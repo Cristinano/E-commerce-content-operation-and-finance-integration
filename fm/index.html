@@ -1,0 +1,1804 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业财一体化 · FM 财务管理</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,900&f[]=clash-display@400,500,600,700&f[]=jetbrains-mono@400,500,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-body: #f2f3f5; --bg-surface: #ffffff; --bg-sidebar: #0f1419;
+  --bg-sidebar-hover: #1a2029; --bg-sidebar-active: #1e2733;
+  --bg-input: #f6f7f8; --border: #e2e5e9; --border-light: #eef0f2;
+  --text-primary: #13161b; --text-secondary: #59636e; --text-tertiary: #8b949e;
+  --text-sidebar: #8190a0; --accent: #ce3a3a; --accent-hover: #b33030;
+  --accent-light: #fef3f3; --accent-glow: rgba(206,58,58,0.12);
+  --teal: #0d8555; --teal-light: #edfaf3; --amber: #c26d0a; --amber-light: #fef8ee;
+  --blue: #2662d9; --blue-light: #edf3fd; --purple: #6c49c9; --purple-light: #f5f2fe;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --radius-xs: 4px; --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px;
+  --font-body: 'Satoshi', system-ui, -apple-system, sans-serif;
+  --font-display: 'Clash Display', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-body);background:var(--bg-body);color:var(--text-primary);display:flex;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
+/* ---- Sidebar ---- */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg-sidebar);display:flex;flex-direction:column;z-index:20}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 22px;border-bottom:1px solid rgba(255,255,255,.05)}
+.sidebar-logo{width:32px;height:32px;border-radius:var(--radius-xs);background:var(--teal);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff;letter-spacing:-.5px}
+.sidebar-brand-text{color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:-.2px}
+.sidebar-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.sidebar-section{padding:14px 10px 4px;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1px}
+.sidebar-module-label{padding:8px 10px;font-size:9px;font-weight:700;color:rgba(255,255,255,.18);text-transform:uppercase;letter-spacing:2px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);color:var(--text-sidebar);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.nav-item:hover{background:var(--bg-sidebar-hover);color:#c8cfd6}
+.nav-item.active{background:var(--bg-sidebar-active);color:#fff;font-weight:600}
+.nav-item .badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;font-family:var(--font-mono);min-width:18px;text-align:center}
+.nav-section{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);color:var(--text-sidebar);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;user-select:none}
+.nav-section:hover{background:var(--bg-sidebar-hover);color:#c8cfd6}
+.nav-section .nav-arrow{font-size:9px;margin-left:auto;transition:transform .2s}
+.nav-section.collapsed .nav-arrow{transform:rotate(-90deg)}
+.nav-sub{display:flex;align-items:center;gap:9px;padding:7px 10px 7px 30px;border-radius:var(--radius-sm);color:var(--text-sidebar);font-size:12.5px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;position:relative}
+.nav-sub:hover{background:var(--bg-sidebar-hover);color:#c8cfd6}
+.nav-sub.active{background:var(--bg-sidebar-active);color:#fff;font-weight:600}
+.nav-sub.active::before{content:'';position:absolute;left:18px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:var(--teal)}
+.nav-sub.hidden{display:none}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.05);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e34d4d,#ce3a3a);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
+.sidebar-name{color:#e8ecef;font-size:12px;font-weight:600}
+.sidebar-role{color:rgba(255,255,255,.35);font-size:10.5px}
+/* ---- Main Layout ---- */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.page{display:none;flex-direction:column;flex:1;overflow:hidden}
+.page.active{display:flex}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:11px 24px;background:var(--bg-surface);border-bottom:1px solid var(--border);flex-shrink:0;min-height:50px}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-title{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.3px}
+.topbar-breadcrumb{font-size:11px;color:var(--text-tertiary);display:flex;align-items:center;gap:5px}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.content{flex:1;overflow-y:auto;padding:18px 24px;display:flex;flex-direction:column;gap:14px}
+/* ---- Cards & Stats ---- */
+.stats-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.stats-grid.col3{grid-template-columns:repeat(3,1fr)}
+.stats-grid.col4{grid-template-columns:repeat(4,1fr)}
+.stat-card{background:#fff;border-radius:var(--radius-md);border:1px solid var(--border);padding:14px 16px;box-shadow:var(--shadow-xs);transition:all .15s}
+.stat-card:hover{box-shadow:var(--shadow-sm);border-color:#d1d5db}
+.stat-label{font-size:10.5px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.stat-value{font-family:var(--font-display);font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.stat-sub{font-size:10.5px;color:var(--text-tertiary);margin-top:1px}
+.stat-card.accent{border-left:3px solid var(--accent)}
+.stat-card.teal{border-left:3px solid var(--teal)}
+.stat-card.amber{border-left:3px solid var(--amber)}
+.stat-card.blue{border-left:3px solid var(--blue)}
+.stat-card.purple{border-left:3px solid var(--purple)}
+.card{background:#fff;border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-xs)}
+.card-header{padding:13px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:-.2px}
+.card-body{padding:16px}
+.card-body-sm{padding:12px 16px}
+/* ---- Table ---- */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{text-align:left;padding:8px 10px;font-size:10.5px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);white-space:nowrap;background:#fafbfc}
+tbody td{padding:10px 10px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+tbody tr{transition:background .1s;cursor:pointer}
+tbody tr:hover{background:#f8f9fb}
+/* ---- Badges ---- */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.badge-gray{background:#f3f4f6;color:#6b7280}.badge-gray .badge-dot{background:#9ca3af}
+.badge-blue{background:var(--blue-light);color:var(--blue)}.badge-blue .badge-dot{background:var(--blue)}
+.badge-teal{background:var(--teal-light);color:var(--teal)}.badge-teal .badge-dot{background:var(--teal)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}.badge-amber .badge-dot{background:var(--amber)}
+.badge-red{background:var(--accent-light);color:var(--accent)}.badge-red .badge-dot{background:var(--accent)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}.badge-purple .badge-dot{background:var(--purple)}
+/* ---- Buttons ---- */
+.btn{padding:6px 13px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--font-body);display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-primary{background:var(--teal);color:#fff}.btn-primary:hover{background:#0b7148;box-shadow:0 2px 8px rgba(13,133,85,0.18)}
+.btn-primary.red{background:var(--accent);color:#fff}.btn-primary.red:hover{background:var(--accent-hover);box-shadow:0 2px 8px var(--accent-glow)}
+.btn-secondary{background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border-light)}
+.btn-ghost{background:transparent;color:var(--text-secondary)}.btn-ghost:hover{background:var(--bg-input)}
+.btn-sm{padding:4px 10px;font-size:11px}
+.btn-xs{padding:3px 7px;font-size:10.5px;border-radius:var(--radius-xs)}
+/* ---- Progress ---- */
+.progress{height:6px;border-radius:3px;background:#eef0f2;overflow:hidden;min-width:50px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.progress-fill.teal{background:var(--teal)}.progress-fill.amber{background:var(--amber)}.progress-fill.red{background:var(--accent)}
+/* ---- Filters ---- */
+.filter-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.filter-chip{padding:5px 13px;border-radius:16px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:11.5px;font-weight:500;cursor:pointer;transition:all .12s}
+.filter-chip:hover{border-color:#c4c7cc}
+.filter-chip.active{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
+.filter-select{padding:5px 24px 5px 10px;border-radius:16px;border:1px solid var(--border);background:#fff;font-size:11.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;font-family:var(--font-body);appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='9' height='5' viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%238b949e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center}
+.filter-spacer{flex:1}
+.search-input{padding:5px 12px;border-radius:16px;border:1px solid var(--border);font-size:11.5px;font-family:var(--font-body);outline:none;width:220px}
+.search-input:focus{border-color:var(--teal)}
+/* ---- Tabs ---- */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border-light)}
+.tab{padding:10px 16px;font-size:12.5px;font-weight:600;color:var(--text-tertiary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:var(--font-body)}
+.tab:hover{color:var(--text-secondary)}
+.tab.active{color:var(--teal);border-bottom-color:var(--teal)}
+.tab-content{display:none}.tab-content.active{display:block}
+/* ---- Step Indicator ---- */
+.step-indicator{display:flex;align-items:center;gap:0;margin-bottom:4px}
+.step-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:var(--font-mono);flex-shrink:0}
+.step-dot.active{background:var(--teal);color:#fff}
+.step-dot.done{background:var(--teal);color:#fff}
+.step-dot.idle{background:#eef0f2;color:var(--text-tertiary)}
+.step-line{width:18px;height:1.5px;background:var(--border);flex-shrink:0}
+.step-line.done{background:var(--teal)}
+/* ---- Form ---- */
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11.5px;font-weight:600;color:var(--text-secondary)}
+.form-input,.form-select{padding:7px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:var(--font-body);transition:border-color .15s;background:var(--bg-input)}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(13,133,85,0.1);background:#fff}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='9' height='5' viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%238b949e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row.col3{grid-template-columns:1fr 1fr 1fr}
+textarea.form-input{min-height:80px;resize:vertical}
+/* ---- Alerts ---- */
+.alert{padding:12px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:500;display:flex;align-items:center;gap:8px}
+.alert-warn{background:var(--amber-light);color:var(--amber);border:1px solid rgba(194,109,10,0.15)}
+.alert-error{background:var(--accent-light);color:var(--accent);border:1px solid rgba(206,58,58,0.15)}
+.alert-info{background:var(--blue-light);color:var(--blue);border:1px solid rgba(38,98,217,0.15)}
+/* ---- Vendor Row Expand ---- */
+.vendor-row{cursor:pointer}
+.vendor-row:hover{background:#f8f9fb}
+.vendor-row.expanded{background:#f0f4ff}
+.vendor-row .expand-icon{font-size:10px;color:var(--text-tertiary);transition:transform .2s;display:inline-block;text-align:center;width:20px}
+.vendor-row.expanded .expand-icon{transform:rotate(90deg)}
+.vendor-detail{display:none}
+.vendor-detail.open{display:table-row}
+.vendor-preview{background:#fafbfc;padding:14px 20px;border-top:1px solid var(--border-light)}
+.vendor-preview-header{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.vendor-preview-title{font-family:var(--font-display);font-size:12.5px;font-weight:600}
+.vendor-preview-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.vendor-preview-table thead th{text-align:left;padding:6px 8px;font-size:10px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.4px;border-bottom:1px solid var(--border);background:transparent}
+.vendor-preview-table tbody td{padding:7px 8px;border-bottom:1px solid var(--border-light)}
+/* ---- Expense Detail Expand ---- */
+.exp-row{cursor:pointer}
+.exp-row:hover{background:#f8f9fb}
+.exp-row.expanded{background:#f0f4ff}
+.exp-row .expand-icon{font-size:10px;color:var(--text-tertiary);transition:transform .2s;display:inline-block;text-align:center;width:20px}
+.exp-row.expanded .expand-icon{transform:rotate(90deg)}
+.exp-detail{display:none}
+.exp-detail.open{display:table-row}
+.exp-detail-wrap{padding:12px 20px 16px;background:#fafbfc;border-top:1px solid var(--border-light)}
+.exp-month-group{margin-bottom:10px}
+.exp-month-group:last-child{margin-bottom:0}
+.exp-month-head{display:flex;align-items:center;gap:8px;padding:5px 0 6px;border-bottom:1px dashed var(--border-light);margin-bottom:4px}
+.exp-month-label{font-family:var(--font-display);font-size:11.5px;font-weight:600;color:var(--text-secondary)}
+.exp-sub-table{width:100%;border-collapse:collapse;font-size:11.5px}
+
+/* ==== 薪酬页面样式 ==== */
+.sal-row{cursor:pointer;transition:background .15s}
+.sal-row:hover{background:#f8faf7}
+.sal-row .expand-icon{font-size:10px;color:var(--text-tertiary);transition:transform .2s;display:inline-block;text-align:center;width:20px}
+.sal-row.expanded .expand-icon{transform:rotate(90deg)}
+.sal-detail{display:none}
+.sal-detail.open{display:table-row}
+.sal-detail-wrap{padding:14px 20px 16px;background:linear-gradient(180deg,#f7faf8 0%,#fafbfc 100%);border-top:2px solid var(--teal-light)}
+.sal-block{background:#fff;border:1px solid var(--border-light);border-radius:8px;padding:10px 14px 12px;margin-bottom:10px}
+.sal-block:last-child{margin-bottom:0}
+.sal-block-head{display:flex;align-items:center;gap:10px;padding:4px 0 8px;border-bottom:1px dashed var(--border-light);margin-bottom:6px}
+.sal-block-title{font-family:var(--font-display);font-size:12.5px;font-weight:600;color:var(--teal)}
+.sal-sub-table{width:100%;border-collapse:collapse;font-size:11.5px}
+.sal-sub-table th{padding:5px 8px;background:#f4f7f5;color:var(--text-secondary);font-weight:600;font-size:11px;text-align:left;border-bottom:1px solid var(--border-light)}
+.sal-sub-table th[style*="text-align:right"]{text-align:right}
+.sal-sub-table td{padding:5px 8px;border-bottom:1px solid #f0f2f4;color:var(--text-primary)}
+.sal-note{margin-top:6px;padding:6px 10px;background:var(--amber-light);border-left:3px solid var(--amber);border-radius:0 4px 4px 0;font-size:11px;color:#8b6a1e;line-height:1.6}
+.sal-sub-table .number{font-family:var(--font-display);font-weight:500}
+.pjd-sal-row{cursor:pointer;transition:background .15s}
+.pjd-sal-row:hover{background:#f8faf7}
+.pjd-sal-row .expand-icon{font-size:10px;color:var(--text-tertiary);transition:transform .2s;display:inline-block;text-align:center;width:20px}
+.pjd-sal-row.expanded .expand-icon{transform:rotate(90deg)}
+.pjd-sal-detail{display:none}
+.pjd-sal-detail.open{display:table-row}
+.exp-sub-table thead th{text-align:left;padding:5px 8px;font-size:10px;font-weight:600;color:var(--text-tertiary);letter-spacing:.3px;border-bottom:1px solid var(--border-light);background:transparent}
+.exp-sub-table tbody td{padding:6px 8px;border-bottom:1px solid #f0f1f3}
+.exp-sub-table tbody tr:hover{background:#fff}
+.exp-sub-table tbody tr.exp-filtered{display:none}
+/* ---- Invoice Row Expand ---- */
+.inv-row{cursor:pointer}
+.inv-row:hover{background:#f8f9fb}
+.inv-row.expanded{background:#f0f4ff}
+.inv-row .expand-icon{font-size:10px;color:var(--text-tertiary);transition:transform .2s;display:inline-block;text-align:center;width:20px}
+.inv-row.expanded .expand-icon{transform:rotate(90deg)}
+.inv-detail{display:none}
+.inv-detail.open{display:table-row}
+.inv-pending.inv-filtered{display:none}
+.inv-done.inv-filtered{display:none}
+.inv-merge-ck{width:14px;height:14px;cursor:pointer;accent-color:var(--teal)}
+/* ---- Drawer ---- */
+.drawer-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,20,25,.4);z-index:100;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;top:0;right:0;width:460px;height:100vh;background:#fff;z-index:101;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:0 24px 48px rgba(0,0,0,0.12)}
+.drawer.open{transform:translateX(0)}
+.drawer-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.drawer-close{width:26px;height:26px;border-radius:50%;background:var(--bg-input);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text-secondary)}
+.drawer-body{flex:1;overflow-y:auto;padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.drawer-foot{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+/* ---- Modal ---- */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,20,25,.5);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding-top:50px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:var(--radius-lg);width:660px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,0.12)}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:var(--font-display);font-size:15px;font-weight:600}
+.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+/* ---- Toast ---- */
+.toast{position:fixed;top:20px;right:20px;z-index:300;background:#13161b;color:#fff;padding:11px 18px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:500;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(-10px);transition:all .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:var(--teal)}.toast.warn{background:var(--amber)}
+/* ---- Misc ---- */
+.muted{color:var(--text-tertiary);font-size:11px}
+.number{font-family:var(--font-mono);font-weight:600;font-size:12.5px}
+.number.lg{font-size:18px;font-weight:700}
+.row-between{display:flex;align-items:center;justify-content:space-between}
+.gap-sm{gap:6px}
+.gap-md{gap:12px}
+.flex{display:flex}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}
+.mb-sm{margin-bottom:8px}.mb-md{margin-bottom:14px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px}
+.info-row{display:flex;padding:4px 0}
+.info-label{color:var(--text-tertiary);font-size:11.5px;width:110px;flex-shrink:0}
+.info-value{font-size:12.5px;font-weight:500}
+.preview-panel{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;font-size:12px}
+.preview-panel .pp-header{padding:8px 14px;background:#fafbfc;border-bottom:1px solid var(--border-light);font-weight:600;font-size:11px;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.4px}
+.preview-panel .pp-row{display:flex;padding:5px 14px;font-size:12px}
+.preview-panel .pp-label{color:var(--text-tertiary);width:100px;flex-shrink:0}
+.preview-panel .pp-value{font-weight:500}
+.recon-section{border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:12px}
+.recon-section-title{padding:10px 14px;background:#fafbfc;border-bottom:1px solid var(--border-light);font-family:var(--font-display);font-size:13px;font-weight:600}
+.recon-section-body{padding:14px}
+.kpi-steps{display:flex;align-items:center;gap:10px;padding:10px 0;font-size:12px}
+/* ---- Month tabs in project detail ---- */
+.pjd-mtab{display:inline-flex;align-items:center;padding:7px 14px;border-radius:20px;border:1px solid var(--border);background:#fff;font-size:12.5px;font-weight:600;cursor:pointer;transition:all .15s;font-family:var(--font-mono);color:var(--text-secondary)}
+.pjd-mtab:hover{background:var(--bg-input);border-color:#c4c7cc}
+.pjd-mtab.active{background:var(--text-primary);color:#fff;border-color:var(--text-primary);box-shadow:0 2px 8px rgba(19,22,27,0.15)}
+</style>
+</head>
+<body>
+<!-- ====== SIDEBAR ====== -->
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">F</div>
+    <div class="sidebar-brand-text">业财一体化</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-module-label">模块导航</div>
+    <div class="nav-item" data-nav="crm" style="opacity:.45">CRM 客户商机</div>
+    <div class="nav-item" data-nav="pm" style="opacity:.45">PM 项目管理</div>
+    <div class="sidebar-section">财务管理</div>
+    <div class="nav-item active" data-nav="dashboard">📊 工作台</div>
+    <div class="nav-item" data-nav="proj-recon">💰 项目对账 <span class="badge">3</span></div>
+    <div class="nav-item" data-nav="ar">📋 应收与回款 <span class="badge" style="background:var(--amber)">2</span></div>
+    <div class="nav-item" data-nav="invoice">🧾 开票管理 <span class="badge" style="background:var(--blue)">5</span></div>
+    <div class="nav-item" data-nav="profit">🧮 利润核算</div>
+    <div class="nav-section" data-section="cost-settle">📦 成本结算 <span class="nav-arrow">▾</span></div>
+    <div class="nav-sub" data-nav="salary">💰 人员薪酬</div>
+    <div class="nav-sub" data-nav="vendor">📮 供应商结算 <span class="badge" style="background:var(--purple)">3</span></div>
+    <div class="nav-sub" data-nav="expense">📝 费用报销</div>
+    <div class="sidebar-section">其他模块</div>
+    <div class="nav-item" data-nav="wms" style="opacity:.45">WMS 仓务管理</div>
+    <div class="nav-item" data-nav="hr" style="opacity:.45">HR 人力资源</div>
+    <div class="nav-item" data-nav="bi" style="opacity:.45">BI 经营分析</div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-avatar">李</div>
+    <div><div class="sidebar-name">李财务</div><div class="sidebar-role">财务部 · 主管</div></div>
+  </div>
+</div>
+<!-- ====== MAIN ====== -->
+<div class="main">
+
+<!-- PAGE: Dashboard -->
+<section class="page active" id="pg-dashboard">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title">FM 财务工作台</span></div><div class="topbar-actions"><span class="muted">2026年6月8日 周日</span></div></div>
+<div class="content">
+<div class="stats-grid">
+  <div class="stat-card teal"><div class="stat-label">📋 待对账</div><div class="stat-value">3</div><div class="stat-sub">个项目</div></div>
+  <div class="stat-card blue"><div class="stat-label">🧾 待开票</div><div class="stat-value">5</div><div class="stat-sub">笔</div></div>
+  <div class="stat-card amber"><div class="stat-label">💰 待回款</div><div class="stat-value">¥1,200,000</div><div class="stat-sub">含逾期 ¥300,000</div></div>
+  <div class="stat-card accent"><div class="stat-label">⚠️ 逾期应收</div><div class="stat-value">2</div><div class="stat-sub">笔</div></div>
+  <div class="stat-card purple"><div class="stat-label">📮 待结算供应商</div><div class="stat-value">3</div><div class="stat-sub">家</div></div>
+</div>
+<div class="stats-grid col3">
+  <div class="stat-card"><div class="stat-label">已对账收入(本月)</div><div class="stat-value">¥450,000</div></div>
+  <div class="stat-card"><div class="stat-label">已确认收入(本月)</div><div class="stat-value">¥320,000</div></div>
+  <div class="stat-card"><div class="stat-label">本月回款 / 预计30天回款</div><div class="stat-value">¥280,000 <span class="muted" style="font-size:14px">/ ¥520,000</span></div></div>
+</div>
+<div class="card"><div class="card-header"><span class="card-title">⚠️ 逾期应收提醒</span></div>
+  <div class="card-body" style="padding:0">
+    <table><thead><tr><th>编号</th><th>客户</th><th>项目</th><th>金额</th><th>到期日</th><th>逾期天数</th><th>操作</th></tr></thead>
+    <tbody>
+      <tr><td><span class="number">AR-002</span></td><td>TCL</td><td>PJ-005</td><td class="number">¥47,228</td><td>2025-10-15</td><td><span class="badge badge-red"><span class="badge-dot"></span>54天</span></td><td><button class="btn btn-xs btn-secondary" onclick="navTo('ar')">催收记录</button></td></tr>
+      <tr><td><span class="number">AR-005</span></td><td>美的</td><td>PJ-001</td><td class="number">¥89,000</td><td>2025-11-20</td><td><span class="badge badge-red"><span class="badge-dot"></span>12天</span></td><td><button class="btn btn-xs btn-secondary" onclick="navTo('ar')">催收记录</button></td></tr>
+    </tbody></table>
+  </div>
+</div>
+<div class="card"><div class="card-header"><span class="card-title">最近对账单</span></div>
+  <div class="card-body" style="padding:0">
+    <table><thead><tr><th>编号</th><th>客户</th><th>月份</th><th>金额</th><th>状态</th><th>日期</th></tr></thead>
+    <tbody>
+      <tr onclick="navTo('proj-detail','3')"><td><span class="number">RCN-008</span></td><td>美的</td><td>2026-08</td><td class="number">¥62,970</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已确认</span></td><td>08-25</td></tr>
+      <tr onclick="navTo('proj-detail','2')"><td><span class="number">RCN-007</span></td><td>TCL</td><td>2026-08</td><td class="number">¥59,822</td><td><span class="badge badge-blue"><span class="badge-dot"></span>已提交</span></td><td>08-24</td></tr>
+      <tr><td><span class="number">RCN-006</span></td><td>松下</td><td>2026-08</td><td class="number">¥89,000</td><td><span class="badge badge-gray"><span class="badge-dot"></span>草稿</span></td><td>08-23</td></tr>
+    </tbody></table>
+  </div>
+</div>
+<div class="card"><div class="card-header"><span class="card-title">预算消耗预警</span></div>
+  <div class="card-body">
+    <div class="alert alert-error" style="margin-bottom:8px">🔴 <b>美的年框</b> PJ-001 · 预算池消耗 92% · ¥9,200,000 / ¥10,000,000</div>
+    <div class="alert alert-warn">🟡 <b>TCL年框</b> PJ-005 · 8月消耗 130% · 超支 ¥150,000</div>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- PAGE: Project Recon List -->
+<section class="page" id="pg-proj-recon">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">项目对账</span></div></div>
+<div class="content">
+<div class="stats-grid col4" style="margin-bottom:4px">
+  <div class="stat-card amber"><div class="stat-label">🟡 待核对成本</div><div class="stat-value">3</div><div class="stat-sub">个项目</div></div>
+  <div class="stat-card blue"><div class="stat-label">📋 待生成对账单</div><div class="stat-value">2</div><div class="stat-sub">成本已核对</div></div>
+  <div class="stat-card teal"><div class="stat-label">✅ 已对账</div><div class="stat-value">5</div><div class="stat-sub">本月</div></div>
+  <div class="stat-card accent"><div class="stat-label">⚠️ 有争议</div><div class="stat-value">1</div><div class="stat-sub">待处理</div></div>
+</div>
+<div class="filter-row"><span class="filter-chip active">全部</span><span class="filter-chip">待核对</span><span class="filter-chip">已对账</span><span class="filter-chip">有争议</span><select class="filter-select"><option>全部客户</option><option>美的集团</option><option>TCL集团</option></select><select class="filter-select"><option>全部月份</option><option>2026-08</option><option>2026-07</option></select></div>
+<div class="tabs"><span class="tab active" data-tab="recon-proj">按项目划分</span><span class="tab" data-tab="recon-month">按月汇总</span></div>
+<div class="tab-content active" id="tab-recon-proj">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>项目名称</th><th>客户</th><th>合同号</th><th style="text-align:right">合同额</th><th>结算模式</th><th style="text-align:right">累计成本</th><th>状态</th></tr></thead>
+<tbody>
+<tr class="exp-row" data-exp="recon-meidi" onclick="toggleExpDetail('recon-meidi')"><td class="expand-icon">▸</td><td style="font-weight:600">美的2026年度框架</td><td>美的集团</td><td><span class="number" style="color:var(--blue)">HT-2026-001</span></td><td class="number" style="text-align:right">¥10,000,000</td><td><span class="badge badge-gray">单纯计件</span></td><td class="number" style="text-align:right">¥478,600</td><td><span class="badge badge-amber">2月待核对</span></td></tr>
+<tr class="exp-detail" id="detail-recon-meidi"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-08</span><span class="muted">当月成本 ¥258,600 · 23条</span><span style="margin-left:auto"><span class="badge badge-amber">待核对</span><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();navTo('proj-detail','1')" style="margin-left:6px">核对成本</button></span></div>
+    <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>费用汇总</th><th style="text-align:right">明细数</th><th style="text-align:right">金额</th><th>归属说明</th></tr></thead>
+    <tbody>
+    <tr style="background:#f6f9fc;cursor:pointer" onclick="event.stopPropagation();navTo('proj-detail','1')"><td><span class="badge badge-blue">👥 内部人力</span></td><td>6人 · 计件+底薪+绩效分摊</td><td class="number" style="text-align:right">14条</td><td class="number" style="text-align:right;font-weight:600;color:var(--blue)">¥30,477</td><td><span class="badge badge-gray">点击核对 →</span></td></tr>
+    <tr style="background:#fafbfc"><td><span class="badge badge-purple">🤝 外包成本</span></td><td>XX工作室 + YY影视</td><td class="number" style="text-align:right">4条</td><td class="number" style="text-align:right;font-weight:600">¥1,260</td><td><span class="badge badge-gray">归属8月</span></td></tr>
+    <tr style="background:#fafbfc"><td><span class="badge badge-red">🏗️ 场地+模特+其他</span></td><td>场地+模特+平台投放+差旅</td><td class="number" style="text-align:right">5条</td><td class="number" style="text-align:right;font-weight:600">¥16,500</td><td><span class="badge badge-gray">归属8月</span></td></tr>
+    <tr style="background:#fff5f5"><td><span class="badge badge-red">⚠ 前期遗留</span></td><td>脚本·美的厨热·6月未核对部分</td><td class="number" style="text-align:right">1条</td><td class="number" style="text-align:right;font-weight:600">¥600</td><td><span class="badge badge-red">归属6月·前期遗留至8月核对</span></td></tr>
+    <tr style="background:#f0f7ff"><td><span class="badge badge-blue">🔮 前置完成</span></td><td>脚本·美的空调·9月预热内容</td><td class="number" style="text-align:right">1条</td><td class="number" style="text-align:right;font-weight:600">¥375</td><td><span class="badge badge-blue">归属9月·前置完成</span></td></tr>
+    <tr style="background:#e8f5e9;font-weight:600"><td colspan="3">本月成本小计（23条明细）</td><td class="number" style="text-align:right;font-size:15px">¥258,600</td><td style="font-size:11px;color:var(--text-secondary)">内部人力点击进入核对</td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-07</span><span class="muted">当月成本 ¥220,000 · 18条</span><span style="margin-left:auto"><span class="badge badge-teal">已对账</span><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();navTo('proj-detail','3')" style="margin-left:6px">查看</button></span></div>
+    <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>费用汇总</th><th style="text-align:right">明细数</th><th style="text-align:right">金额</th><th>归属说明</th></tr></thead>
+    <tbody>
+    <tr style="background:#f6f9fc;cursor:pointer" onclick="event.stopPropagation();navTo('proj-detail','3')"><td><span class="badge badge-blue">👥 内部人力</span></td><td>4人 · 计件+底薪+绩效分摊</td><td class="number" style="text-align:right">10条</td><td class="number" style="text-align:right;font-weight:600;color:var(--blue)">¥19,800</td><td><span class="badge badge-gray">点击查看 →</span></td></tr>
+    <tr style="background:#fafbfc"><td><span class="badge badge-purple">🤝 外包成本</span></td><td>XX工作室 + YY影视</td><td class="number" style="text-align:right">5条</td><td class="number" style="text-align:right;font-weight:600">¥11,500</td><td><span class="badge badge-gray">归属7月</span></td></tr>
+    <tr style="background:#fafbfc"><td><span class="badge badge-red">🏗️ 场地+模特+其他</span></td><td>场地+模特+差旅</td><td class="number" style="text-align:right">3条</td><td class="number" style="text-align:right;font-weight:600">¥14,100</td><td><span class="badge badge-gray">归属7月</span></td></tr>
+    <tr style="background:#fff5f5"><td><span class="badge badge-red">⚠ 前期遗留</span></td><td>脚本·美的厨热·5月未核对部分</td><td class="number" style="text-align:right">1条</td><td class="number" style="text-align:right;font-weight:600">¥450</td><td><span class="badge badge-red">归属5月·前期遗留至7月核对</span></td></tr>
+    <tr style="background:#e8f5e9;font-weight:600"><td colspan="3">本月成本小计（18条明细）</td><td class="number" style="text-align:right;font-size:15px">¥220,000</td><td style="font-size:11px;color:var(--text-secondary)">含前期遗留 ¥450</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="recon-tcl" onclick="toggleExpDetail('recon-tcl')"><td class="expand-icon">▸</td><td style="font-weight:600">TCL 2026年度框架</td><td>TCL集团</td><td><span class="number" style="color:var(--blue)">HT-2026-005</span></td><td class="number" style="text-align:right">¥5,000,000</td><td><span class="badge badge-purple">双重考核</span></td><td class="number" style="text-align:right">¥374,200</td><td><span class="badge badge-amber">1月有争议</span></td></tr>
+<tr class="exp-detail" id="detail-recon-tcl"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-08</span><span class="muted">当月成本 ¥198,400 · 15条</span><span style="margin-left:auto"><span class="badge badge-teal">已核对</span><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();navTo('proj-detail','2')" style="margin-left:6px">查看</button></span></div>
+    <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th></tr></thead>
+    <tbody>
+    <tr><td><span class="badge badge-amber">内部人力</span></td><td>拍摄·TCL·智能科技</td><td class="number" style="text-align:right">100</td><td class="number" style="text-align:right">¥30</td><td class="number" style="text-align:right">¥3,000</td></tr>
+    <tr style="background:#fafbfc;font-weight:600"><td colspan="4">本月成本小计（15条明细）</td><td class="number" style="text-align:right">¥198,400</td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-07</span><span class="muted">当月成本 ¥175,800 · 12条</span><span style="margin-left:auto"><span class="badge badge-amber">有争议</span><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation();navTo('proj-detail','5')" style="margin-left:6px">处理</button></span></div>
+    <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th></tr></thead>
+    <tbody>
+    <tr><td><span class="badge badge-amber">内部人力</span></td><td>脚本·TCL·测评内容</td><td class="number" style="text-align:right">80</td><td class="number" style="text-align:right">¥15</td><td class="number" style="text-align:right">¥1,200</td></tr>
+    <tr style="background:#fafbfc;font-weight:600"><td colspan="4">本月成本小计（12条明细）</td><td class="number" style="text-align:right">¥175,800</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="recon-songxia" onclick="toggleExpDetail('recon-songxia')"><td class="expand-icon">▸</td><td style="font-weight:600">松下Q1季度包</td><td>松下</td><td><span class="number" style="color:var(--blue)">HT-2026-002</span></td><td class="number" style="text-align:right">¥1,000,000</td><td><span class="badge badge-gray">单纯计件</span></td><td class="number" style="text-align:right">¥156,200</td><td><span class="badge badge-amber">1月待核对</span></td></tr>
+<tr class="exp-detail" id="detail-recon-songxia"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-08</span><span class="muted">当月成本 ¥156,200 · 10条</span><span style="margin-left:auto"><span class="badge badge-amber">待核对</span><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();navTo('proj-detail','4')" style="margin-left:6px">核对成本</button></span></div>
+    <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th></tr></thead>
+    <tbody>
+    <tr><td><span class="badge badge-amber">内部人力</span></td><td>脚本·松下·测评向</td><td class="number" style="text-align:right">95</td><td class="number" style="text-align:right">¥15</td><td class="number" style="text-align:right">¥1,425</td></tr>
+    <tr style="background:#fafbfc;font-weight:600"><td colspan="4">本月成本小计（10条明细）</td><td class="number" style="text-align:right">¥156,200</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+<div class="tab-content" id="tab-recon-month">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>月份</th><th style="text-align:right">总成本</th><th style="text-align:right">项目数</th><th style="text-align:right">待核对</th><th style="text-align:right">已对账</th><th style="text-align:right">有争议</th></tr></thead>
+<tbody>
+<tr class="exp-row" data-exp="recon-m-2026-08" onclick="toggleExpDetail('recon-m-2026-08')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-08</td><td class="number" style="text-align:right">¥613,200</td><td class="number" style="text-align:right">3</td><td class="number" style="text-align:right;color:var(--amber)">2</td><td class="number" style="text-align:right;color:var(--teal)">1</td><td class="number" style="text-align:right">-</td></tr>
+<tr class="exp-detail" id="detail-recon-m-2026-08"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">成本 ¥258,600 · 23条</span><span style="margin-left:auto"><span class="badge badge-amber">待核对</span><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();navTo('proj-detail','1')" style="margin-left:6px">核对</button></span></div>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">TCL年框</span><span class="muted">成本 ¥198,400 · 15条</span><span style="margin-left:auto"><span class="badge badge-teal">已核对</span><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();navTo('proj-detail','2')" style="margin-left:6px">查看</button></span></div>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">松下季度包</span><span class="muted">成本 ¥156,200 · 10条</span><span style="margin-left:auto"><span class="badge badge-amber">待核对</span><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();navTo('proj-detail','4')" style="margin-left:6px">核对</button></span></div>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="recon-m-2026-07" onclick="toggleExpDetail('recon-m-2026-07')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-07</td><td class="number" style="text-align:right">¥395,800</td><td class="number" style="text-align:right">2</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right;color:var(--teal)">1</td><td class="number" style="text-align:right;color:var(--accent)">1</td></tr>
+<tr class="exp-detail" id="detail-recon-m-2026-07"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">成本 ¥220,000 · 18条</span><span style="margin-left:auto"><span class="badge badge-teal">已对账</span><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();navTo('proj-detail','3')" style="margin-left:6px">查看</button></span></div>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">TCL年框</span><span class="muted">成本 ¥175,800 · 12条</span><span style="margin-left:auto"><span class="badge badge-amber">有争议</span><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation();navTo('proj-detail','5')" style="margin-left:6px">处理</button></span></div>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+</div>
+</section>
+
+<!-- PAGE: Project Detail (月度成本核对 → 生成对账单) -->
+<section class="page" id="pg-proj-detail">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('proj-recon')">← 项目对账</span><span style="font-size:12px;color:var(--text-tertiary);margin:0 6px">/</span><span class="topbar-title" id="pjd-title">美的2026年度框架</span><span class="badge badge-blue" style="margin-left:8px;font-size:10px">PJ-2026-001</span></div><div class="topbar-actions"><button class="btn btn-ghost btn-sm">导出成本明细</button></div></div>
+<div class="content">
+<!-- 项目信息 + 合同快照 -->
+<div class="card"><div class="card-body-sm" style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap;font-size:12px">
+  <div style="min-width:0;flex:1">
+    <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:10px">
+      <div><span class="muted">客户</span> <b>美的集团</b></div>
+      <div><span class="muted">合同</span> <b style="color:var(--blue);font-weight:700">HT-2026-001</b> <b>· 年框 · ¥10,000,000</b></div>
+      <div><span class="muted">结算模式</span> <span class="badge badge-gray">单纯计件</span></div>
+      <div style="margin-left:auto"><span class="muted">预算消耗</span> <b style="color:var(--teal)">32%</b> <span class="muted">¥3,200,000 / ¥10,000,000</span></div>
+    </div>
+    <!-- 合同内容类型定价明细（CRM快照，只读） -->
+    <div style="background:#f8f9fb;border-radius:var(--radius-sm);padding:10px 14px">
+      <span style="font-size:10.5px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px">合同内容类型定价明细（t_contract_price · 单价版本 v2026-01-15）</span>
+      <table style="width:100%;margin-top:6px;font-size:11px">
+      <thead><tr style="color:var(--text-tertiary)"><th style="text-align:left">品类</th><th style="text-align:left">内容类型</th><th style="text-align:left">费用</th><th style="text-align:right;width:70px">单价</th><th style="text-align:right;width:60px">总量</th><th style="text-align:center;width:90px">阶梯折扣</th><th style="text-align:right;width:60px">已消耗</th><th style="width:50px"></th></tr></thead>
+      <tbody>
+      <tr><td style="font-weight:600">视频</td><td>商品讲解 / 好物分享</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">4,000</td><td style="text-align:center;font-size:10px;color:var(--text-tertiary)">[0-100]无折扣<br>[101-500]9折<br>[501+]8折</td><td style="text-align:right;font-size:10px">1,800</td><td><div class="progress" style="width:40px"><div class="progress-fill teal" style="width:45%"></div></div></td></tr>
+      <tr><td style="font-weight:600">视频</td><td>产品展示 / 开箱测评</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">3,000</td><td style="text-align:center;font-size:10px;color:var(--text-tertiary)">同上</td><td style="text-align:right;font-size:10px">1,350</td><td><div class="progress" style="width:40px"><div class="progress-fill teal" style="width:45%"></div></div></td></tr>
+      <tr><td style="font-weight:600">视频</td><td>氛围体验 / 创意视频 / 主图视频</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">3,000</td><td style="text-align:center;font-size:10px;color:var(--text-tertiary)">同上</td><td style="text-align:right;font-size:10px">1,050</td><td><div class="progress" style="width:40px"><div class="progress-fill teal" style="width:35%"></div></div></td></tr>
+      <tr><td style="font-weight:600">图文</td><td>攻略测评 / 商品讲解</td><td>combined</td><td class="number" style="text-align:right">¥30/条</td><td class="number" style="text-align:right">30,000</td><td style="text-align:center;font-size:10px;color:var(--text-tertiary)">[0-500]无折扣<br>[501-1000]9折<br>[1001+]8折</td><td style="text-align:right;font-size:10px">13,200</td><td><div class="progress" style="width:40px"><div class="progress-fill teal" style="width:44%"></div></div></td></tr>
+      <tr><td style="font-weight:600">图文</td><td>好物分享 / 产品展示</td><td>combined</td><td class="number" style="text-align:right">¥30/条</td><td class="number" style="text-align:right">20,000</td><td style="text-align:center;font-size:10px;color:var(--text-tertiary)">同上</td><td style="text-align:right;font-size:10px">8,800</td><td><div class="progress" style="width:40px"><div class="progress-fill teal" style="width:44%"></div></div></td></tr>
+      <tr><td style="font-weight:600">直播</td><td>氛围体验</td><td>combined</td><td class="number" style="text-align:right">¥500/场</td><td class="number" style="text-align:right">200</td><td style="text-align:center;font-size:10px;color:var(--text-tertiary)">无折扣</td><td style="text-align:right;font-size:10px">80</td><td><div class="progress" style="width:40px"><div class="progress-fill teal" style="width:40%"></div></div></td></tr>
+      </tbody></table>
+      <div style="margin-top:6px;font-size:10px;color:var(--text-tertiary)">价格来源：CRM t_contract_price (is_current=true) · 阶梯折扣来源：t_contract_step_discount · 费用类型：combined=合价(制作+投放)</div>
+    </div>
+  </div>
+</div></div>
+
+<!-- 月份切换标签 -->
+<div class="card"><div class="card-body-sm" style="padding:14px 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+  <span style="font-size:11px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px">对账月份</span>
+  <div id="pjd-month-tabs" style="display:flex;gap:6px">
+    <span class="pjd-mtab" data-m="2026-06" onclick="switchPjdMonth('2026-06')"><span class="badge badge-teal" style="margin-right:3px;font-size:9px">✓</span>2026-06</span>
+    <span class="pjd-mtab" data-m="2026-07" onclick="switchPjdMonth('2026-07')"><span class="badge badge-teal" style="margin-right:3px;font-size:9px">✓</span>2026-07</span>
+    <span class="pjd-mtab active" data-m="2026-08" onclick="switchPjdMonth('2026-08')"><span class="badge badge-amber" style="margin-right:3px;font-size:9px">●</span>2026-08</span>
+    <span class="pjd-mtab" data-m="2026-09" onclick="switchPjdMonth('2026-09')" style="opacity:.4;cursor:default">2026-09</span>
+  </div>
+  <span style="margin-left:auto;font-size:11px;color:var(--text-tertiary)">← 滑动选择历史月份</span>
+</div></div>
+
+<!-- ========== 2026-08 待核对 ========== -->
+<div class="pjd-month-content" id="pjd-m-2026-08">
+<!-- 成本概览卡片 -->
+<div class="stats-grid col4" style="margin-bottom:6px">
+  <div class="stat-card"><div class="stat-label">📊 当月成本合计</div><div class="stat-value">¥50,237</div><div class="stat-sub">内部人力6人 + 外包及其他9条 · 全部已校准</div></div>
+   <div class="stat-card teal"><div class="stat-label">✅ HR薪酬已确认</div><div class="stat-value">18人</div><div class="stat-sub">底薪+绩效+计件均已校准</div></div>
+   <div class="stat-card blue"><div class="stat-label">👥 内部人力成本</div><div class="stat-value">¥30,477</div><div class="stat-sub">6人·编导/拍摄/剪辑 + PM/AE</div></div>
+   <div class="stat-card purple"><div class="stat-label">🤝 外包+场地+模特+其他</div><div class="stat-value">¥17,760</div><div class="stat-sub">外包¥1,260·场地¥4,200·模特¥4,500</div></div>
+</div>
+
+<!-- 内部人力成本（点击展开明细） -->
+<div class="card"><div class="card-header"><span class="card-title">👥 内部人力成本</span><span class="muted" style="font-size:10px">HR薪酬分摊已确认 · 底薪/提成按归属月×项目加权 · 绩效仅当月分摊</span><span style="margin-left:auto;font-size:11px;color:var(--teal);font-weight:600">合计: ¥30,477（6人）</span></div>
+<div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>姓名</th><th>岗位</th><th style="text-align:right">计件</th><th style="text-align:right">底薪分摊</th><th style="text-align:right">绩效分摊</th><th style="text-align:right">小计</th><th style="text-align:right">归属月</th></tr></thead>
+<tbody>
+
+<tr class="pjd-sal-row" data-psal="wu" onclick="togglePjdSalDetail('wu')"><td class="expand-icon">▸</td><td style="font-weight:600">巫昭仪</td><td><span class="badge badge-blue">编导</span></td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right">¥2,377</td><td class="number" style="text-align:right">¥1,200</td><td class="number" style="text-align:right;font-weight:700;color:var(--teal)">¥5,077</td><td style="text-align:right;font-size:10px;color:var(--blue);font-weight:600">计件→9月</td></tr>
+<tr class="pjd-sal-detail" id="pjd-detail-wu"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="sal-detail-wrap">
+  <table class="sal-sub-table"><thead><tr><th>类型</th><th>产出内容</th><th style="text-align:right">产出/权重</th><th style="text-align:right">归属月</th><th style="text-align:right">金额</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td><span class="badge badge-amber">计件</span></td><td>脚本·美的厨热·商品讲解</td><td class="number" style="text-align:right">120条·¥15/条</td><td style="text-align:right;color:var(--blue);font-weight:600">2026-09</td><td class="number" style="text-align:right;font-weight:600">¥1,500</td><td style="font-size:10px;color:var(--blue)">8月完成·跨月</td></tr>
+  <tr><td><span class="badge badge-purple">底薪分摊</span></td><td>美的年框+TCL直播</td><td class="number" style="text-align:right">53.3%</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥2,377</td><td style="font-size:10px">产出岗·归属月加权</td></tr>
+  <tr><td><span class="badge badge-teal">绩效分摊</span></td><td>美的年框+TCL直播</td><td class="number" style="text-align:right">75%</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥1,200</td><td style="font-size:10px">仅当月·不跨月</td></tr>
+  </tbody></table>
+</div></td></tr>
+
+<tr class="pjd-sal-row" data-psal="liang" onclick="togglePjdSalDetail('liang')"><td class="expand-icon">▸</td><td style="font-weight:600">梁记</td><td><span class="badge badge-blue">编导</span></td><td class="number" style="text-align:right">¥1,200</td><td class="number" style="text-align:right">¥2,500</td><td class="number" style="text-align:right">¥1,300</td><td class="number" style="text-align:right;font-weight:700;color:var(--teal)">¥5,000</td><td style="text-align:right;font-size:10px;color:var(--blue);font-weight:600">计件→7月</td></tr>
+<tr class="pjd-sal-detail" id="pjd-detail-liang"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="sal-detail-wrap">
+  <table class="sal-sub-table"><thead><tr><th>类型</th><th>产出内容</th><th style="text-align:right">产出/权重</th><th style="text-align:right">归属月</th><th style="text-align:right">金额</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td><span class="badge badge-amber">计件</span></td><td>脚本·美的冰箱·攻略测评</td><td class="number" style="text-align:right">120条·¥10/条</td><td style="text-align:right;color:var(--blue);font-weight:600">2026-07</td><td class="number" style="text-align:right;font-weight:600">¥1,200</td><td style="font-size:10px;color:var(--blue)">8月完成·跨月</td></tr>
+  <tr><td><span class="badge badge-purple">底薪分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">50%</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥2,500</td><td style="font-size:10px">产出岗·归属月加权</td></tr>
+  <tr><td><span class="badge badge-teal">绩效分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">当月</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥1,300</td><td style="font-size:10px">仅当月·不跨月</td></tr>
+  </tbody></table>
+</div></td></tr>
+
+<tr class="pjd-sal-row" data-psal="daming" onclick="togglePjdSalDetail('daming')"><td class="expand-icon">▸</td><td style="font-weight:600">李大明</td><td><span class="badge badge-purple">拍摄</span></td><td class="number" style="text-align:right">¥3,325</td><td class="number" style="text-align:right">¥3,000</td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right;font-weight:700;color:var(--teal)">¥7,825</td><td style="text-align:right;font-size:10px">—</td></tr>
+<tr class="pjd-sal-detail" id="pjd-detail-daming"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="sal-detail-wrap">
+  <table class="sal-sub-table"><thead><tr><th>类型</th><th>产出内容</th><th style="text-align:right">产出/权重</th><th style="text-align:right">归属月</th><th style="text-align:right">金额</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td><span class="badge badge-amber">计件</span></td><td>拍摄·美的厨热·产品展示</td><td class="number" style="text-align:right">95条·¥35/条</td><td style="text-align:right">2026-08</td><td class="number" style="text-align:right;font-weight:600">¥3,325</td><td style="font-size:10px">当月·当月完成</td></tr>
+  <tr><td><span class="badge badge-purple">底薪分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">50%</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥3,000</td><td style="font-size:10px">产出岗·归属月加权</td></tr>
+  <tr><td><span class="badge badge-teal">绩效分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">当月</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥1,500</td><td style="font-size:10px">仅当月·不跨月</td></tr>
+  </tbody></table>
+</div></td></tr>
+
+<tr class="pjd-sal-row" data-psal="xiaoming" onclick="togglePjdSalDetail('xiaoming')"><td class="expand-icon">▸</td><td style="font-weight:600">陈小明</td><td><span class="badge badge-gray">剪辑</span></td><td class="number" style="text-align:right">¥2,275</td><td class="number" style="text-align:right">¥2,800</td><td class="number" style="text-align:right">¥1,400</td><td class="number" style="text-align:right;font-weight:700;color:var(--teal)">¥6,475</td><td style="text-align:right;font-size:10px;color:var(--blue);font-weight:600">计件→10月</td></tr>
+<tr class="pjd-sal-detail" id="pjd-detail-xiaoming"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="sal-detail-wrap">
+  <table class="sal-sub-table"><thead><tr><th>类型</th><th>产出内容</th><th style="text-align:right">产出/权重</th><th style="text-align:right">归属月</th><th style="text-align:right">金额</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td><span class="badge badge-amber">计件</span></td><td>剪辑·美的冰箱·攻略测评</td><td class="number" style="text-align:right">98条·¥35/条</td><td style="text-align:right;color:var(--blue);font-weight:600">2026-10</td><td class="number" style="text-align:right;font-weight:600">¥2,275</td><td style="font-size:10px;color:var(--blue)">8月完成·跨月</td></tr>
+  <tr><td><span class="badge badge-purple">底薪分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">47%</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥2,800</td><td style="font-size:10px">产出岗·归属月加权</td></tr>
+  <tr><td><span class="badge badge-teal">绩效分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">当月</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥1,400</td><td style="font-size:10px">仅当月·不跨月</td></tr>
+  </tbody></table>
+</div></td></tr>
+
+<tr class="pjd-sal-row" data-psal="zhangsan" onclick="togglePjdSalDetail('zhangsan')"><td class="expand-icon">▸</td><td style="font-weight:600">张三</td><td><span class="badge badge-gray">PM</span></td><td class="number" style="text-align:right">—</td><td class="number" style="text-align:right">¥3,500</td><td class="number" style="text-align:right">—</td><td class="number" style="text-align:right;font-weight:700">¥3,500</td><td style="text-align:right;font-size:10px;color:var(--text-tertiary)">—</td></tr>
+<tr class="pjd-sal-detail" id="pjd-detail-zhangsan"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="sal-detail-wrap">
+  <table class="sal-sub-table"><thead><tr><th>类型</th><th>产出内容</th><th style="text-align:right">权重</th><th style="text-align:right">归属月</th><th style="text-align:right">金额</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td><span class="badge badge-purple">底薪分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">工时比例</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥3,500</td><td style="font-size:10px">非产出·按工时占比</td></tr>
+  </tbody></table>
+</div></td></tr>
+
+<tr class="pjd-sal-row" data-psal="zhaoliu" onclick="togglePjdSalDetail('zhaoliu')"><td class="expand-icon">▸</td><td style="font-weight:600">赵六</td><td><span class="badge badge-gray">AE</span></td><td class="number" style="text-align:right">—</td><td class="number" style="text-align:right">¥2,600</td><td class="number" style="text-align:right">—</td><td class="number" style="text-align:right;font-weight:700">¥2,600</td><td style="text-align:right;font-size:10px;color:var(--text-tertiary)">—</td></tr>
+<tr class="pjd-sal-detail" id="pjd-detail-zhaoliu"><td colspan="8" style="padding:0;border-bottom:none">
+<div class="sal-detail-wrap">
+  <table class="sal-sub-table"><thead><tr><th>类型</th><th>产出内容</th><th style="text-align:right">权重</th><th style="text-align:right">归属月</th><th style="text-align:right">金额</th><th>说明</th></tr></thead>
+  <tbody>
+  <tr><td><span class="badge badge-purple">底薪分摊</span></td><td>美的年框</td><td class="number" style="text-align:right">工时比例</td><td style="text-align:right">2026-06</td><td class="number" style="text-align:right;font-weight:600">¥2,600</td><td style="font-size:10px">非产出·按工时占比</td></tr>
+  </tbody></table>
+</div></td></tr>
+
+<tr style="background:#fafbfc;font-weight:700"><td></td><td colspan="5">内部人力合计</td><td class="number" style="text-align:right;color:var(--teal);font-size:14px">¥30,477</td><td></td></tr>
+
+</tbody></table>
+</div></div>
+
+<!-- 外包+其他成本明细（逐条核对） -->
+<div class="card"><div class="card-header"><span class="card-title">📋 外包及其他成本 — 请逐条核对</span><span class="muted" style="font-size:10px">外包计件 + 场地 + 模特 + 平台投放 + 其他</span><div style="display:flex;gap:6px"><span id="pjd-checked-count" style="font-size:11px;color:var(--teal);font-weight:600">已核对 0/9</span><button class="btn btn-xs btn-ghost" onclick="checkAllCostItems()">全部确认</button><button class="btn btn-xs btn-ghost" style="color:var(--amber)" onclick="markDisputeDemo()">标记异常</button></div></div>
+<div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px">☐</th><th>#</th><th>成本类型</th><th>归属人/供应商</th><th>任务</th><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th><th style="text-align:center">校准</th><th style="text-align:center">归属月</th><th>备注</th></tr></thead>
+<tbody id="pjd-cost-tbody">
+<tr><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>1</td><td><span class="badge badge-purple">外包成本</span></td><td>XX工作室</td><td>T-05</td><td><span class="badge badge-gray">计件</span></td><td>脚本·美的厨热·好物分享</td><td class="number" style="text-align:right">12</td><td class="number" style="text-align:right">¥10/条</td><td class="number" style="text-align:right">¥100</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px">2026-08</td><td></td></tr>
+<tr style="background:#fff7ed"><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>2</td><td><span class="badge badge-purple">外包成本</span></td><td>XX工作室</td><td>T-20</td><td><span class="badge badge-gray">计件</span></td><td>脚本·美的厨热·产品展示</td><td class="number" style="text-align:right">10</td><td class="number" style="text-align:right">¥10/条</td><td class="number" style="text-align:right">¥80</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px;font-weight:600;color:var(--blue)">2026-07</td><td style="font-size:10px;color:var(--blue)">跨月:7月</td></tr>
+<tr><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>3</td><td><span class="badge badge-purple">外包成本</span></td><td>YY影视</td><td>T-12</td><td><span class="badge badge-gray">计件</span></td><td>拍摄·美的厨热·商品讲解</td><td class="number" style="text-align:right">18</td><td class="number" style="text-align:right">¥50/条</td><td class="number" style="text-align:right">¥600</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px">2026-08</td><td></td></tr>
+<tr style="background:#fff7ed"><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>4</td><td><span class="badge badge-purple">外包成本</span></td><td>YY影视</td><td>T-18</td><td><span class="badge badge-gray">计件</span></td><td>剪辑·美的冰箱·好物分享</td><td class="number" style="text-align:right">9</td><td class="number" style="text-align:right">¥80/条</td><td class="number" style="text-align:right">¥480</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px;font-weight:600;color:var(--blue)">2026-06</td><td style="font-size:10px;color:var(--blue)">跨月:6月</td></tr>
+<tr><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>5</td><td><span class="badge badge-red">场地租赁</span></td><td>广州TIT创意园</td><td>T-08</td><td><span class="badge badge-red">场地租赁</span></td><td>拍摄场地·美的厨热</td><td class="number" style="text-align:right">3天</td><td class="number" style="text-align:right">¥800/天</td><td class="number" style="text-align:right">¥2,400</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px">2026-08</td><td></td></tr>
+<tr style="background:#fff7ed"><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>6</td><td><span class="badge badge-red">场地租赁</span></td><td>佛山创意园</td><td>T-09</td><td><span class="badge badge-red">场地租赁</span></td><td>拍摄场地·美的冰箱</td><td class="number" style="text-align:right">2天</td><td class="number" style="text-align:right">¥900/天</td><td class="number" style="text-align:right">¥1,800</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px;font-weight:600;color:var(--blue)">2026-09</td><td style="font-size:10px;color:var(--blue)">跨月:9月</td></tr>
+<tr><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>7</td><td><span class="badge badge-accent" style="background:#fdf2f8;color:#c026d3">🧍 模特</span></td><td>张丹妮 (A级)</td><td>T-08</td><td><span class="badge badge-accent" style="background:#fdf2f8;color:#c026d3">模特</span></td><td>出镜·美的厨热·商品讲解</td><td class="number" style="text-align:right">3天</td><td class="number" style="text-align:right">¥1,500/天</td><td class="number" style="text-align:right">¥4,500</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px">2026-08</td><td style="font-size:10px;color:var(--text-tertiary)">含肖像授权</td></tr>
+<tr><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>8</td><td><span class="badge badge-amber">平台投放</span></td><td>-</td><td>-</td><td><span class="badge badge-amber">平台投放</span></td><td>京准通投放·美的厨热</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">¥5,000</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px">-</td><td style="font-size:10px;color:var(--text-tertiary)">费用报销</td></tr>
+<tr><td><input type="checkbox" class="cost-ck" onchange="updateCheckedCount()"></td><td>9</td><td><span class="badge badge-amber">其他</span></td><td>-</td><td>-</td><td><span class="badge badge-amber">其他</span></td><td>差旅费·广州拍摄</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">¥2,800</td><td style="text-align:center"><span style="font-size:11px;color:var(--teal);font-weight:600">✅已校准</span></td><td style="text-align:center;font-size:11px">-</td><td style="font-size:10px;color:var(--text-tertiary)">费用报销</td></tr>
+<tr style="background:#fafbfc;font-weight:700"><td></td><td></td><td colspan="6">外包及其他合计</td><td class="number" style="text-align:right">¥17,760</td><td></td><td></td></tr>
+<tr style="background:#e8f5e9;font-weight:700"><td></td><td></td><td colspan="6">成本总计（内部人力 ¥30,477 + 外包及其他 ¥17,760）</td><td class="number" style="text-align:right;font-size:15px">¥50,237</td><td></td><td></td></tr>
+</tbody></table>
+</div>
+<div style="padding:6px 16px;background:#f8f9fb;border-top:1px solid var(--border-light);font-size:11px;color:var(--text-tertiary)">
+📌 <span style="color:var(--blue);font-weight:600">蓝色</span>=任务归属月(PM口径，任务分配月份) <span style="margin-left:8px;color:var(--teal);font-weight:600">绿色</span>=实际完成月(财务口径，即当前对账月2026-08) <span style="margin-left:8px">归属月可早于/晚于完成月(前置完成场景)</span>
+<span style="margin-left:12px">统计口径：</span><span class="filter-chip" style="font-size:10px;padding:2px 8px">□ 项目管理视角</span><span class="filter-chip active" style="font-size:10px;background:var(--text-primary);color:#fff;padding:2px 8px">■ 财务视角</span>
+</div></div>
+
+<!-- 操作区 + 对账预览面板 -->
+<div class="card" id="pjd-action-card"><div class="card-header"><span class="card-title">📑 对账预览</span><span class="muted">合同 HT-2026-001 · 单价快照版本: 原始合同(v2026-01-15) · 结算模式: 单纯计件</span></div>
+<div class="card-body-sm" style="font-size:12px">
+<!-- 合同内容品类 × 当月产出 → 对账金额 -->
+<table style="margin-bottom:10px"><thead><tr style="background:#f8f9fb"><th>品类<br><span style="font-weight:400;font-size:10px">content_type</span></th><th>内容类型<br><span style="font-weight:400;font-size:10px">content_subtype</span></th><th>费用类型<br><span style="font-weight:400;font-size:10px">fee_type</span></th><th style="text-align:right">合同单价</th><th style="text-align:right">当月产出</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">对账金额</th><th>消耗/总量</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:600">视频<span class="badge badge-gray" style="font-size:9px;margin-left:3px">video</span></td><td>商品讲解 / 好物分享</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">450条</td><td style="text-align:center"><span class="badge badge-amber">4档·9折</span><br><span style="font-size:10px;color:var(--text-tertiary)">[101-500]</span></td><td class="number" style="text-align:right;font-weight:700">¥48,600</td><td style="text-align:center"><div class="progress" style="width:60px;margin:0 auto"><div class="progress-fill teal" style="width:42%"></div></div><span style="font-size:10px;color:var(--text-tertiary)">4,200/10,000</span></td></tr>
+<tr><td style="font-weight:600">视频<span class="badge badge-gray" style="font-size:9px;margin-left:3px">video</span></td><td>产品展示 / 开箱测评</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">—</td><td style="text-align:center"><span class="badge badge-gray">—</span></td><td class="number" style="text-align:right;color:var(--text-tertiary)">本月无产出</td><td style="text-align:center"><span style="font-size:10px;color:var(--text-tertiary)">4,200/10,000</span></td></tr>
+<tr><td style="font-weight:600">视频<span class="badge badge-gray" style="font-size:9px;margin-left:3px">video</span></td><td>氛围体验 / 创意视频</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">—</td><td style="text-align:center"><span class="badge badge-gray">—</span></td><td class="number" style="text-align:right;color:var(--text-tertiary)">本月无产出</td><td style="text-align:center"><span style="font-size:10px;color:var(--text-tertiary)">4,200/10,000</span></td></tr>
+<tr><td style="font-weight:600">图文<span class="badge badge-gray" style="font-size:9px;margin-left:3px">graphic</span></td><td>攻略测评 / 商品讲解</td><td>combined</td><td class="number" style="text-align:right">¥30/条</td><td class="number" style="text-align:right">479条</td><td style="text-align:center"><span class="badge badge-gray">1档·无折扣</span><br><span style="font-size:10px;color:var(--text-tertiary)">[0-500]</span></td><td class="number" style="text-align:right;font-weight:700">¥14,370</td><td style="text-align:center"><div class="progress" style="width:60px;margin:0 auto"><div class="progress-fill teal" style="width:44%"></div></div><span style="font-size:10px;color:var(--text-tertiary)">22,000/50,000</span></td></tr>
+<tr><td style="font-weight:600">直播<span class="badge badge-gray" style="font-size:9px;margin-left:3px">live</span></td><td>氛围体验</td><td>combined</td><td class="number" style="text-align:right">¥500/场</td><td class="number" style="text-align:right">—</td><td style="text-align:center"><span class="badge badge-gray">—</span></td><td class="number" style="text-align:right;color:var(--text-tertiary)">本月无产出</td><td style="text-align:center"><span style="font-size:10px;color:var(--text-tertiary)">80/200</span></td></tr>
+<tr style="background:#fafbfc;font-weight:700"><td colspan="5">合计</td><td style="text-align:center">—</td><td class="number lg" style="text-align:right">¥62,970</td><td></td></tr>
+</tbody></table>
+<div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:12px 16px;background:#f0faf5;border-radius:var(--radius-sm);margin-bottom:10px">
+  <div><span style="font-size:11px;color:var(--text-tertiary)">对账收入(不含税)</span><div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--teal)">¥62,970</div></div>
+  <div><span style="font-size:11px;color:var(--text-tertiary)">税率 / 含税金额</span><div style="font-family:var(--font-display);font-size:22px;font-weight:700">6% / ¥66,748</div></div>
+  <div><span style="font-size:11px;color:var(--text-tertiary)">成本合计</span><div style="font-family:var(--font-display);font-size:22px;font-weight:700">¥50,237</div></div>
+   <div><span style="font-size:11px;color:var(--text-tertiary)">预估毛利率</span><div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--teal)">20.2%</div></div>
+  <div style="margin-left:auto"><span style="font-size:11px;color:var(--text-tertiary)">合同预算消耗</span><div style="font-family:var(--font-mono);font-size:14px;font-weight:600">32% → 32.6%</div><div style="font-size:10px;color:var(--text-tertiary)">¥3,200,000 → ¥3,262,970</div></div>
+</div>
+<div style="display:flex;gap:8px;justify-content:flex-end">
+  <button class="btn btn-secondary btn-sm">保存草稿</button>
+  <button class="btn btn-primary btn-sm" id="btn-gen-recon" onclick="generateReconciliation()" disabled style="opacity:.5">⚠ 请先逐条核对全部成本（0/23）后生成对账单</button>
+</div></div></div>
+
+<!-- 对账单展示区（生成后出现） -->
+<div id="pjd-recon-result" style="display:none">
+  <div class="card" style="border:2px solid var(--teal);margin-top:8px">
+  <div class="card-header" style="background:#f0faf5"><span class="card-title">📄 对账单 RCN-2026-08-001</span><span class="badge badge-teal"><span class="badge-dot"></span>待甲方确认</span><div style="display:flex;gap:6px;margin-left:12px"><button class="btn btn-xs btn-ghost">下载PDF</button><button class="btn btn-xs btn-primary" style="background:var(--blue)">导出成本明细Excel</button></div></div>
+  <div class="card-body-sm">
+    <div class="preview-panel" style="margin-bottom:10px"><div class="pp-header">关联合同（CRM快照）</div>
+      <div class="pp-row"><span class="pp-label">合同</span><span class="pp-value">HT-2026-001 · 美的2026年度框架 · 年框 · ¥10,000,000</span></div>
+      <div class="pp-row"><span class="pp-label">结算</span><span class="pp-value">单纯计件· 单价快照版本 v2026-01-15</span></div>
+      <div class="pp-row"><span class="pp-label">税率</span><span class="pp-value">6% 增值税专用发票 · 对账金额均为不含税</span></div>
+    </div>
+    <table style="margin-bottom:10px"><thead><tr><th>品类</th><th>内容类型</th><th>费用类型</th><th style="text-align:right">合同单价</th><th style="text-align:right">当月产出</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">对账金额</th></tr></thead>
+    <tbody><tr><td style="font-weight:600">视频</td><td>商品讲解 / 好物分享</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">450</td><td style="text-align:center">9折</td><td class="number" style="text-align:right;font-weight:700">¥48,600</td></tr><tr><td style="font-weight:600">图文</td><td>攻略测评 / 商品讲解</td><td>combined</td><td class="number" style="text-align:right">¥30/条</td><td class="number" style="text-align:right">479</td><td style="text-align:center">无折扣</td><td class="number" style="text-align:right;font-weight:700">¥14,370</td></tr><tr style="background:#fafbfc;font-weight:700"><td colspan="4">合计</td><td></td><td></td><td class="number lg" style="text-align:right">¥62,970</td></tr></tbody></table>
+    <div style="display:flex;gap:20px;padding:8px 12px;background:#f0faf5;border-radius:var(--radius-sm);font-size:12px">
+       <span>收入(不含税) ¥62,970</span><span>含税 ¥66,748</span><span>成本 ¥50,237</span><span style="color:var(--teal);font-weight:700">毛利率 20.2%</span><span class="muted">创建: 李财务 · 06-09 15:30</span>
+    </div>
+  </div></div>
+</div>
+</div>
+
+<!-- ========== 2026-07 已对账 ========== -->
+<div class="pjd-month-content" id="pjd-m-2026-07" style="display:none">
+<div class="stats-grid col4" style="margin-bottom:6px">
+  <div class="stat-card"><div class="stat-label">📊 当月成本合计</div><div class="stat-value">¥53,300</div><div class="stat-sub">12条明细</div></div>
+  <div class="stat-card teal"><div class="stat-label">💰 对账收入</div><div class="stat-value">¥126,000</div></div>
+  <div class="stat-card teal"><div class="stat-label">📈 毛利率</div><div class="stat-value">57.7%</div></div>
+  <div class="stat-card"><div class="stat-label">📅 状态</div><div class="stat-value" style="font-size:16px;color:var(--teal)">已确认</div></div>
+</div>
+<div class="card" style="border:1px solid var(--teal)">
+  <div class="card-header" style="background:#f0faf5"><span class="card-title">📄 对账单 RCN-2026-07-001</span><span class="badge badge-teal"><span class="badge-dot"></span>已确认</span></div>
+  <div class="card-body-sm">
+    <div class="preview-panel" style="margin-bottom:10px"><div class="pp-header">关联合同（CRM快照）</div>
+      <div class="pp-row"><span class="pp-label">合同</span><span class="pp-value">HT-2026-001 · 美的2026年度框架 · 年框 · ¥10,000,000</span></div>
+      <div class="pp-row"><span class="pp-label">结算</span><span class="pp-value">simple（单纯计件）· 单价快照版本 v2026-01-15</span></div>
+      <div class="pp-row"><span class="pp-label">税率</span><span class="pp-value">6% 增值税专用发票</span></div>
+    </div>
+    <table><thead><tr><th>品类</th><th>内容类型</th><th>费用类型</th><th style="text-align:right">合同单价</th><th style="text-align:right">当月产出</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">对账金额</th></tr></thead>
+    <tbody><tr><td style="font-weight:600">视频</td><td>商品讲解 / 好物分享 / 产品展示</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">900</td><td style="text-align:center">9折</td><td class="number" style="text-align:right;font-weight:700">¥97,200</td></tr><tr><td style="font-weight:600">图文</td><td>攻略测评 / 商品讲解</td><td>combined</td><td class="number" style="text-align:right">¥30/条</td><td class="number" style="text-align:right">1,200</td><td style="text-align:center">8折</td><td class="number" style="text-align:right;font-weight:700">¥28,800</td></tr><tr style="background:#fafbfc;font-weight:700"><td colspan="4">合计</td><td></td><td></td><td class="number lg" style="text-align:right">¥126,000</td></tr></tbody></table>
+    <p style="font-size:11px;color:var(--text-tertiary);margin-top:8px">✅ 07-20 甲方确认 · 关联应收 AR-2026-001 · 已开票 INV-2026-003（¥133,560 含税）</p>
+  </div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 成本明细（已锁定，不可编辑）</span></div><div class="card-body" style="padding:0">
+<table><thead><tr><th>#</th><th>类型</th><th>归属人/供应商</th><th>任务</th><th>产出内容</th><th style="text-align:right">金额</th><th style="text-align:center">校准</th><th style="text-align:center">归属月</th><th style="text-align:center">完成月</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><span class="badge badge-blue">内部人力</span></td><td>巫昭仪 (编导)</td><td>T-30</td><td>脚本·美的厨热·商品讲解</td><td class="number" style="text-align:right">¥3,600</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>2</td><td><span class="badge badge-blue">内部人力</span></td><td>梁记 (编导)</td><td>T-32</td><td>脚本·美的冰箱·攻略测评</td><td class="number" style="text-align:right">¥2,700</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>3</td><td><span class="badge badge-blue">内部人力</span></td><td>李大明 (拍摄)</td><td>T-34</td><td>拍摄·美的厨热·好物分享</td><td class="number" style="text-align:right">¥5,600</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>4</td><td><span class="badge badge-blue">内部人力</span></td><td>陈小明 (剪辑)</td><td>T-36</td><td>剪辑·美的冰箱·产品展示</td><td class="number" style="text-align:right">¥4,200</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>5</td><td><span class="badge badge-blue">内部人力</span></td><td>巫昭仪 (编导)</td><td>-</td><td>底薪分摊</td><td class="number" style="text-align:right">¥2,500</td><td style="text-align:center">✅</td><td style="text-align:center">-</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>6</td><td><span class="badge badge-blue">内部人力</span></td><td>巫昭仪 (编导)</td><td>-</td><td>绩效分摊</td><td class="number" style="text-align:right">¥1,200</td><td style="text-align:center">✅</td><td style="text-align:center">-</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>7</td><td><span class="badge badge-purple">外包成本</span></td><td>XX工作室</td><td>T-38</td><td>脚本·美的厨热·商品讲解</td><td class="number" style="text-align:right">¥3,500</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>8</td><td><span class="badge badge-purple">外包成本</span></td><td>YY影视</td><td>T-40</td><td>拍摄·美的冰箱·攻略测评</td><td class="number" style="text-align:right">¥8,000</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>9</td><td><span class="badge badge-red">场地租赁</span></td><td>广州TIT创意园</td><td>T-34</td><td>拍摄场地·美的厨热</td><td class="number" style="text-align:right">¥4,000</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>10</td><td><span class="badge badge-red">场地租赁</span></td><td>佛山创意园</td><td>T-35</td><td>拍摄场地·美的冰箱</td><td class="number" style="text-align:right">¥3,600</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>11</td><td><span class="badge badge-accent" style="background:#fdf2f8;color:#c026d3">🧍 模特</span></td><td>苏婉婷 (B级)</td><td>T-34</td><td>出镜·美的厨热·好物分享</td><td class="number" style="text-align:right">¥6,500</td><td style="text-align:center">✅</td><td style="text-align:center">2026-07</td><td style="text-align:center">2026-07</td></tr>
+<tr><td>12</td><td><span class="badge badge-amber">其他</span></td><td>-</td><td>-</td><td>差旅费·广州拍摄</td><td class="number" style="text-align:right">¥3,900</td><td style="text-align:center">✅</td><td style="text-align:center">-</td><td style="text-align:center">2026-07</td></tr>
+<tr style="background:#fafbfc;font-weight:700"><td></td><td colspan="4">合计</td><td class="number" style="text-align:right">¥49,300</td><td></td><td></td><td></td></tr>
+</tbody></table>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📑 收入成本概览</span></div><div class="card-body-sm">
+<div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:8px 12px;background:#f0faf5;border-radius:var(--radius-sm);font-size:12px">
+  <span>收入 ¥126,000</span><span>内部人力 ¥19,800</span><span>外包 ¥11,500</span><span>场地 ¥7,600</span><span>模特 ¥6,500</span><span>其他 ¥3,900</span>
+</div></div></div>
+</div>
+
+<!-- ========== 2026-06 已回款 ========== -->
+<div class="pjd-month-content" id="pjd-m-2026-06" style="display:none">
+<div class="stats-grid col4" style="margin-bottom:6px">
+  <div class="stat-card"><div class="stat-label">📊 当月成本合计</div><div class="stat-value">¥38,000</div><div class="stat-sub">10条明细</div></div>
+  <div class="stat-card teal"><div class="stat-label">💰 对账收入</div><div class="stat-value">¥84,240</div></div>
+  <div class="stat-card teal"><div class="stat-label">📈 毛利率</div><div class="stat-value">54.9%</div></div>
+  <div class="stat-card"><div class="stat-label">📅 状态</div><div class="stat-value" style="font-size:16px;color:var(--teal)">已回款</div></div>
+</div>
+<div class="card" style="border:1px solid var(--teal)">
+  <div class="card-header" style="background:#f0faf5"><span class="card-title">📄 对账单 RCN-2026-06-001</span><span class="badge badge-teal"><span class="badge-dot"></span>已确认 · 已回款</span></div>
+  <div class="card-body-sm">
+    <div class="preview-panel" style="margin-bottom:10px"><div class="pp-header">关联合同（CRM快照）</div>
+      <div class="pp-row"><span class="pp-label">合同</span><span class="pp-value">HT-2026-001 · 美的2026年度框架 · 年框 · ¥10,000,000</span></div>
+      <div class="pp-row"><span class="pp-label">结算</span><span class="pp-value">simple（单纯计件）· 单价快照版本 v2026-01-15</span></div>
+      <div class="pp-row"><span class="pp-label">税率</span><span class="pp-value">6% 增值税专用发票</span></div>
+    </div>
+    <table><thead><tr><th>品类</th><th>内容类型</th><th>费用类型</th><th style="text-align:right">合同单价</th><th style="text-align:right">当月产出</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">对账金额</th></tr></thead>
+    <tbody><tr><td style="font-weight:600">视频</td><td>商品讲解 / 好物分享 / 开箱测评</td><td>combined</td><td class="number" style="text-align:right">¥120/条</td><td class="number" style="text-align:right">780</td><td style="text-align:center">9折</td><td class="number" style="text-align:right;font-weight:700">¥84,240</td></tr><tr style="font-weight:700"><td colspan="4">合计</td><td></td><td></td><td class="number" style="text-align:right">¥84,240</td></tr></tbody></table>
+    <p style="font-size:11px;color:var(--text-tertiary);margin-top:8px">✅ 06-18 甲方确认 · AR-2026-000 · <span class="badge badge-teal">已回款 ¥84,240</span> · 06-25 到账</p>
+  </div></div>
+<div class="card"><div class="card-header"><span class="card-title">📋 成本明细（已锁定，不可编辑）</span></div><div class="card-body" style="padding:0">
+<table><thead><tr><th>#</th><th>类型</th><th>归属人/供应商</th><th>任务</th><th>产出内容</th><th style="text-align:right">金额</th><th style="text-align:center">校准</th><th style="text-align:center">归属月</th><th style="text-align:center">完成月</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><span class="badge badge-blue">内部人力</span></td><td>巫昭仪 (编导)</td><td>T-50</td><td>脚本·美的厨热·618大促</td><td class="number" style="text-align:right">¥4,200</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>2</td><td><span class="badge badge-blue">内部人力</span></td><td>梁记 (编导)</td><td>T-52</td><td>脚本·美的冰箱·618种草</td><td class="number" style="text-align:right">¥3,000</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>3</td><td><span class="badge badge-blue">内部人力</span></td><td>李大明 (拍摄)</td><td>T-54</td><td>拍摄·美的厨热·618大促</td><td class="number" style="text-align:right">¥6,200</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>4</td><td><span class="badge badge-blue">内部人力</span></td><td>陈小明 (剪辑)</td><td>T-56</td><td>剪辑·美的冰箱·618种草</td><td class="number" style="text-align:right">¥3,800</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>5</td><td><span class="badge badge-blue">内部人力</span></td><td>巫昭仪 (编导)</td><td>-</td><td>底薪分摊</td><td class="number" style="text-align:right">¥2,300</td><td style="text-align:center">✅</td><td style="text-align:center">-</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>6</td><td><span class="badge badge-purple">外包成本</span></td><td>XX工作室</td><td>T-58</td><td>脚本·美的厨热·618大促</td><td class="number" style="text-align:right">¥4,200</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>7</td><td><span class="badge badge-purple">外包成本</span></td><td>YY影视</td><td>T-60</td><td>拍摄·美的厨热·618大促</td><td class="number" style="text-align:right">¥7,500</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>8</td><td><span class="badge badge-red">场地租赁</span></td><td>广州TIT创意园</td><td>T-54</td><td>拍摄场地·美的厨热</td><td class="number" style="text-align:right">¥3,200</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>9</td><td><span class="badge badge-accent" style="background:#fdf2f8;color:#c026d3">🧍 模特</span></td><td>张丹妮 (A级)</td><td>T-54</td><td>出镜·美的厨热·618大促</td><td class="number" style="text-align:right">¥5,800</td><td style="text-align:center">✅</td><td style="text-align:center">2026-06</td><td style="text-align:center">2026-06</td></tr>
+<tr><td>10</td><td><span class="badge badge-amber">其他</span></td><td>-</td><td>-</td><td>布景道具·618拍摄</td><td class="number" style="text-align:right">¥2,800</td><td style="text-align:center">✅</td><td style="text-align:center">-</td><td style="text-align:center">2026-06</td></tr>
+<tr style="background:#fafbfc;font-weight:700"><td></td><td colspan="4">合计</td><td class="number" style="text-align:right">¥43,000</td><td></td><td></td><td></td></tr>
+</tbody></table>
+</div></div>
+<div class="card"><div class="card-header"><span class="card-title">📑 收入成本概览</span></div><div class="card-body-sm">
+<div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding:8px 12px;background:#f0faf5;border-radius:var(--radius-sm);font-size:12px">
+  <span>收入 ¥84,240</span><span>内部人力 ¥19,500</span><span>外包 ¥11,700</span><span>场地 ¥3,200</span><span>模特 ¥5,800</span><span>其他 ¥2,800</span>
+</div></div></div>
+</div>
+</div>
+</section>
+
+<!-- PAGE: AR (Unified: 按项目 + 按月) -->
+<section class="page" id="pg-ar">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">应收与回款</span></div><div class="topbar-actions"><button class="btn btn-sm btn-primary" onclick="openDrawer('drawer-payment')">+ 登记回款</button></div></div>
+<div class="content">
+<div class="stats-grid">
+  <div class="stat-card"><div class="stat-label">应收总额</div><div class="stat-value">¥2,800,000</div></div>
+  <div class="stat-card amber"><div class="stat-label">待回款</div><div class="stat-value">¥1,200,000</div></div>
+  <div class="stat-card blue"><div class="stat-label">部分回款</div><div class="stat-value">¥350,000</div></div>
+  <div class="stat-card teal"><div class="stat-label">已回款</div><div class="stat-value">¥950,000</div></div>
+  <div class="stat-card accent"><div class="stat-label">逾期</div><div class="stat-value">¥300,000</div></div>
+</div>
+<div class="filter-row"><span class="filter-chip active">全部</span><span class="filter-chip">待回款</span><span class="filter-chip">部分回款</span><span class="filter-chip">已回款</span><span class="filter-chip">逾期</span><select class="filter-select"><option>全部客户</option><option>美的集团</option><option>TCL集团</option></select><select class="filter-select"><option>全部月份</option><option>2026-08</option><option>2026-07</option><option>2026-06</option></select></div>
+<div class="tabs"><span class="tab active" data-tab="ar-proj">按项目划分</span><span class="tab" data-tab="ar-month">按月汇总</span></div>
+<div class="tab-content active" id="tab-ar-proj">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>项目名称</th><th>客户</th><th style="text-align:right">应收总额</th><th style="text-align:right">待回款</th><th style="text-align:right">已回款</th><th>状态</th></tr></thead>
+<tbody>
+<tr class="exp-row" data-exp="ar-proj-meidi" onclick="toggleExpDetail('ar-proj-meidi')"><td class="expand-icon">▸</td><td style="font-weight:600">美的年框</td><td>美的集团</td><td class="number" style="text-align:right">¥151,970</td><td class="number" style="text-align:right;color:var(--amber)">¥151,970</td><td class="number" style="text-align:right">¥0</td><td><span class="badge badge-amber">2笔待回款</span></td></tr>
+<tr class="exp-detail" id="detail-ar-proj-meidi"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">应收明细</span><span class="muted">小计 ¥151,970 · 2笔</span><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();navTo('ar-summary')" style="margin-left:auto">客户汇总 →</button></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>应收月份</th><th style="text-align:right">金额</th><th>到期日</th><th>状态</th><th>账龄</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-001</span></td><td>RCN-008</td><td>2026-08</td><td class="number" style="text-align:right">¥62,970</td><td>2027-01-10</td><td><span class="badge badge-amber"><span class="badge-dot"></span>待回款</span></td><td>-</td><td><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openDrawer('drawer-payment')">回款</button></td></tr>
+    <tr style="background:#fef3f3"><td><span class="number">AR-005</span></td><td>RCN-004</td><td>2026-07</td><td class="number" style="text-align:right">¥89,000</td><td>2025-11-20</td><td><span class="badge badge-red"><span class="badge-dot"></span>逾期</span></td><td><span class="badge badge-red">12天</span></td><td><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation()">催收</button></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="ar-proj-tcl" onclick="toggleExpDetail('ar-proj-tcl')"><td class="expand-icon">▸</td><td style="font-weight:600">TCL年框</td><td>TCL集团</td><td class="number" style="text-align:right">¥47,228</td><td class="number" style="text-align:right;color:var(--accent)">¥47,228</td><td class="number" style="text-align:right">¥0</td><td><span class="badge badge-red">1笔逾期</span></td></tr>
+<tr class="exp-detail" id="detail-ar-proj-tcl"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">应收明细</span><span class="muted">小计 ¥47,228 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>应收月份</th><th style="text-align:right">金额</th><th>到期日</th><th>状态</th><th>账龄</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr style="background:#fef3f3"><td><span class="number">AR-002</span></td><td>RCN-007</td><td>2026-07</td><td class="number" style="text-align:right">¥47,228</td><td>2025-10-15</td><td><span class="badge badge-red"><span class="badge-dot"></span>逾期</span></td><td><span class="badge badge-red">54天</span></td><td><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation()">催收</button></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="ar-proj-songxia" onclick="toggleExpDetail('ar-proj-songxia')"><td class="expand-icon">▸</td><td style="font-weight:600">松下季度包</td><td>松下</td><td class="number" style="text-align:right">¥89,000</td><td class="number" style="text-align:right;color:var(--amber)">¥39,000</td><td class="number" style="text-align:right;color:var(--teal)">¥50,000</td><td><span class="badge badge-blue">1笔部分回款</span></td></tr>
+<tr class="exp-detail" id="detail-ar-proj-songxia"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">应收明细</span><span class="muted">小计 ¥89,000 · 1笔（已回 ¥50,000）</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>应收月份</th><th style="text-align:right">金额</th><th>到期日</th><th>状态</th><th>账龄</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-003</span></td><td>RCN-005</td><td>2026-06</td><td class="number" style="text-align:right">¥89,000</td><td>2026-11-30</td><td><span class="badge badge-blue"><span class="badge-dot"></span>部分回款</span></td><td>25天</td><td><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openDrawer('drawer-payment')">回款</button></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="ar-proj-chuangwei" onclick="toggleExpDetail('ar-proj-chuangwei')"><td class="expand-icon">▸</td><td style="font-weight:600">创维年框</td><td>创维</td><td class="number" style="text-align:right">¥78,000</td><td class="number" style="text-align:right">¥0</td><td class="number" style="text-align:right;color:var(--teal)">¥78,000</td><td><span class="badge badge-teal">已结清</span></td></tr>
+<tr class="exp-detail" id="detail-ar-proj-chuangwei"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">应收明细</span><span class="muted">小计 ¥78,000 · 1笔（已回款）</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>应收月份</th><th style="text-align:right">金额</th><th>到期日</th><th>状态</th><th>账龄</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-006</span></td><td>RCN-003</td><td>2026-06</td><td class="number" style="text-align:right">¥78,000</td><td>2026-10-20</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已回款</span></td><td>-</td><td>-</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+<div class="tab-content" id="tab-ar-month">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>应收月份</th><th style="text-align:right">应收总额</th><th style="text-align:right">笔数</th><th style="text-align:right">待回款</th><th style="text-align:right">已回款</th><th style="text-align:right">逾期</th></tr></thead>
+<tbody>
+<tr class="exp-row" data-exp="ar-m-2026-08" onclick="toggleExpDetail('ar-m-2026-08')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-08</td><td class="number" style="text-align:right">¥62,970</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right;color:var(--amber)">¥62,970</td><td class="number" style="text-align:right">¥0</td><td class="number" style="text-align:right">-</td></tr>
+<tr class="exp-detail" id="detail-ar-m-2026-08"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">AR-001 · ¥62,970 · 待回款</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>到期日</th><th style="text-align:right">金额</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-001</span></td><td>RCN-008</td><td>2027-01-10</td><td class="number" style="text-align:right">¥62,970</td><td><span class="badge badge-amber">待回款</span></td><td><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openDrawer('drawer-payment')">回款</button></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="ar-m-2026-07" onclick="toggleExpDetail('ar-m-2026-07')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-07</td><td class="number" style="text-align:right">¥136,228</td><td class="number" style="text-align:right">2</td><td class="number" style="text-align:right;color:var(--accent)">¥136,228</td><td class="number" style="text-align:right">¥0</td><td class="number" style="text-align:right;color:var(--accent)">2</td></tr>
+<tr class="exp-detail" id="detail-ar-m-2026-07"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">AR-005 · ¥89,000 · 逾期12天</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>到期日</th><th style="text-align:right">金额</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-005</span></td><td>RCN-004</td><td>2025-11-20</td><td class="number" style="text-align:right">¥89,000</td><td><span class="badge badge-red">逾期</span></td><td><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation()">催收</button></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">TCL年框</span><span class="muted">AR-002 · ¥47,228 · 逾期54天</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>到期日</th><th style="text-align:right">金额</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-002</span></td><td>RCN-007</td><td>2025-10-15</td><td class="number" style="text-align:right">¥47,228</td><td><span class="badge badge-red">逾期</span></td><td><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation()">催收</button></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="ar-m-2026-06" onclick="toggleExpDetail('ar-m-2026-06')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-06</td><td class="number" style="text-align:right">¥167,000</td><td class="number" style="text-align:right">2</td><td class="number" style="text-align:right;color:var(--amber)">¥39,000</td><td class="number" style="text-align:right;color:var(--teal)">¥128,000</td><td class="number" style="text-align:right">-</td></tr>
+<tr class="exp-detail" id="detail-ar-m-2026-06"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">松下季度包</span><span class="muted">AR-003 · ¥89,000 · 部分回款</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>到期日</th><th style="text-align:right">金额</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-003</span></td><td>RCN-005</td><td>2026-11-30</td><td class="number" style="text-align:right">¥89,000</td><td><span class="badge badge-blue">部分回款</span></td><td><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openDrawer('drawer-payment')">回款</button></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">创维年框</span><span class="muted">AR-006 · ¥78,000 · 已回款</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>对账单号</th><th>到期日</th><th style="text-align:right">金额</th><th>状态</th><th>操作</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">AR-006</span></td><td>RCN-003</td><td>2026-10-20</td><td class="number" style="text-align:right">¥78,000</td><td><span class="badge badge-teal">已回款</span></td><td>-</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+</div>
+</section>
+
+<!-- PAGE: AR Summary -->
+<section class="page" id="pg-ar-summary">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('ar')">←</span><span class="topbar-title" style="margin-left:8px">客户应收汇总</span></div></div>
+<div class="content">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th>客户</th><th style="text-align:right">应收总额</th><th style="text-align:right">待回款</th><th style="text-align:right">逾期</th></tr></thead>
+<tbody>
+<tr style="background:#fafbfc;font-weight:600"><td style="font-family:var(--font-display)">美的集团</td><td class="number" style="text-align:right">¥1,200,000</td><td class="number" style="text-align:right">¥650,000</td><td class="number" style="text-align:right;color:var(--accent)">¥120,000</td></tr>
+<tr><td style="padding-left:30px">├ 美的厨热</td><td class="number" style="text-align:right">¥800,000</td><td class="number" style="text-align:right">¥400,000</td><td class="number" style="text-align:right;color:var(--accent)">¥50,000</td></tr>
+<tr><td style="padding-left:30px">└ 美的冰箱</td><td class="number" style="text-align:right">¥400,000</td><td class="number" style="text-align:right">¥250,000</td><td class="number" style="text-align:right;color:var(--accent)">¥70,000</td></tr>
+<tr style="background:#fafbfc;font-weight:600"><td style="font-family:var(--font-display)">TCL集团</td><td class="number" style="text-align:right">¥900,000</td><td class="number" style="text-align:right">¥350,000</td><td class="number" style="text-align:right;color:var(--accent)">¥180,000</td></tr>
+<tr><td style="padding-left:30px">├ TCL智能科技</td><td class="number" style="text-align:right">¥500,000</td><td class="number" style="text-align:right">¥200,000</td><td class="number" style="text-align:right;color:var(--accent)">¥100,000</td></tr>
+<tr><td style="padding-left:30px">└ 惠州酷友</td><td class="number" style="text-align:right">¥400,000</td><td class="number" style="text-align:right">¥150,000</td><td class="number" style="text-align:right;color:var(--accent)">¥80,000</td></tr>
+<tr style="font-weight:600"><td style="font-family:var(--font-display)">松下</td><td class="number" style="text-align:right">¥700,000</td><td class="number" style="text-align:right">¥200,000</td><td class="number" style="text-align:right;color:var(--teal)">¥0</td></tr>
+</tbody></table>
+</div></div>
+<p class="muted">💡 点击集团行展开查看子公司明细。集团行 = 所有子公司行的合计。仅统计 status ≠ void 的应收。</p>
+</div>
+</section>
+
+<!-- PAGE: Invoice -->
+<section class="page" id="pg-invoice">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">开票管理</span></div><div class="topbar-actions"><button class="btn btn-sm btn-primary" onclick="openModal('modal-invoice')">+ 登记发票</button></div></div>
+<div class="content">
+<div class="stats-grid col4">
+  <div class="stat-card amber"><div class="stat-label">待开票总额</div><div class="stat-value">¥188,970</div><div class="stat-sub">3笔</div></div>
+  <div class="stat-card teal"><div class="stat-label">已开票总额</div><div class="stat-value">¥191,976</div><div class="stat-sub">3笔</div></div>
+  <div class="stat-card blue"><div class="stat-label">本月开票</div><div class="stat-value">¥66,748</div><div class="stat-sub">2026-08</div></div>
+  <div class="stat-card accent"><div class="stat-label">可合并开票</div><div class="stat-value">2</div><div class="stat-sub">笔 · 同客户</div></div>
+</div>
+<div class="filter-row"><span class="filter-chip active">全部</span><span class="filter-chip">待开票</span><span class="filter-chip">已开票</span><select class="filter-select"><option>全部月份</option><option>2026-08</option><option>2026-07</option><option>2026-06</option></select><select class="filter-select"><option>全部客户</option><option>美的集团</option><option>TCL集团</option><option>松下</option></select></div>
+<div class="tabs"><span class="tab active" data-tab="inv-proj">按项目划分</span><span class="tab" data-tab="inv-month">按月汇总</span></div>
+<div class="tab-content active" id="tab-inv-proj">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>项目名称</th><th>客户</th><th style="text-align:right">待开票金额</th><th style="text-align:right">待开票数</th><th style="text-align:right">已开票金额</th><th style="text-align:right">已开票数</th></tr></thead>
+<tbody>
+<tr class="inv-row" data-inv="proj-meidi" onclick="toggleInvDetail('proj-meidi')"><td class="expand-icon">▸</td><td style="font-weight:600">美的年框</td><td>美的集团</td><td class="number" style="text-align:right;color:var(--amber)">¥110,970</td><td class="number" style="text-align:right;color:var(--amber)">2</td><td class="number" style="text-align:right;color:var(--teal)">¥66,748</td><td class="number" style="text-align:right">1</td></tr>
+<tr class="inv-detail" id="detail-inv-proj-meidi"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">📑 待开票</span><span class="muted">小计 ¥110,970 · 2笔（同客户可合并）</span><span style="font-size:10px;color:var(--text-tertiary);margin-left:8px">科目来源：对账单</span><button class="btn btn-xs btn-primary" onclick="event.stopPropagation();openModal('modal-invoice')" style="margin-left:auto">合并开票</button></div>
+    <div class="inv-ar-group">
+      <div class="inv-ar-summary"><span class="inv-ar-label"><input type="checkbox" class="inv-merge-ck" checked> AR-001</span><span class="number" style="font-weight:600">¥62,970</span><span class="muted">← RCN-008 · 美的2026-08 · 含税6% → ¥66,748</span></div>
+      <table class="exp-sub-table"><thead><tr><th>合同品类</th><th>内容类型</th><th style="text-align:right">当月完成条数</th><th style="text-align:right">合同单价</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">金额</th></tr></thead>
+      <tbody>
+      <tr class="inv-pending"><td style="font-weight:600">视频</td><td>商品讲解 / 好物分享</td><td class="number" style="text-align:right">450条</td><td class="number" style="text-align:right">¥120/条</td><td style="text-align:center"><span class="badge badge-amber">9折</span></td><td class="number" style="text-align:right;font-weight:600">¥48,600</td></tr>
+      <tr class="inv-pending"><td style="font-weight:600">图文</td><td>攻略测评 / 商品讲解</td><td class="number" style="text-align:right">479条</td><td class="number" style="text-align:right">¥30/条</td><td style="text-align:center"><span class="badge badge-gray">—</span></td><td class="number" style="text-align:right;font-weight:600">¥14,370</td></tr>
+      <tr class="inv-pending" style="background:#fafbfc;font-weight:600"><td colspan="5">开票金额（不含税）· 与对账单一致</td><td class="number" style="text-align:right;font-size:14px">¥62,970</td></tr>
+      </tbody></table>
+    </div>
+    <div class="inv-ar-group" style="margin-top:12px">
+      <div class="inv-ar-summary"><span class="inv-ar-label"><input type="checkbox" class="inv-merge-ck" checked> AR-003</span><span class="number" style="font-weight:600">¥48,000</span><span class="muted">← RCN-006 · 松下Q1 · 含税6% → ¥50,880</span></div>
+      <table class="exp-sub-table"><thead><tr><th>合同品类</th><th>内容类型</th><th style="text-align:right">当月完成条数</th><th style="text-align:right">合同单价</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">金额</th></tr></thead>
+      <tbody>
+      <tr class="inv-pending"><td style="font-weight:600">视频</td><td>产品展示 / 开箱测评</td><td class="number" style="text-align:right">400条</td><td class="number" style="text-align:right">¥120/条</td><td style="text-align:center"><span class="badge badge-gray">—</span></td><td class="number" style="text-align:right;font-weight:600">¥48,000</td></tr>
+      <tr class="inv-pending" style="background:#fafbfc;font-weight:600"><td colspan="5">开票金额（不含税）· 与对账单一致</td><td class="number" style="text-align:right;font-size:14px">¥48,000</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">已开票</span><span class="muted">小计 ¥66,748 · 1张</span></div>
+    <table class="exp-sub-table"><thead><tr><th>发票号</th><th>关联应收</th><th style="text-align:right">金额</th><th>开具日</th><th>寄送日</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr class="inv-done"><td><span class="number">INV-2026-003</span></td><td>AR-001</td><td class="number" style="text-align:right">¥66,748</td><td>08-25</td><td>08-26</td><td><span class="badge badge-teal">已寄</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="inv-row" data-inv="proj-tcl" onclick="toggleInvDetail('proj-tcl')"><td class="expand-icon">▸</td><td style="font-weight:600">TCL年框</td><td>TCL集团</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right;color:var(--teal)">¥47,228</td><td class="number" style="text-align:right">1</td></tr>
+<tr class="inv-detail" id="detail-inv-proj-tcl"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">已开票</span><span class="muted">小计 ¥47,228 · 1张</span></div>
+    <table class="exp-sub-table"><thead><tr><th>发票号</th><th>关联应收</th><th style="text-align:right">金额</th><th>开具日</th><th>寄送日</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr class="inv-done"><td><span class="number">INV-2026-002</span></td><td>AR-002</td><td class="number" style="text-align:right">¥47,228</td><td>07-15</td><td>07-16</td><td><span class="badge badge-teal">已寄</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="inv-row" data-inv="proj-songxia" onclick="toggleInvDetail('proj-songxia')"><td class="expand-icon">▸</td><td style="font-weight:600">松下季度包</td><td>松下</td><td class="number" style="text-align:right;color:var(--amber)">¥78,000</td><td class="number" style="text-align:right;color:var(--amber)">1</td><td class="number" style="text-align:right;color:var(--teal)">¥78,000</td><td class="number" style="text-align:right">1</td></tr>
+<tr class="inv-detail" id="detail-inv-proj-songxia"><td colspan="7" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">📑 待开票</span><span class="muted">小计 ¥78,000 · 1笔</span><span style="font-size:10px;color:var(--text-tertiary);margin-left:8px">科目来源：对账单</span></div>
+    <div class="inv-ar-group">
+      <div class="inv-ar-summary"><span class="inv-ar-label"><input type="checkbox" class="inv-merge-ck"> AR-004</span><span class="number" style="font-weight:600">¥78,000</span><span class="muted">← RCN-005 · 松下Q1 · 含税6% → ¥82,680</span></div>
+      <table class="exp-sub-table"><thead><tr><th>合同品类</th><th>内容类型</th><th style="text-align:right">当月完成条数</th><th style="text-align:right">合同单价</th><th style="text-align:center">阶梯折扣</th><th style="text-align:right">金额</th></tr></thead>
+      <tbody>
+      <tr class="inv-pending"><td style="font-weight:600">视频</td><td>氛围体验 / 创意视频</td><td class="number" style="text-align:right">650条</td><td class="number" style="text-align:right">¥120/条</td><td style="text-align:center"><span class="badge badge-gray">—</span></td><td class="number" style="text-align:right;font-weight:600">¥78,000</td></tr>
+      <tr class="inv-pending" style="background:#fafbfc;font-weight:600"><td colspan="5">开票金额（不含税）· 与对账单一致</td><td class="number" style="text-align:right;font-size:14px">¥78,000</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">已开票</span><span class="muted">小计 ¥78,000 · 1张</span></div>
+    <table class="exp-sub-table"><thead><tr><th>发票号</th><th>关联应收</th><th style="text-align:right">金额</th><th>开具日</th><th>寄送日</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr class="inv-done"><td><span class="number">INV-2026-001</span></td><td>AR-006</td><td class="number" style="text-align:right">¥78,000</td><td>06-20</td><td>06-21</td><td><span class="badge badge-teal">已寄</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+<div class="tab-content" id="tab-inv-month">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>月份</th><th style="text-align:right">开票总额</th><th style="text-align:right">发票数</th><th style="text-align:right">待开票</th><th style="text-align:right">已开票</th></tr></thead>
+<tbody>
+<tr class="inv-row" data-inv="month-2026-08" onclick="toggleInvDetail('month-2026-08')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-08</td><td class="number" style="text-align:right">¥66,748</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right;color:var(--amber)">3</td><td class="number" style="text-align:right;color:var(--teal)">1</td></tr>
+<tr class="inv-detail" id="detail-inv-month-2026-08"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">已开票</span><span class="muted">小计 ¥66,748 · 1张</span></div>
+    <table class="exp-sub-table"><thead><tr><th>发票号</th><th>客户</th><th>项目</th><th>关联应收</th><th style="text-align:right">金额</th><th>寄送日</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr class="inv-done"><td><span class="number">INV-2026-003</span></td><td>美的</td><td>美的年框</td><td>AR-001</td><td class="number" style="text-align:right">¥66,748</td><td>08-26</td><td><span class="badge badge-teal">已寄</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">待开票</span><span class="muted">小计 ¥188,970 · 3笔</span></div>
+    <div class="inv-ar-group">
+      <div class="inv-ar-summary"><span class="inv-ar-label">AR-001</span><span class="number" style="font-weight:600">¥62,970</span><span class="muted">美的 · 美的年框 · RCN-008 · 含税6% → ¥66,748</span></div>
+      <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th></tr></thead>
+      <tbody>
+      <tr class="inv-pending"><td><span class="badge badge-amber">内部人力</span></td><td>脚本·美的冰箱·攻略测评</td><td class="number" style="text-align:right">15条</td><td class="number" style="text-align:right">¥15</td><td class="number" style="text-align:right">¥225</td></tr>
+      <tr class="inv-pending"><td><span class="badge badge-gray">外包成本</span></td><td>拍摄·美的冰箱·4K</td><td class="number" style="text-align:right">320条</td><td class="number" style="text-align:right">¥50</td><td class="number" style="text-align:right">¥16,000</td></tr>
+      <tr class="inv-pending"><td><span class="badge badge-purple">场地租赁</span></td><td>广州TIT创意园3天</td><td class="number" style="text-align:right">1项</td><td class="number" style="text-align:right">¥3,200</td><td class="number" style="text-align:right">¥3,200</td></tr>
+      <tr class="inv-pending" style="background:#fafbfc;font-weight:600"><td colspan="4">AR-001 小计</td><td class="number" style="text-align:right">¥19,425</td></tr>
+      </tbody></table>
+    </div>
+    <div class="inv-ar-group" style="margin-top:10px">
+      <div class="inv-ar-summary"><span class="inv-ar-label">AR-003</span><span class="number" style="font-weight:600">¥48,000</span><span class="muted">美的 · 美的年框 · RCN-006 · 含税6% → ¥50,880</span></div>
+      <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th></tr></thead>
+      <tbody>
+      <tr class="inv-pending"><td><span class="badge badge-gray">外包成本</span></td><td>剪辑·美的厨热·后期</td><td class="number" style="text-align:right">180条</td><td class="number" style="text-align:right">¥48</td><td class="number" style="text-align:right">¥8,640</td></tr>
+      <tr class="inv-pending"><td><span class="badge badge-gray">其他</span></td><td>惠州出差差旅费</td><td class="number" style="text-align:right">1项</td><td class="number" style="text-align:right">¥2,100</td><td class="number" style="text-align:right">¥2,100</td></tr>
+      <tr class="inv-pending" style="background:#fafbfc;font-weight:600"><td colspan="4">AR-003 小计</td><td class="number" style="text-align:right">¥10,740</td></tr>
+      </tbody></table>
+    </div>
+    <div class="inv-ar-group" style="margin-top:10px">
+      <div class="inv-ar-summary"><span class="inv-ar-label">AR-004</span><span class="number" style="font-weight:600">¥78,000</span><span class="muted">松下 · 松下季度包 · RCN-005 · 含税6% → ¥82,680</span></div>
+      <table class="exp-sub-table"><thead><tr><th>费用类型</th><th>产出内容</th><th style="text-align:right">数量</th><th style="text-align:right">单价</th><th style="text-align:right">金额</th></tr></thead>
+      <tbody>
+      <tr class="inv-pending"><td><span class="badge badge-amber">内部人力</span></td><td>脚本·松下·测评向</td><td class="number" style="text-align:right">10条</td><td class="number" style="text-align:right">¥15</td><td class="number" style="text-align:right">¥150</td></tr>
+      <tr class="inv-pending"><td><span class="badge badge-gray">外包成本</span></td><td>拍摄·松下·产品场景</td><td class="number" style="text-align:right">100条</td><td class="number" style="text-align:right">¥50</td><td class="number" style="text-align:right">¥5,000</td></tr>
+      <tr class="inv-pending" style="background:#fafbfc;font-weight:600"><td colspan="4">AR-004 小计</td><td class="number" style="text-align:right">¥5,150</td></tr>
+      </tbody></table>
+    </div>
+  </div>
+</div>
+</td></tr>
+<tr class="inv-row" data-inv="month-2026-07" onclick="toggleInvDetail('month-2026-07')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-07</td><td class="number" style="text-align:right">¥47,228</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right;color:var(--teal)">1</td></tr>
+<tr class="inv-detail" id="detail-inv-month-2026-07"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">已开票</span><span class="muted">小计 ¥47,228 · 1张</span></div>
+    <table class="exp-sub-table"><thead><tr><th>发票号</th><th>客户</th><th>项目</th><th>关联应收</th><th style="text-align:right">金额</th><th>寄送日</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr class="inv-done"><td><span class="number">INV-2026-002</span></td><td>TCL</td><td>TCL年框</td><td>AR-002</td><td class="number" style="text-align:right">¥47,228</td><td>07-16</td><td><span class="badge badge-teal">已寄</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="inv-row" data-inv="month-2026-06" onclick="toggleInvDetail('month-2026-06')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-06</td><td class="number" style="text-align:right">¥78,000</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right;color:var(--teal)">1</td></tr>
+<tr class="inv-detail" id="detail-inv-month-2026-06"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">已开票</span><span class="muted">小计 ¥78,000 · 1张</span></div>
+    <table class="exp-sub-table"><thead><tr><th>发票号</th><th>客户</th><th>项目</th><th>关联应收</th><th style="text-align:right">金额</th><th>寄送日</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr class="inv-done"><td><span class="number">INV-2026-001</span></td><td>松下</td><td>松下季度包</td><td>AR-006</td><td class="number" style="text-align:right">¥78,000</td><td>06-21</td><td><span class="badge badge-teal">已寄</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+</div>
+</section>
+
+<!-- PAGE: Profit -->
+<section class="page" id="pg-profit">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">利润核算</span></div></div>
+<div class="content">
+<div class="tabs"><span class="tab active" data-tab="proj-profit">项目利润</span><span class="tab" data-tab="brand-profit">品牌利润</span><span class="tab" data-tab="company-profit">公司利润表</span></div>
+<div class="tab-content active" id="tab-proj-profit">
+<div class="card" style="margin-top:12px"><div class="card-body" style="padding:0">
+<table><thead><tr><th>项目</th><th>客户</th><th style="text-align:right">已确认收入</th><th style="text-align:right">总成本</th><th style="text-align:right">利润</th><th style="text-align:right">毛利率</th></tr></thead>
+<tbody>
+<tr><td>美的2026年度框架</td><td>美的集团</td><td class="number" style="text-align:right">¥3,200,000</td><td class="number" style="text-align:right">¥2,560,000</td><td class="number lg" style="text-align:right;color:var(--teal)">¥640,000</td><td class="number" style="text-align:right;color:var(--teal)">20.0%</td></tr>
+<tr><td>TCL 2026年度框架</td><td>TCL集团</td><td class="number" style="text-align:right">¥1,800,000</td><td class="number" style="text-align:right">¥1,620,000</td><td class="number lg" style="text-align:right;color:var(--teal)">¥180,000</td><td class="number" style="text-align:right;color:var(--teal)">10.0%</td></tr>
+<tr><td>松下Q1季度包</td><td>松下</td><td class="number" style="text-align:right">¥850,000</td><td class="number" style="text-align:right">¥820,000</td><td class="number lg" style="text-align:right;color:var(--teal)">¥30,000</td><td class="number" style="text-align:right;color:var(--teal)">3.5%</td></tr>
+<tr><td>创维年度框架</td><td>创维</td><td class="number" style="text-align:right">¥600,000</td><td class="number" style="text-align:right">¥650,000</td><td class="number lg" style="text-align:right;color:var(--accent)">-¥50,000</td><td class="number" style="text-align:right;color:var(--accent)">-8.3%</td></tr>
+</tbody></table>
+</div></div>
+</div>
+<div class="tab-content" id="tab-brand-profit">
+<div class="card" style="margin-top:12px"><div class="card-body" style="padding:0">
+<table><thead><tr><th>品牌/集团</th><th style="text-align:right">项目数</th><th style="text-align:right">总收入</th><th style="text-align:right">总成本</th><th style="text-align:right">利润</th><th style="text-align:right">毛利率</th></tr></thead>
+<tbody>
+<tr><td style="font-weight:600">美的集团</td><td class="number" style="text-align:right">2</td><td class="number" style="text-align:right">¥4,000,000</td><td class="number" style="text-align:right">¥3,360,000</td><td class="number lg" style="text-align:right;color:var(--teal)">¥640,000</td><td class="number" style="text-align:right;color:var(--teal)">16.0%</td></tr>
+<tr><td style="padding-left:24px">├ 美的厨热</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right">¥3,200,000</td><td class="number" style="text-align:right">¥2,560,000</td><td class="number" style="text-align:right;color:var(--teal)">¥640,000</td><td class="number" style="text-align:right;color:var(--teal)">20.0%</td></tr>
+<tr><td style="padding-left:24px">└ 美的冰箱</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right">¥800,000</td><td class="number" style="text-align:right">¥800,000</td><td class="number" style="text-align:right">¥0</td><td class="number" style="text-align:right">0%</td></tr>
+<tr><td style="font-weight:600">TCL集团</td><td class="number" style="text-align:right">2</td><td class="number" style="text-align:right">¥2,200,000</td><td class="number" style="text-align:right">¥2,020,000</td><td class="number lg" style="text-align:right;color:var(--teal)">¥180,000</td><td class="number" style="text-align:right;color:var(--teal)">8.2%</td></tr>
+</tbody></table>
+</div></div>
+</div>
+<div class="tab-content" id="tab-company-profit">
+<div class="card" style="margin-top:12px"><div class="card-body" style="padding:0">
+<table><thead><tr><th>项目</th><th style="text-align:right">8月</th><th style="text-align:right">7月</th><th style="text-align:right">Q3累计</th><th style="text-align:right">年度累计</th></tr></thead>
+<tbody>
+<tr style="font-weight:600"><td>主营业务收入</td><td class="number" style="text-align:right">¥450,000</td><td class="number" style="text-align:right">¥380,000</td><td class="number" style="text-align:right">¥830,000</td><td class="number" style="text-align:right">¥2,800,000</td></tr>
+<tr><td>主营业务成本</td><td class="number" style="text-align:right">¥360,000</td><td class="number" style="text-align:right">¥310,000</td><td class="number" style="text-align:right">¥670,000</td><td class="number" style="text-align:right">¥2,380,000</td></tr>
+<tr style="font-weight:600;background:#fafbfc"><td>毛利</td><td class="number" style="text-align:right;color:var(--teal)">¥90,000</td><td class="number" style="text-align:right;color:var(--teal)">¥70,000</td><td class="number" style="text-align:right;color:var(--teal)">¥160,000</td><td class="number" style="text-align:right;color:var(--teal)">¥420,000</td></tr>
+<tr><td>毛利率</td><td class="number" style="text-align:right">20.0%</td><td class="number" style="text-align:right">18.4%</td><td class="number" style="text-align:right">19.3%</td><td class="number" style="text-align:right">15.0%</td></tr>
+<tr><td colspan="5" style="color:var(--text-tertiary);padding:8px 12px">其中：内部人力 ¥1,560,000 | 外包 ¥680,000 | 期间费用 ¥140,000</td></tr>
+</tbody></table>
+</div></div>
+</div>
+</div>
+</section>
+
+<!-- PAGE: Vendor -->
+<section class="page" id="pg-vendor">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">供应商结算</span></div><div class="topbar-actions"><button class="btn btn-sm btn-primary">生成月结</button></div></div>
+<div class="content">
+<div class="filter-row"><select class="filter-select"><option>全部月份</option><option>2026-08</option><option>2026-07</option><option>2026-06</option></select><span class="filter-chip active">全部</span><span class="filter-chip">待确认</span><span class="filter-chip">已确认</span><span class="filter-chip">已付款</span><select class="filter-select"><option>全部供应商</option><option>XX工作室</option><option>YY影视</option><option>ZZ传媒</option></select></div>
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>供应商</th><th>月份</th><th style="text-align:right">总条数</th><th style="text-align:right">供应商单价</th><th style="text-align:right">结算金额</th><th>状态</th><th>操作</th></tr></thead>
+<tbody>
+<tr class="vendor-row" data-vendor="xx-2026-08" onclick="toggleVendorDetail('xx-2026-08')"><td class="expand-icon">▸</td><td>XX工作室</td><td>2026-08</td><td class="number" style="text-align:right">330</td><td class="number" style="text-align:right">¥10-50/条</td><td class="number" style="text-align:right">¥7,300</td><td><span class="badge badge-gray"><span class="badge-dot"></span>待确认</span></td><td><button class="btn btn-xs btn-primary" onclick="event.stopPropagation()">确认</button></td></tr>
+<tr class="vendor-detail" id="detail-xx-2026-08"><td colspan="8" style="padding:0;border-bottom:none">
+  <div class="vendor-preview">
+    <div class="vendor-preview-header"><span class="vendor-preview-title">XX工作室 · 2026-08 月结预览</span><span class="muted" style="font-size:10px">按实际条数结算 · 不含系数</span></div>
+    <table class="vendor-preview-table"><thead><tr><th>品类</th><th style="text-align:right">条数</th><th style="text-align:right">单价</th><th style="text-align:right">小计</th></tr></thead>
+    <tbody>
+    <tr><td>脚本</td><td class="number" style="text-align:right">230</td><td class="number" style="text-align:right">10元/条</td><td class="number" style="text-align:right">¥2,300</td></tr>
+    <tr><td>拍摄</td><td class="number" style="text-align:right">100</td><td class="number" style="text-align:right">50元/条</td><td class="number" style="text-align:right">¥5,000</td></tr>
+    <tr style="background:#fafbfc;font-weight:700"><td>合计</td><td class="number" style="text-align:right">330</td><td></td><td class="number lg" style="text-align:right">¥7,300</td></tr>
+    </tbody></table>
+  </div>
+</td></tr>
+<tr class="vendor-row" data-vendor="yy-2026-08" onclick="toggleVendorDetail('yy-2026-08')"><td class="expand-icon">▸</td><td>YY影视</td><td>2026-08</td><td class="number" style="text-align:right">180</td><td class="number" style="text-align:right">¥48-80/条</td><td class="number" style="text-align:right">¥12,500</td><td><span class="badge badge-blue"><span class="badge-dot"></span>已确认</span></td><td><button class="btn btn-xs btn-primary red" onclick="event.stopPropagation();openModal('modal-vendor-pay')">付款</button></td></tr>
+<tr class="vendor-detail" id="detail-yy-2026-08"><td colspan="8" style="padding:0;border-bottom:none">
+  <div class="vendor-preview">
+    <div class="vendor-preview-header"><span class="vendor-preview-title">YY影视 · 2026-08 月结预览</span><span class="muted" style="font-size:10px">按实际条数结算 · 不含系数</span></div>
+    <table class="vendor-preview-table"><thead><tr><th>品类</th><th style="text-align:right">条数</th><th style="text-align:right">单价</th><th style="text-align:right">小计</th></tr></thead>
+    <tbody>
+    <tr><td>拍摄</td><td class="number" style="text-align:right">120</td><td class="number" style="text-align:right">80元/条</td><td class="number" style="text-align:right">¥9,600</td></tr>
+    <tr><td>剪辑</td><td class="number" style="text-align:right">60</td><td class="number" style="text-align:right">48元/条</td><td class="number" style="text-align:right">¥2,900</td></tr>
+    <tr style="background:#fafbfc;font-weight:700"><td>合计</td><td class="number" style="text-align:right">180</td><td></td><td class="number lg" style="text-align:right">¥12,500</td></tr>
+    </tbody></table>
+  </div>
+</td></tr>
+<tr class="vendor-row" data-vendor="xx-2026-07" onclick="toggleVendorDetail('xx-2026-07')"><td class="expand-icon">▸</td><td>XX工作室</td><td>2026-07</td><td class="number" style="text-align:right">280</td><td class="number" style="text-align:right">¥10-44/条</td><td class="number" style="text-align:right">¥6,200</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已付款</span></td><td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation()">查看</button></td></tr>
+<tr class="vendor-detail" id="detail-xx-2026-07"><td colspan="8" style="padding:0;border-bottom:none">
+  <div class="vendor-preview">
+    <div class="vendor-preview-header"><span class="vendor-preview-title">XX工作室 · 2026-07 月结预览</span><span class="muted" style="font-size:10px">按实际条数结算 · 不含系数</span></div>
+    <table class="vendor-preview-table"><thead><tr><th>品类</th><th style="text-align:right">条数</th><th style="text-align:right">单价</th><th style="text-align:right">小计</th></tr></thead>
+    <tbody>
+    <tr><td>脚本</td><td class="number" style="text-align:right">180</td><td class="number" style="text-align:right">10元/条</td><td class="number" style="text-align:right">¥1,800</td></tr>
+    <tr><td>拍摄</td><td class="number" style="text-align:right">100</td><td class="number" style="text-align:right">44元/条</td><td class="number" style="text-align:right">¥4,400</td></tr>
+    <tr style="background:#fafbfc;font-weight:700"><td>合计</td><td class="number" style="text-align:right">280</td><td></td><td class="number lg" style="text-align:right">¥6,200</td></tr>
+    </tbody></table>
+  </div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+</section>
+
+<!-- PAGE: Salary -->
+<section class="page" id="pg-salary">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">人员薪酬汇总</span></div><div class="topbar-actions"><span class="muted" style="font-size:11px">💡 按薪酬核算月统计 · 底薪和提成按归属月跨月分布 · 绩效仅在当月</span></div></div>
+<div class="content">
+
+<!-- 月份切换 + 核心指标 -->
+<div class="stats-grid col4">
+  <div class="stat-card"><div class="stat-label">薪酬核算月</div><div class="stat-value" style="font-size:22px">2026-06</div><div class="stat-sub">
+    <select class="filter-select" style="margin-top:6px;font-size:11px;width:100%"><option>2026-06</option><option>2026-05</option><option>2026-04</option></select>
+  </div></div>
+  <div class="stat-card teal"><div class="stat-label">底薪合计</div><div class="stat-value">¥62,500</div><div class="stat-sub">12人 · 全月</div></div>
+  <div class="stat-card amber"><div class="stat-label">绩效合计</div><div class="stat-value">¥18,000</div><div class="stat-sub">12人 · HR评定</div></div>
+  <div class="stat-card blue"><div class="stat-label">提成合计</div><div class="stat-value">¥24,300</div><div class="stat-sub">超额条数 × 单价</div></div>
+</div>
+<div class="stats-grid col3" style="margin-top:0">
+  <div class="stat-card"><div class="stat-label">本月薪酬总支出（按完成月统计）</div><div class="stat-value" style="color:var(--accent)">¥104,800</div><div class="stat-sub">发薪日 2026-06-28</div></div>
+  <div class="stat-card"><div class="stat-label">归属到本月的项目成本</div><div class="stat-value">¥71,233</div><div class="stat-sub">底薪 ¥41,233 + 绩效 ¥18,000 + 提成 ¥12,000</div></div>
+  <div class="stat-card"><div class="stat-label">跨月分布（归属到其他月份）</div><div class="stat-value" style="font-size:18px">¥33,567</div><div class="stat-sub">底薪 ¥21,267 + 提成 ¥12,300（绩效不跨月）</div></div>
+</div>
+
+<!-- 两个维度说明卡片 -->
+<div class="card" style="margin-top:8px">
+  <div class="card-body">
+    <div style="display:flex;gap:16px;flex-wrap:wrap">
+      <div style="flex:1;min-width:260px;padding:12px 14px;background:var(--teal-light);border-radius:8px">
+        <div style="font-weight:600;font-size:13px;color:var(--teal);margin-bottom:4px">📊 薪酬核算月维度（财务发薪统计）</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">看本月完成的所有任务条数，不管任务归属到哪个月。<br>底薪、绩效、提成全部按完成月统计 → 本月薪酬支出 ¥104,800</div>
+      </div>
+      <div style="flex:1;min-width:260px;padding:12px 14px;background:var(--blue-light);border-radius:8px">
+        <div style="font-weight:600;font-size:13px;color:var(--blue);margin-bottom:4px">💼 任务归属月维度（项目成本核算）</div>
+        <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">底薪和提成按任务归属月分摊到各月项目成本。<br>绩效只在当月分摊，不跨月。<br>本月项目成本中包含 ¥71,233（含其他月份完成但归属本月的部分）</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 人员薪酬表格 -->
+<div class="card" style="margin-top:12px"><div class="card-header"><span class="card-title">人员薪酬明细 · 2026-06</span><span class="muted" style="font-size:11px;margin-left:8px">点击行查看跨月×跨项目分布</span></div><div class="card-body" style="padding:0">
+<table>
+  <thead><tr><th style="width:28px"></th><th>姓名</th><th>岗位</th><th style="text-align:right">底薪</th><th style="text-align:right">绩效</th><th style="text-align:right">提成</th><th style="text-align:right">本月薪酬合计</th><th style="text-align:right">跨月分布说明</th></tr></thead>
+  <tbody>
+
+  <!-- 巫昭仪 - 核心示例 -->
+  <tr class="sal-row" data-sal="wu" onclick="toggleSalaryDetail('wu')"><td class="expand-icon">▸</td><td style="font-weight:600">巫昭仪</td><td>编导</td><td class="number" style="text-align:right">¥5,000</td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right;color:var(--accent);font-weight:600">¥8,000</td><td style="text-align:right;font-size:11px;color:var(--text-secondary)">底薪/提成跨5/6/7月分布</td></tr>
+  <tr class="sal-detail" id="detail-wu"><td colspan="8" style="padding:0;border-bottom:none">
+    <div class="sal-detail-wrap">
+
+      <!-- 底薪分布 -->
+      <div class="sal-block">
+        <div class="sal-block-head"><span class="sal-block-title">底薪 ¥5,000</span><span class="muted" style="font-size:11px">按归属月 × 项目 加权分布</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th>项目</th><th style="text-align:right">产出条数</th><th style="text-align:right">占比</th><th style="text-align:right">底薪分摊</th></tr></thead>
+          <tbody>
+            <tr><td>2026-05</td><td>美的年框</td><td class="number" style="text-align:right">100</td><td class="number" style="text-align:right">16.7%</td><td class="number" style="text-align:right">¥833</td></tr>
+            <tr><td>2026-05</td><td>TCL直播</td><td class="number" style="text-align:right">50</td><td class="number" style="text-align:right">8.3%</td><td class="number" style="text-align:right">¥417</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>美的年框</td><td class="number" style="text-align:right">120</td><td class="number" style="text-align:right">20%</td><td class="number" style="text-align:right">¥1,000</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>TCL直播</td><td class="number" style="text-align:right">40</td><td class="number" style="text-align:right">6.7%</td><td class="number" style="text-align:right">¥333</td></tr>
+            <tr><td>2026-07</td><td>美的年框</td><td class="number" style="text-align:right">100</td><td class="number" style="text-align:right">16.7%</td><td class="number" style="text-align:right">¥833</td></tr>
+            <tr><td>2026-07</td><td>九阳内容</td><td class="number" style="text-align:right">50</td><td class="number" style="text-align:right">8.3%</td><td class="number" style="text-align:right">¥417</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td colspan="4">合计（600条）</td><td class="number" style="text-align:right">¥5,000</td></tr>
+          </tbody>
+        </table>
+        <div class="sal-note">⭐ 归属到6月的底薪 ¥1,333 计入本月项目成本；其余 ¥3,667 归属到5月/7月的项目成本中</div>
+      </div>
+
+      <!-- 绩效分布 -->
+      <div class="sal-block">
+        <div class="sal-block-head"><span class="sal-block-title">绩效 ¥1,500</span><span class="muted" style="font-size:11px">仅在当月 × 跨项目分布 · 不跨月</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th>项目</th><th style="text-align:right">产出条数</th><th style="text-align:right">占比</th><th style="text-align:right">绩效分摊</th></tr></thead>
+          <tbody>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>美的年框</td><td class="number" style="text-align:right">120</td><td class="number" style="text-align:right">75%</td><td class="number" style="text-align:right">¥1,125</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>TCL直播</td><td class="number" style="text-align:right">40</td><td class="number" style="text-align:right">25%</td><td class="number" style="text-align:right">¥375</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td colspan="4">合计（当月160条）</td><td class="number" style="text-align:right">¥1,500</td></tr>
+          </tbody>
+        </table>
+        <div class="sal-note">⭐ 绩效由HR评定，只在薪酬核算月内按项目产出比例分摊，不跨月</div>
+      </div>
+
+      <!-- 提成分布 -->
+      <div class="sal-block">
+        <div class="sal-block-head"><span class="sal-block-title">提成 ¥1,500</span><span class="muted" style="font-size:11px">按归属月 × 项目 跨月分布（与底薪规则一致）</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th>项目</th><th style="text-align:right">超额条数</th><th style="text-align:right">占比</th><th style="text-align:right">提成分摊</th></tr></thead>
+          <tbody>
+            <tr><td>2026-05</td><td>美的年框</td><td class="number" style="text-align:right">16.7</td><td class="number" style="text-align:right">16.7%</td><td class="number" style="text-align:right">¥250</td></tr>
+            <tr><td>2026-05</td><td>TCL直播</td><td class="number" style="text-align:right">8.3</td><td class="number" style="text-align:right">8.3%</td><td class="number" style="text-align:right">¥125</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>美的年框</td><td class="number" style="text-align:right">20</td><td class="number" style="text-align:right">20%</td><td class="number" style="text-align:right">¥300</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>TCL直播</td><td class="number" style="text-align:right">6.7</td><td class="number" style="text-align:right">6.7%</td><td class="number" style="text-align:right">¥100</td></tr>
+            <tr><td>2026-07</td><td>美的年框</td><td class="number" style="text-align:right">16.7</td><td class="number" style="text-align:right">16.7%</td><td class="number" style="text-align:right">¥250</td></tr>
+            <tr><td>2026-07</td><td>九阳内容</td><td class="number" style="text-align:right">8.3</td><td class="number" style="text-align:right">8.3%</td><td class="number" style="text-align:right">¥125</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td colspan="4">合计（100条超额 × ¥15单价）</td><td class="number" style="text-align:right">¥1,500</td></tr>
+          </tbody>
+        </table>
+        <div class="sal-note">⭐ 归属到6月的提成 ¥400 计入本月项目成本；其余 ¥1,100 归属到5月/7月的项目成本中</div>
+      </div>
+
+      <!-- 汇总 -->
+      <div class="sal-block" style="background:var(--teal-light);border:none">
+        <div class="sal-block-head"><span class="sal-block-title">本月薪酬归属汇总</span><span class="muted" style="font-size:11px">按任务归属月维度</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th style="text-align:right">底薪</th><th style="text-align:right">绩效</th><th style="text-align:right">提成</th><th style="text-align:right">合计归属</th></tr></thead>
+          <tbody>
+            <tr><td>2026-05</td><td class="number" style="text-align:right">¥1,250</td><td class="number" style="text-align:right">—</td><td class="number" style="text-align:right">¥375</td><td class="number" style="text-align:right">¥1,625</td></tr>
+            <tr style="background:#fff;font-weight:600"><td>2026-06 ⭐</td><td class="number" style="text-align:right">¥1,333</td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right">¥400</td><td class="number" style="text-align:right;color:var(--teal)">¥3,233</td></tr>
+            <tr><td>2026-07</td><td class="number" style="text-align:right">¥1,250</td><td class="number" style="text-align:right">—</td><td class="number" style="text-align:right">¥375</td><td class="number" style="text-align:right">¥1,625</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td>合计（薪酬核算月总额）</td><td class="number" style="text-align:right">¥5,000</td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right">¥1,500</td><td class="number" style="text-align:right">¥8,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+  </td></tr>
+
+  <!-- 其他人员：张小明 -->
+  <tr class="sal-row" data-sal="zhang" onclick="toggleSalaryDetail('zhang')"><td class="expand-icon">▸</td><td style="font-weight:600">张小明</td><td>摄影师</td><td class="number" style="text-align:right">¥6,000</td><td class="number" style="text-align:right">¥1,800</td><td class="number" style="text-align:right">¥2,400</td><td class="number" style="text-align:right;color:var(--accent);font-weight:600">¥10,200</td><td style="text-align:right;font-size:11px;color:var(--text-secondary)">底薪/提成跨5/6月分布</td></tr>
+  <tr class="sal-detail" id="detail-zhang"><td colspan="8" style="padding:0;border-bottom:none">
+    <div class="sal-detail-wrap">
+      <div class="sal-block">
+        <div class="sal-block-head"><span class="sal-block-title">底薪 ¥6,000 · 归属月分布</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th>项目</th><th style="text-align:right">产出</th><th style="text-align:right">占比</th><th style="text-align:right">分摊</th></tr></thead>
+          <tbody>
+            <tr><td>2026-05</td><td>美的年框</td><td class="number" style="text-align:right">80</td><td class="number" style="text-align:right">33.3%</td><td class="number" style="text-align:right">¥2,000</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>美的年框</td><td class="number" style="text-align:right">120</td><td class="number" style="text-align:right">50%</td><td class="number" style="text-align:right">¥3,000</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>TCL直播</td><td class="number" style="text-align:right">40</td><td class="number" style="text-align:right">16.7%</td><td class="number" style="text-align:right">¥1,000</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td colspan="3">合计</td><td class="number" style="text-align:right">¥6,000</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sal-block">
+        <div class="sal-block-head"><span class="sal-block-title">绩效 ¥1,800 · 仅当月跨项目</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th>项目</th><th style="text-align:right">产出</th><th style="text-align:right">占比</th><th style="text-align:right">分摊</th></tr></thead>
+          <tbody>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>美的年框</td><td class="number" style="text-align:right">120</td><td class="number" style="text-align:right">75%</td><td class="number" style="text-align:right">¥1,350</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>TCL直播</td><td class="number" style="text-align:right">40</td><td class="number" style="text-align:right">25%</td><td class="number" style="text-align:right">¥450</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td colspan="3">合计</td><td class="number" style="text-align:right">¥1,800</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="sal-block">
+        <div class="sal-block-head"><span class="sal-block-title">提成 ¥2,400 · 归属月分布</span></div>
+        <table class="sal-sub-table">
+          <thead><tr><th>归属月</th><th>项目</th><th style="text-align:right">超额</th><th style="text-align:right">占比</th><th style="text-align:right">分摊</th></tr></thead>
+          <tbody>
+            <tr><td>2026-05</td><td>美的年框</td><td class="number" style="text-align:right">40</td><td class="number" style="text-align:right">33.3%</td><td class="number" style="text-align:right">¥800</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>美的年框</td><td class="number" style="text-align:right">60</td><td class="number" style="text-align:right">50%</td><td class="number" style="text-align:right">¥1,200</td></tr>
+            <tr style="background:var(--teal-light)"><td style="font-weight:600">2026-06 ⭐</td><td>TCL直播</td><td class="number" style="text-align:right">20</td><td class="number" style="text-align:right">16.7%</td><td class="number" style="text-align:right">¥400</td></tr>
+            <tr style="background:#fafbfc;font-weight:600"><td colspan="3">合计（120条 × ¥20）</td><td class="number" style="text-align:right">¥2,400</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </td></tr>
+
+  <!-- 其他人员：李芳芳 -->
+  <tr class="sal-row" data-sal="li" onclick="toggleSalaryDetail('li')"><td class="expand-icon">▸</td><td style="font-weight:600">李芳芳</td><td>剪辑师</td><td class="number" style="text-align:right">¥4,500</td><td class="number" style="text-align:right">¥1,200</td><td class="number" style="text-align:right">¥1,800</td><td class="number" style="text-align:right;color:var(--accent);font-weight:600">¥7,500</td><td style="text-align:right;font-size:11px;color:var(--text-secondary)">仅当月项目 · 无跨月</td></tr>
+  <tr class="sal-detail" id="detail-li"><td colspan="8" style="text-align:center;padding:20px;color:var(--text-secondary);font-size:12px">本月所有产出均归属6月，底薪/绩效/提成全部计入6月项目成本，无需跨月分布</td></tr>
+
+  <!-- 其他人员：汇总行 -->
+  <tr style="background:#fafbfc;font-weight:600"><td></td><td colspan="2">小计（以上3人示例）</td><td class="number" style="text-align:right">¥15,500</td><td class="number" style="text-align:right">¥4,500</td><td class="number" style="text-align:right">¥5,700</td><td class="number" style="text-align:right;color:var(--accent)">¥25,700</td><td></td></tr>
+  <tr style="background:#fff;font-weight:700;border-top:2px solid #e8ecf0"><td></td><td colspan="2">全员合计（12人）</td><td class="number" style="text-align:right">¥62,500</td><td class="number" style="text-align:right">¥18,000</td><td class="number" style="text-align:right">¥24,300</td><td class="number" style="text-align:right;color:var(--accent);font-size:16px">¥104,800</td><td></td></tr>
+
+  </tbody>
+</table>
+</div></div>
+
+<!-- 底部说明 -->
+<div class="card" style="margin-top:12px;background:#fffdf5;border:1px solid #f0e7c7"><div class="card-body" style="font-size:12px;color:#8b7a2a;line-height:1.8">
+  <div style="font-weight:600;color:#6b5c1e;margin-bottom:4px">📌 核心规则说明（与HR模块对齐）</div>
+  <div>① <b>底薪</b>：按「任务归属月」× 项目 加权分摊 — 本月完成的任务中，归属到哪个月的项目，底薪就分摊到哪个月的项目成本</div>
+  <div>② <b>绩效</b>：HR评定后只在「薪酬核算月」内按项目产出比例分摊 — <b>不跨月</b></div>
+  <div>③ <b>提成</b>：与底薪一致，按「任务归属月」× 项目 跨月分布 — 归属规则与底薪完全对齐</div>
+  <div>④ <b>财务薪酬统计</b>：按完成月（薪酬核算月）统计所有条数 — 底薪+绩效+提成的总额即本月发薪支出</div>
+  <div>⑤ <b>项目成本核算</b>：按归属月归集 — 本月项目成本中可能包含上月/下月完成但归属本月的底薪+提成</div>
+</div></div>
+
+</div>
+</section>
+
+<!-- PAGE: Expense -->
+<section class="page" id="pg-expense">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">费用报销</span></div><div class="topbar-actions"><span class="muted" style="font-size:11px">💡 报销由项目PM发起，财务仅审核</span></div></div>
+<div class="content">
+<div class="stats-grid col4">
+  <div class="stat-card"><div class="stat-label">报销总额</div><div class="stat-value">¥25,300</div><div class="stat-sub">已通过金额</div></div>
+  <div class="stat-card amber"><div class="stat-label">待审批</div><div class="stat-value">1</div><div class="stat-sub">笔 · ¥2,500</div></div>
+  <div class="stat-card accent"><div class="stat-label">已驳回</div><div class="stat-value">1</div><div class="stat-sub">笔 · ¥1,800</div></div>
+  <div class="stat-card blue"><div class="stat-label">本月报销</div><div class="stat-value">¥17,000</div><div class="stat-sub">2026-08</div></div>
+</div>
+<div class="filter-row"><span class="filter-chip active">全部</span><span class="filter-chip">待审批</span><span class="filter-chip">已通过</span><span class="filter-chip">已驳回</span><select class="filter-select"><option>全部类型</option><option>场地租赁</option><option>模特</option><option>平台投放</option><option>设备</option><option>其他</option></select><select class="filter-select"><option>全部月份</option><option>2026-08</option><option>2026-07</option><option>2026-06</option></select></div>
+<div class="tabs"><span class="tab active" data-tab="exp-proj">按项目划分</span><span class="tab" data-tab="exp-month">按月汇总</span></div>
+<div class="tab-content active" id="tab-exp-proj">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>项目名称</th><th>状态</th><th style="text-align:right">报销总金额</th><th style="text-align:right">待审批</th><th>最近报销月</th></tr></thead>
+<tbody>
+<tr class="exp-row" data-exp="proj-meidi" onclick="toggleExpDetail('proj-meidi')"><td class="expand-icon">▸</td><td style="font-weight:600">美的年框</td><td><span class="badge badge-blue">进行中</span></td><td class="number" style="text-align:right">¥20,700</td><td class="number" style="text-align:right;color:var(--amber)">1笔</td><td>2026-08</td></tr>
+<tr class="exp-detail" id="detail-proj-meidi"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-08</span><span class="muted">小计 ¥10,700 · 3笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-015</span></td><td>张三</td><td class="number" style="text-align:right">¥5,000</td><td><span class="badge badge-amber">平台投放</span></td><td>京准通 · 618大促投放费</td><td>08-15</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-014</span></td><td>陈小明</td><td class="number" style="text-align:right">¥3,200</td><td><span class="badge badge-purple">场地租赁</span></td><td>广州TIT · 拍摄场地3天</td><td>08-12</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-011</span></td><td>李四</td><td class="number" style="text-align:right">¥2,500</td><td><span class="badge badge-gray">其他</span></td><td>出差广州差旅费</td><td>08-10</td><td><span class="badge badge-blue">待审批</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-07</span><span class="muted">小计 ¥6,200 · 2笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-009</span></td><td>张三</td><td class="number" style="text-align:right">¥4,200</td><td><span class="badge badge-amber">平台投放</span></td><td>巨量千川 · 投放推广</td><td>07-20</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-008</span></td><td>陈小明</td><td class="number" style="text-align:right">¥2,000</td><td><span class="badge badge-purple">场地租赁</span></td><td>佛山创意园 · 拍摄2天</td><td>07-15</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-06</span><span class="muted">小计 ¥3,800 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-005</span></td><td>巫昭仪</td><td class="number" style="text-align:right">¥3,800</td><td><span class="badge badge-blue">模特</span></td><td>张丹妮 · 拍摄2天</td><td>06-18</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="proj-tcl" onclick="toggleExpDetail('proj-tcl')"><td class="expand-icon">▸</td><td style="font-weight:600">TCL年框</td><td><span class="badge badge-blue">进行中</span></td><td class="number" style="text-align:right">¥8,400</td><td class="number" style="text-align:right">-</td><td>2026-08</td></tr>
+<tr class="exp-detail" id="detail-proj-tcl"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-08</span><span class="muted">小计 ¥6,300 · 2笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-013</span></td><td>梁记</td><td class="number" style="text-align:right">¥4,500</td><td><span class="badge badge-blue">模特</span></td><td>张丹妮 · 模特拍摄3天</td><td>08-10</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-010</span></td><td>王五</td><td class="number" style="text-align:right">¥1,800</td><td><span class="badge badge-purple">设备</span></td><td>器材租赁 · 灯光设备</td><td>08-05</td><td><span class="badge badge-red">已驳回</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-07</span><span class="muted">小计 ¥2,100 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-007</span></td><td>赵六</td><td class="number" style="text-align:right">¥2,100</td><td><span class="badge badge-gray">其他</span></td><td>惠州出差差旅费</td><td>07-22</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="proj-songxia" onclick="toggleExpDetail('proj-songxia')"><td class="expand-icon">▸</td><td style="font-weight:600">松下季度包</td><td><span class="badge badge-gray">已完结</span></td><td class="number" style="text-align:right">¥4,400</td><td class="number" style="text-align:right">-</td><td>2026-07</td></tr>
+<tr class="exp-detail" id="detail-proj-songxia"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-08</span><span class="muted">小计 ¥2,800 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-012</span></td><td>李大明</td><td class="number" style="text-align:right">¥2,800</td><td><span class="badge badge-gray">其他</span></td><td>上海出差差旅费</td><td>08-08</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">2026-07</span><span class="muted">小计 ¥1,600 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>日期</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-006</span></td><td>王五</td><td class="number" style="text-align:right">¥1,600</td><td><span class="badge badge-purple">场地租赁</span></td><td>佛山创意园 · 拍摄1天</td><td>07-18</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+<div class="tab-content" id="tab-exp-month">
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:28px"></th><th>月份</th><th style="text-align:right">报销总金额</th><th style="text-align:right">报销单数</th><th style="text-align:right">待审批</th><th style="text-align:right">已通过</th></tr></thead>
+<tbody>
+<tr class="exp-row" data-exp="month-2026-08" onclick="toggleExpDetail('month-2026-08')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-08</td><td class="number" style="text-align:right">¥19,800</td><td class="number" style="text-align:right">6</td><td class="number" style="text-align:right;color:var(--amber)">1</td><td class="number" style="text-align:right">5</td></tr>
+<tr class="exp-detail" id="detail-month-2026-08"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">小计 ¥10,700 · 3笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-015</span></td><td>张三</td><td class="number" style="text-align:right">¥5,000</td><td><span class="badge badge-amber">平台投放</span></td><td>京准通 · 618大促投放费</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-014</span></td><td>陈小明</td><td class="number" style="text-align:right">¥3,200</td><td><span class="badge badge-purple">场地租赁</span></td><td>广州TIT · 拍摄场地3天</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-011</span></td><td>李四</td><td class="number" style="text-align:right">¥2,500</td><td><span class="badge badge-gray">其他</span></td><td>出差广州差旅费</td><td><span class="badge badge-blue">待审批</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">TCL年框</span><span class="muted">小计 ¥6,300 · 2笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-013</span></td><td>梁记</td><td class="number" style="text-align:right">¥4,500</td><td><span class="badge badge-blue">模特</span></td><td>张丹妮 · 模特拍摄3天</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-010</span></td><td>王五</td><td class="number" style="text-align:right">¥1,800</td><td><span class="badge badge-purple">设备</span></td><td>器材租赁 · 灯光设备</td><td><span class="badge badge-red">已驳回</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">松下季度包</span><span class="muted">小计 ¥2,800 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-012</span></td><td>李大明</td><td class="number" style="text-align:right">¥2,800</td><td><span class="badge badge-gray">其他</span></td><td>上海出差差旅费</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="month-2026-07" onclick="toggleExpDetail('month-2026-07')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-07</td><td class="number" style="text-align:right">¥9,900</td><td class="number" style="text-align:right">4</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">4</td></tr>
+<tr class="exp-detail" id="detail-month-2026-07"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">小计 ¥6,200 · 2笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-009</span></td><td>张三</td><td class="number" style="text-align:right">¥4,200</td><td><span class="badge badge-amber">平台投放</span></td><td>巨量千川 · 投放推广</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    <tr><td><span class="number">EXP-008</span></td><td>陈小明</td><td class="number" style="text-align:right">¥2,000</td><td><span class="badge badge-purple">场地租赁</span></td><td>佛山创意园 · 拍摄2天</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">TCL年框</span><span class="muted">小计 ¥2,100 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-007</span></td><td>赵六</td><td class="number" style="text-align:right">¥2,100</td><td><span class="badge badge-gray">其他</span></td><td>惠州出差差旅费</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">松下季度包</span><span class="muted">小计 ¥1,600 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-006</span></td><td>王五</td><td class="number" style="text-align:right">¥1,600</td><td><span class="badge badge-purple">场地租赁</span></td><td>佛山创意园 · 拍摄1天</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+<tr class="exp-row" data-exp="month-2026-06" onclick="toggleExpDetail('month-2026-06')"><td class="expand-icon">▸</td><td style="font-weight:600">2026-06</td><td class="number" style="text-align:right">¥3,800</td><td class="number" style="text-align:right">1</td><td class="number" style="text-align:right">-</td><td class="number" style="text-align:right">1</td></tr>
+<tr class="exp-detail" id="detail-month-2026-06"><td colspan="6" style="padding:0;border-bottom:none">
+<div class="exp-detail-wrap">
+  <div class="exp-month-group">
+    <div class="exp-month-head"><span class="exp-month-label">美的年框</span><span class="muted">小计 ¥3,800 · 1笔</span></div>
+    <table class="exp-sub-table"><thead><tr><th>编号</th><th>申请人</th><th style="text-align:right">金额</th><th>成本类型</th><th>费用描述</th><th>状态</th></tr></thead>
+    <tbody>
+    <tr><td><span class="number">EXP-005</span></td><td>巫昭仪</td><td class="number" style="text-align:right">¥3,800</td><td><span class="badge badge-blue">模特</span></td><td>张丹妮 · 拍摄2天</td><td><span class="badge badge-teal">已通过</span></td></tr>
+    </tbody></table>
+  </div>
+</div>
+</td></tr>
+</tbody></table>
+</div></div>
+</div>
+</div>
+</section>
+
+</div><!-- END MAIN -->
+
+<!-- ====== MODALS ====== -->
+<!-- Modal: Register Invoice -->
+<div class="modal-overlay" id="modal-invoice" onclick="closeModal('modal-invoice')">
+<div class="modal" onclick="event.stopPropagation()">
+<div class="modal-header"><span class="modal-title">登记发票</span><button class="drawer-close" onclick="closeModal('modal-invoice')">×</button></div>
+<div class="modal-body">
+  <div class="alert alert-info" style="font-size:11px">合并开票：已选中 AR-001 (¥62,970) + AR-003 (¥48,000)，发票金额 = ¥117,810（含税6%）</div>
+  <div class="form-row"><div class="form-group"><label class="form-label">发票号码</label><input class="form-input" placeholder="INV-2026-004"></div><div class="form-group"><label class="form-label">发票类型</label><select class="form-select"><option>增值税专用发票</option><option>增值税普通发票</option></select></div></div>
+  <div class="form-row col3"><div class="form-group"><label class="form-label">发票金额(含税)</label><input class="form-input" value="¥117,810"></div><div class="form-group"><label class="form-label">税率</label><select class="form-select"><option>6%</option><option>3%</option><option>13%</option></select></div><div class="form-group"><label class="form-label">不含税金额(自动)</label><input class="form-input" value="¥111,141.5" style="background:#fafbfc;color:var(--text-tertiary)" readonly></div></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">开具日期</label><input class="form-input" type="date" value="2026-06-08"></div><div class="form-group"><label class="form-label">寄送日期</label><input class="form-input" type="date"></div></div>
+  <div class="form-group"><label class="form-label">备注</label><input class="form-input" placeholder="可选"></div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-invoice')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-invoice');showToast('发票 INV-2026-004 已登记','ok')">确认登记</button></div>
+</div></div>
+
+<!-- Modal: Expense -->
+<div class="modal-overlay" id="modal-expense" onclick="closeModal('modal-expense')">
+<div class="modal" style="width:580px" onclick="event.stopPropagation()">
+<div class="modal-header"><span class="modal-title">新建报销单</span><button class="drawer-close" onclick="closeModal('modal-expense')">×</button></div>
+<div class="modal-body">
+  <div class="form-row"><div class="form-group"><label class="form-label">关联项目</label><select class="form-select"><option>PJ-001 美的年框</option><option>PJ-005 TCL年框</option></select></div><div class="form-group"><label class="form-label">报销日期</label><input class="form-input" type="date" value="2026-06-08"></div></div>
+  <div class="card" style="border:1px dashed var(--border)"><div class="card-header"><span class="card-title" style="font-size:12px">报销明细行</span><button class="btn btn-xs btn-ghost">+ 添加行</button></div><div class="card-body" style="padding:0">
+  <table><thead><tr><th>成本类型</th><th>费用类型</th><th style="text-align:right;width:70px">金额</th><th style="width:100px">描述</th><th style="text-align:right;width:55px">税额</th><th style="width:45px">可抵扣</th><th>凭证</th></tr></thead>
+  <tbody>
+  <tr><td><select class="form-select" style="font-size:11px;padding:4px"><option>平台投放</option><option>场地租赁</option><option>模特</option><option>设备</option><option>其他</option></select></td><td><input class="form-input" value="京准通" style="width:80px"></td><td><input class="form-input" value="¥5,000" style="width:70px;text-align:right"></td><td><input class="form-input" value="美的618大促投放费" style="width:100px"></td><td><input class="form-input" value="¥300" style="width:55px;text-align:right"></td><td><select class="form-select" style="font-size:10px;padding:3px;width:45px"><option>是</option><option selected>否</option></select></td><td><button class="btn btn-xs btn-secondary">📎 上传</button></td></tr>
+  <tr><td><select class="form-select" style="font-size:11px;padding:4px"><option>场地租赁</option><option>平台投放</option><option>模特</option><option>设备</option><option>其他</option></select></td><td><input class="form-input" value="广州TIT" style="width:80px"></td><td><input class="form-input" value="¥3,200" style="width:70px;text-align:right"></td><td><input class="form-input" value="拍摄场地3天" style="width:100px"></td><td><input class="form-input" value="¥192" style="width:55px;text-align:right"></td><td><select class="form-select" style="font-size:10px;padding:3px;width:45px"><option selected>是</option><option>否</option></select></td><td><button class="btn btn-xs btn-secondary">📎 上传</button></td></tr>
+  <tr><td><select class="form-select" style="font-size:11px;padding:4px"><option>模特</option><option>平台投放</option><option>场地租赁</option><option>设备</option><option>其他</option></select></td><td><input class="form-input" value="张丹妮" style="width:80px"></td><td><input class="form-input" value="¥4,500" style="width:70px;text-align:right"></td><td><input class="form-input" value="模特拍摄3天" style="width:100px"></td><td><input class="form-input" value="¥270" style="width:55px;text-align:right"></td><td><select class="form-select" style="font-size:10px;padding:3px;width:45px"><option selected>是</option><option>否</option></select></td><td><button class="btn btn-xs btn-secondary">📎 上传</button></td></tr>
+  </tbody></table>
+  </div></div>
+  <div class="row-between"><span class="muted">报销总金额:</span><span class="number lg">¥12,700</span><span class="muted">（其中可抵扣进项税 ¥762）</span></div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-expense')">保存草稿</button><button class="btn btn-primary" onclick="closeModal('modal-expense');showToast('报销单已提交审批','ok')">提交审批</button></div>
+</div></div>
+
+<!-- Modal: Vendor Pay -->
+<div class="modal-overlay" id="modal-vendor-pay" onclick="closeModal('modal-vendor-pay')">
+<div class="modal" style="width:500px" onclick="event.stopPropagation()">
+<div class="modal-header"><span class="modal-title">供应商付款登记</span><button class="drawer-close" onclick="closeModal('modal-vendor-pay')">×</button></div>
+<div class="modal-body">
+  <div class="preview-panel"><div class="pp-header">月结信息</div><div class="pp-row"><span class="pp-label">供应商</span><span class="pp-value">YY影视</span></div><div class="pp-row"><span class="pp-label">月份</span><span class="pp-value">2026-08</span></div><div class="pp-row"><span class="pp-label">结算金额</span><span class="pp-value number">¥12,500</span></div></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">付款金额</label><input class="form-input" value="¥12,500"></div><div class="form-group"><label class="form-label">付款日期</label><input class="form-input" type="date" value="2026-06-08"></div></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">付款方式</label><select class="form-select"><option>银行转账</option><option>其他</option></select></div><div class="form-group"><label class="form-label">银行流水号</label><input class="form-input" placeholder="BANK-20260608-001"></div></div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-vendor-pay')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-vendor-pay');showToast('付款已登记，月结单状态 → 已付款','ok')">确认付款</button></div>
+</div></div>
+
+<!-- ====== DRAWERS ====== -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- Drawer: Register Payment -->
+<div class="drawer" id="drawer-payment">
+<div class="drawer-header"><span style="font-family:var(--font-display);font-size:15px;font-weight:600">登记回款</span><button class="drawer-close" onclick="closeDrawer()">×</button></div>
+<div class="drawer-body">
+  <div class="form-group"><label class="form-label">关联应收</label><select class="form-select"><option>AR-001 · 美的 · ¥62,970 · 待回款</option><option>AR-002 · TCL · ¥47,228 · 逾期</option><option>AR-003 · 松下 · ¥89,000 · 部分回款</option></select></div>
+  <div class="form-group"><label class="form-label">回款金额</label><input class="form-input" value="¥62,970"></div>
+  <div class="form-row"><div class="form-group"><label class="form-label">回款日期</label><input class="form-input" type="date" value="2026-06-08"></div><div class="form-group"><label class="form-label">支付方式</label><select class="form-select"><option>银行转账</option><option>金单</option><option>京准通</option><option>其他</option></select></div></div>
+  <div class="form-group"><label class="form-label">银行流水号</label><input class="form-input" placeholder="BANK-20260608-002"></div>
+  <div class="form-group"><label class="form-label">备注</label><input class="form-input" placeholder="可选"></div>
+  <div class="preview-panel"><div class="pp-header">应收当前状态</div><div class="pp-row"><span class="pp-label">应收金额</span><span class="pp-value number">¥62,970</span></div><div class="pp-row"><span class="pp-label">已回款</span><span class="pp-value number">¥0</span></div><div class="pp-row"><span class="pp-label">未回款</span><span class="pp-value number" style="color:var(--accent)">¥62,970</span></div><div class="pp-row"><span class="pp-label">登记后状态</span><span class="pp-value"><span class="badge badge-teal">已回款 paid</span></span></div></div>
+</div>
+<div class="drawer-foot"><button class="btn btn-secondary" onclick="closeDrawer()">取消</button><button class="btn btn-primary" onclick="closeDrawer();showToast('回款 ¥62,970 已登记，应收已核销','ok')">确认回款</button></div>
+</div>
+
+<!-- Drawer: Vendor Detail -->
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ---- Navigation ----
+const pages = ['dashboard','proj-recon','proj-detail','ar','ar-summary','invoice','profit','salary','vendor','expense'];
+function navTo(id, pid){
+  pages.forEach(p => {
+    let el = document.getElementById('pg-' + p);
+    if(el) el.classList.toggle('active', p === id);
+  });
+  document.querySelectorAll('.nav-item,.nav-sub').forEach(n => n.classList.toggle('active', n.dataset.nav === id));
+}
+
+// ---- Sidebar clicks ----
+document.querySelectorAll('.nav-item,.nav-sub').forEach(i => {
+  i.addEventListener('click', () => { navTo(i.dataset.nav) });
+});
+// ---- Nav section toggle ----
+document.querySelectorAll('.nav-section').forEach(s => {
+  s.addEventListener('click', () => {
+    s.classList.toggle('collapsed');
+    let next = s.nextElementSibling;
+    while (next && next.classList.contains('nav-sub')) {
+      next.classList.toggle('hidden');
+      next = next.nextElementSibling;
+    }
+  });
+});
+
+// ---- 月份切换 ----
+function switchPjdMonth(m) {
+  // 切换标签样式
+  document.querySelectorAll('.pjd-mtab').forEach(t => {
+    t.classList.toggle('active', t.dataset.m === m);
+  });
+  // 切换内容
+  document.querySelectorAll('.pjd-month-content').forEach(c => {
+    c.style.display = c.id === 'pjd-m-' + m ? 'block' : 'none';
+  });
+  // 更新标题
+  document.getElementById('pjd-title').textContent = 
+    m === '2026-08' ? '美的2026年度框架' : '美的2026年度框架';
+}
+
+// ---- 成本逐条核对 ----
+function updateCheckedCount() {
+  const total = document.querySelectorAll('.cost-ck').length;
+  const checked = document.querySelectorAll('.cost-ck:checked').length;
+  document.getElementById('pjd-checked-count').textContent = '已核对 ' + checked + '/' + total;
+  const btn = document.getElementById('btn-gen-recon');
+  if (checked === total) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = '✅ 生成对账单并提交甲方';
+  } else {
+    btn.disabled = true;
+    btn.style.opacity = '.5';
+    btn.textContent = '⚠ 请先逐条核对全部成本（' + checked + '/' + total + '）后生成对账单';
+  }
+}
+
+function checkAllCostItems() {
+  document.querySelectorAll('.cost-ck').forEach(ck => { ck.checked = true; });
+  updateCheckedCount();
+  showToast('外包及其他成本已全部确认', 'ok');
+}
+
+function markDisputeDemo() {
+  const rows = document.querySelectorAll('#pjd-cost-tbody tr');
+  if (rows.length < 2) return;
+  const row = rows[1];
+  const ck = row.querySelector('.cost-ck');
+  if (ck) ck.checked = false;
+  row.style.background = '#fef3f3';
+  const lastTd = row.querySelector('td:last-child');
+  if (lastTd && !lastTd.innerHTML.includes('异常')) {
+    lastTd.innerHTML += ' <span class="badge badge-red" style="font-size:9px">异常</span>';
+  }
+  updateCheckedCount();
+  showToast('已标记第2条为异常，需联系PM确认', 'warn');
+}
+
+// ---- 生成对账单 ----
+function generateReconciliation() {
+  const checked = document.querySelectorAll('.cost-ck:checked').length;
+  const total = document.querySelectorAll('.cost-ck').length;
+  if (checked < total) {
+    showToast('请先核对全部成本明细', 'warn');
+    return;
+  }
+  // 显示对账单
+  document.getElementById('pjd-recon-result').style.display = 'block';
+  // 隐藏操作区
+  document.getElementById('pjd-action-card').style.opacity = '.6';
+  document.getElementById('pjd-action-card').querySelector('.btn-primary').textContent = '✅ 对账单已生成';
+  document.getElementById('pjd-action-card').querySelector('.btn-primary').disabled = true;
+  // 更新月份标签
+  const tab = document.querySelector('.pjd-mtab[data-m="2026-08"]');
+  tab.innerHTML = '<span class="badge badge-teal" style="margin-right:3px;font-size:9px">✓</span>2026-08';
+  showToast('对账单 RCN-2026-08-001 已生成，待甲方确认', 'ok');
+  // 滚动到对账单
+  setTimeout(() => {
+    document.getElementById('pjd-recon-result').scrollIntoView({behavior:'smooth'});
+  }, 200);
+}
+
+// ---- Modal ----
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeDrawer(); ['modal-invoice','modal-expense','modal-vendor-pay'].forEach(id=>closeModal(id)); } });
+
+// ---- Drawer ----
+function openDrawer(id){
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById(id).classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.querySelectorAll('.drawer.open').forEach(d => d.classList.remove('open'));
+}
+document.getElementById('drawer-overlay').addEventListener('click', closeDrawer);
+
+// ---- Tab ----
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', function(){
+    let p = this.closest('.tabs');
+    p.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+    let c = this.closest('.page') || this.closest('.content') || document;
+    c.querySelectorAll('.tab-content').forEach(ct => ct.classList.remove('active'));
+    let tg = c.querySelector('#tab-' + this.dataset.tab);
+    if(tg) tg.classList.add('active');
+  });
+});
+
+// ---- Vendor detail toggle ----
+function toggleVendorDetail(id) {
+  const row = document.querySelector(`.vendor-row[data-vendor="${id}"]`);
+  const detail = document.getElementById('detail-' + id);
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.vendor-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.vendor-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// ---- PJD salary detail toggle (项目对账页内部人力) ----
+function togglePjdSalDetail(id) {
+  const row = document.querySelector(`.pjd-sal-row[data-psal="${id}"]`);
+  const detail = document.getElementById('pjd-detail-' + id);
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.pjd-sal-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.pjd-sal-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// ---- Expense detail toggle ----
+function toggleExpDetail(id) {
+  const row = document.querySelector(`.exp-row[data-exp="${id}"]`);
+  const detail = document.getElementById('detail-' + id);
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.exp-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.exp-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// ---- Salary detail toggle ----
+function toggleSalaryDetail(id) {
+  const row = document.querySelector(`.sal-row[data-sal="${id}"]`);
+  const detail = document.getElementById('detail-' + id);
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.sal-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.sal-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// ---- Invoice detail toggle ----
+function toggleInvDetail(id) {
+  const row = document.querySelector(`.inv-row[data-inv="${id}"]`);
+  const detail = document.getElementById('detail-inv-' + id);
+  if (!row || !detail) return;
+  const isOpen = detail.classList.contains('open');
+  document.querySelectorAll('.inv-detail.open').forEach(d => d.classList.remove('open'));
+  document.querySelectorAll('.inv-row.expanded').forEach(r => r.classList.remove('expanded'));
+  if (!isOpen) {
+    detail.classList.add('open');
+    row.classList.add('expanded');
+  }
+}
+
+// ---- Toast ----
+function showToast(msg, type){
+  let t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ---- Filter chips (exclude pjd-month-tabs) ----
+document.querySelectorAll('.filter-chip:not(.pjd-mtab)').forEach(chip => {
+  chip.addEventListener('click', function(e){
+    e.stopPropagation();
+    let row = this.closest('.filter-row');
+    if(row){ row.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active')); }
+    this.classList.add('active');
+    let sel = this.textContent.trim();
+    let pg = this.closest('.page');
+    if (pg && pg.id === 'pg-expense') {
+      document.querySelectorAll('#pg-expense .exp-sub-table tbody tr').forEach(tr => {
+        if (sel === '全部') { tr.classList.remove('exp-filtered'); return; }
+        let badge = tr.querySelector('.badge');
+        if (!badge) { tr.classList.add('exp-filtered'); return; }
+        if (badge.textContent.trim() === sel) { tr.classList.remove('exp-filtered'); }
+        else { tr.classList.add('exp-filtered'); }
+      });
+    }
+    if (pg && pg.id === 'pg-invoice') {
+      document.querySelectorAll('#pg-invoice .inv-pending, #pg-invoice .inv-done').forEach(tr => {
+        if (sel === '全部') { tr.classList.remove('inv-filtered'); return; }
+        if (sel === '待开票') {
+          tr.classList.toggle('inv-filtered', !tr.classList.contains('inv-pending'));
+        } else if (sel === '已开票') {
+          tr.classList.toggle('inv-filtered', !tr.classList.contains('inv-done'));
+        }
+      });
+    }
+  });
+});
+</script>
+</body>
+</html>
