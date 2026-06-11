@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRM — 业财一体化管理平台</title>
+<title>业财一体化管理平台</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script>
@@ -20,471 +20,150 @@ tailwind.config = {
 </script>
 <style>
   body { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
-  .sidebar { width: 240px; min-height: 100vh; }
-  .main-content { margin-left: 240px; }
-  .view { display: none; }
-  .view.active { display: block; }
-  .nav-item { transition: all 0.15s ease; }
-  .nav-item:hover { background: rgba(255,255,255,0.08); }
-  .nav-item.active { background: rgba(59,130,246,0.15); color: #60a5fa; }
-  .kanban-col { min-width: 220px; }
-  .tier-row { animation: slideDown 0.2s ease; }
-  @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
-  .badge { display:inline-flex; align-items:center; padding:2px 10px; border-radius:9999px; font-size:11px; font-weight:500; }
-  .badge-blue   { background:#dbeafe; color:#1d4ed8; }
-  .badge-green  { background:#dcfce7; color:#16a34a; }
-  .badge-amber  { background:#fef3c7; color:#d97706; }
-  .badge-red    { background:#fee2e2; color:#dc2626; }
-  .badge-purple { background:#f3e8ff; color:#7c3aed; }
-  .badge-gray   { background:#f1f5f9; color:#64748b; }
+  .module-card { transition: all 0.25s ease; cursor: pointer; }
+  .module-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.12); }
   ::-webkit-scrollbar { width:6px; height:6px; }
   ::-webkit-scrollbar-track { background:transparent; }
   ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:3px; }
 </style>
 </head>
-<body class="bg-surface-50 text-surface-800">
+<body class="bg-gradient-to-br from-surface-50 to-blue-50 min-h-screen">
 
-<!-- ====== SIDEBAR ====== -->
-<aside class="sidebar fixed left-0 top-0 bg-surface-900 text-white flex flex-col z-30">
-  <div class="px-5 py-5 border-b border-white/10">
-    <div class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-brand-500 flex items-center justify-center text-sm font-bold">YC</div>
-      <div><div class="text-sm font-semibold leading-tight">业财一体化</div><div class="text-[10px] text-surface-400">CRM 客户管理</div></div>
-    </div>
-  </div>
-
-  <nav class="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-    <div class="text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-3 mb-2">CRM 客户管理</div>
-    <button class="nav-item active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-300" onclick="showView('dashboard')" data-nav="dashboard">
-      <i class="fas fa-th-large w-4 text-center"></i> 工作台概览
-    </button>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-300" onclick="showView('clients')" data-nav="clients">
-      <i class="fas fa-building w-4 text-center"></i> 客户列表
-      <span class="ml-auto text-[10px] bg-surface-700 px-1.5 py-0.5 rounded">8</span>
-    </button>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-300" onclick="showView('contracts')" data-nav="contracts">
-      <i class="fas fa-file-contract w-4 text-center"></i> 合同列表
-      <span class="ml-auto text-[10px] bg-surface-700 px-1.5 py-0.5 rounded">9</span>
-    </button>
-
-    <div class="text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-3 mt-6 mb-2">项目管理</div>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-500 cursor-not-allowed" disabled>
-      <i class="fas fa-folder-tree w-4 text-center"></i> 项目列表
-    </button>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-500 cursor-not-allowed" disabled>
-      <i class="fas fa-tasks w-4 text-center"></i> 任务看板
-    </button>
-
-    <div class="text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-3 mt-6 mb-2">财务管理</div>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-500 cursor-not-allowed" disabled>
-      <i class="fas fa-calculator w-4 text-center"></i> 对账核销
-    </button>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-500 cursor-not-allowed" disabled>
-      <i class="fas fa-chart-line w-4 text-center"></i> 经营分析
-    </button>
-
-    <div class="text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-3 mt-6 mb-2">系统管理</div>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-300" onclick="showView('kpi-templates')" data-nav="kpi-templates">
-      <i class="fas fa-bullseye w-4 text-center"></i> KPI 模板管理
-    </button>
-    <button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-surface-300" onclick="showView('dictionary')" data-nav="dictionary">
-      <i class="fas fa-book w-4 text-center"></i> 字典配置
-    </button>
-  </nav>
-
-  <div class="px-4 py-3 border-t border-white/10">
-    <div class="flex items-center gap-3">
-      <div class="w-8 h-8 rounded-full bg-brand-600 flex items-center justify-center text-xs font-bold">张</div>
-      <div><div class="text-xs font-medium">张经理</div><div class="text-[10px] text-surface-400">项目经理</div></div>
-    </div>
-  </div>
-</aside>
-
-<!-- ====== MAIN CONTENT ====== -->
-<div class="main-content">
-  <header class="sticky top-0 z-20 bg-white/80 backdrop-blur-md border-b border-surface-200 px-6 py-3.5 flex items-center justify-between">
-    <div>
-      <h1 id="topbarTitle" class="text-lg font-semibold text-surface-800">CRM 工作台</h1>
-      <p class="text-xs text-surface-400 mt-0.5" id="topbarSub">概览客户、合同与商机</p>
-    </div>
+<header class="bg-white border-b border-surface-200 shadow-sm">
+  <div class="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
     <div class="flex items-center gap-4">
-      <button class="relative text-surface-400 hover:text-surface-600"><i class="fas fa-bell text-lg"></i><span class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full"></span></button>
-      <div class="w-8 h-8 rounded-full bg-surface-200 flex items-center justify-center text-surface-500 text-xs font-bold">张</div>
-    </div>
-  </header>
-
-  <main class="p-6">
-
-<!-- ==================== DASHBOARD ==================== -->
-<div id="view-dashboard" class="view active">
-  <div class="grid grid-cols-4 gap-5 mb-6">
-    <div class="bg-white rounded-xl border border-surface-200 p-5 hover:shadow-md transition-shadow"><div class="text-xs text-surface-400 mb-1">活跃客户</div><div class="text-2xl font-bold text-surface-800">8<span class="text-sm font-normal text-green-500 ml-2">+2</span></div><div class="text-[11px] text-surface-400 mt-1">本月新增 TCL、云米</div></div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5 hover:shadow-md transition-shadow"><div class="text-xs text-surface-400 mb-1">在途合同</div><div class="text-2xl font-bold text-surface-800">9</div><div class="text-[11px] text-surface-400 mt-1">执行中 6 · 草稿 3</div></div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5 hover:shadow-md transition-shadow"><div class="text-xs text-surface-400 mb-1">合同总金额</div><div class="text-2xl font-bold text-surface-800">¥2,860<span class="text-sm font-normal text-surface-400">万</span></div><div class="text-[11px] text-surface-400 mt-1">年框占比 82%</div></div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5 hover:shadow-md transition-shadow"><div class="text-xs text-surface-400 mb-1">在跟商机</div><div class="text-2xl font-bold text-surface-800">5</div><div class="text-[11px] text-amber-500 mt-1">预估总额 ¥680万</div></div>
-  </div>
-
-  <div class="grid grid-cols-3 gap-5 mb-6">
-    <div class="col-span-2 bg-white rounded-xl border border-surface-200">
-      <div class="px-5 py-3.5 border-b border-surface-100 flex items-center justify-between"><h3 class="text-sm font-semibold">近期合同</h3><button class="text-xs text-brand-600 hover:underline" onclick="showView('contracts')">查看全部 →</button></div>
-      <div class="p-0 overflow-x-auto"><table class="w-full text-xs">
-        <thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-2.5 font-medium">合同编号</th><th class="text-left px-5 py-2.5 font-medium">客户</th><th class="text-left px-5 py-2.5 font-medium">类型</th><th class="text-right px-5 py-2.5 font-medium">金额</th><th class="text-center px-5 py-2.5 font-medium">状态</th></tr></thead>
-        <tbody>
-          <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-002</td><td class="px-5 py-3">美的集团</td><td class="px-5 py-3"><span class="badge badge-blue">年框</span></td><td class="px-5 py-3 text-right font-medium">¥10,000,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr>
-          <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-001</td><td class="px-5 py-3">松下电器</td><td class="px-5 py-3"><span class="badge badge-blue">年框</span></td><td class="px-5 py-3 text-right font-medium">¥6,000,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr>
-          <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-005</td><td class="px-5 py-3">云米科技</td><td class="px-5 py-3"><span class="badge badge-purple">临时</span></td><td class="px-5 py-3 text-right font-medium">¥350,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr>
-        </tbody>
-      </table></div>
-    </div>
-    <div class="bg-white rounded-xl border border-surface-200">
-      <div class="px-5 py-3.5 border-b border-surface-100"><h3 class="text-sm font-semibold">待处理事项</h3></div>
-      <div class="p-4 space-y-3">
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-amber-50 cursor-pointer"><span class="w-2 h-2 bg-amber-400 rounded-full"></span><div><div class="text-xs font-medium">对账待确认 · 3笔</div><div class="text-[10px] text-surface-400">美的 6月产出对账单</div></div></div>
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-red-50 cursor-pointer"><span class="w-2 h-2 bg-red-400 rounded-full"></span><div><div class="text-xs font-medium">未配置单价 · 2份</div><div class="text-[10px] text-surface-400">HT-2026-004, HT-2026-008</div></div></div>
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-blue-50 cursor-pointer"><span class="w-2 h-2 bg-blue-400 rounded-full"></span><div><div class="text-xs font-medium">补充协议待审批 · 2份</div><div class="text-[10px] text-surface-400">AMD-2026-001, AMD-2026-002</div></div></div>
-        <div class="flex items-center gap-3 p-2 rounded-lg hover:bg-purple-50 cursor-pointer"><span class="w-2 h-2 bg-purple-400 rounded-full"></span><div><div class="text-xs font-medium">报价阶段 · 1个</div><div class="text-[10px] text-surface-400">海尔智家 Q3 内容运营</div></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="bg-white rounded-xl border border-surface-200">
-    <div class="px-5 py-3.5 border-b border-surface-100 flex items-center justify-between"><h3 class="text-sm font-semibold">商机看板</h3><span class="text-[11px] text-surface-400">预估总额 ¥680万 · 在跟 5个</span></div>
-    <div class="p-5 flex gap-4 overflow-x-auto">
-      <div class="kanban-col flex-1 min-w-[200px]"><div class="text-xs font-semibold text-surface-500 mb-3 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-surface-300"></span>🧊 线索 <span class="text-surface-400">2</span></div><div class="space-y-2"><div class="bg-surface-50 rounded-lg p-3 border border-surface-100 hover:shadow-sm cursor-pointer"><div class="text-xs font-medium">AA品牌年度内容运营</div><div class="text-[11px] text-surface-400 mt-1">预估 ¥150万</div><div class="flex justify-between mt-2 text-[10px] text-surface-400"><span>张经理</span><span>📅 6/15</span></div></div><div class="bg-surface-50 rounded-lg p-3 border border-surface-100 hover:shadow-sm cursor-pointer"><div class="text-xs font-medium">BB电器短视频合作</div><div class="text-[11px] text-surface-400 mt-1">预估 ¥80万</div><div class="flex justify-between mt-2 text-[10px] text-surface-400"><span>李AE</span><span>📅 7/1</span></div></div></div></div>
-      <div class="kanban-col flex-1 min-w-[200px]"><div class="text-xs font-semibold text-surface-500 mb-3 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-400"></span>💬 需求沟通 <span class="text-surface-400">1</span></div><div class="space-y-2"><div class="bg-surface-50 rounded-lg p-3 border border-surface-100 hover:shadow-sm cursor-pointer"><div class="text-xs font-medium">长虹电器2026内容运营</div><div class="text-[11px] text-surface-400 mt-1">预估 ¥280万</div><div class="flex justify-between mt-2 text-[10px] text-surface-400"><span>概率 60%</span><span>📅 6/20</span></div></div></div></div>
-      <div class="kanban-col flex-1 min-w-[200px]"><div class="text-xs font-semibold text-surface-500 mb-3 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-amber-400"></span>📊 报价 <span class="text-surface-400">1</span></div><div class="space-y-2"><div class="bg-surface-50 rounded-lg p-3 border border-surface-100 hover:shadow-sm cursor-pointer"><div class="text-xs font-medium">海尔智家Q3内容运营</div><div class="text-[11px] text-surface-400 mt-1">报价 ¥120万</div><div class="flex justify-between mt-2 text-[10px] text-surface-400"><span>概率 80%</span><span>📅 6/10</span></div></div></div></div>
-      <div class="kanban-col flex-1 min-w-[200px]"><div class="text-xs font-semibold text-surface-500 mb-3 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-green-400"></span>✅ 赢单 <span class="text-surface-400">1</span></div><div class="space-y-2"><div class="bg-green-50 rounded-lg p-3 border border-green-100 hover:shadow-sm cursor-pointer" onclick="alert('赢单商机 → 可一键创建合同')"><div class="text-xs font-medium">云米618专项</div><div class="text-[11px] text-surface-400 mt-1">成交 ¥35万</div><div class="flex justify-between mt-2 text-[10px]"><span>已签合同</span><span class="text-green-600 font-medium">✓</span></div></div></div></div>
-      <div class="kanban-col flex-1 min-w-[200px]"><div class="text-xs font-semibold text-surface-500 mb-3 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-red-300"></span>❌ 输单 <span class="text-surface-400">0</span></div><div class="text-[11px] text-surface-300 text-center py-6">暂无输单记录</div></div>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== CLIENTS LIST ==================== -->
-<div id="view-clients" class="view">
-  <div class="bg-white rounded-xl border border-surface-200 p-4 mb-5 flex items-center gap-4 flex-wrap">
-    <input class="flex-1 min-w-[200px] border border-surface-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="搜索客户名称...">
-    <select class="border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>全部等级</option><option>S级</option><option>A级</option><option>B级</option><option>C级</option></select>
-    <select class="border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>全部状态</option><option>合作中</option><option>潜在</option><option>已终止</option></select>
-    <button class="bg-brand-600 text-white rounded-lg px-4 py-2 text-xs font-medium hover:bg-brand-700" onclick="showCreateClient()">+ 新建客户</button>
-  </div>
-
-  <div class="bg-white rounded-xl border border-surface-200 overflow-hidden">
-    <table class="w-full text-xs">
-      <thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-3 font-medium">客户名称</th><th class="text-left px-5 py-3 font-medium">等级</th><th class="text-left px-5 py-3 font-medium">行业</th><th class="text-left px-5 py-3 font-medium">状态</th><th class="text-right px-5 py-3 font-medium">在途合同</th><th class="text-right px-5 py-3 font-medium">累计合同额</th></tr></thead>
-      <tbody>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('client-detail')"><td class="px-5 py-3.5 font-medium"><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-brand-100 text-brand-600 flex items-center justify-center text-[10px] font-bold">美</span>美的集团</div></td><td class="px-5 py-3.5"><span class="badge badge-red">S级</span></td><td class="px-5 py-3.5">家电</td><td class="px-5 py-3.5"><span class="badge badge-green">合作中</span></td><td class="px-5 py-3.5 text-right font-medium">3</td><td class="px-5 py-3.5 text-right font-medium">¥12,000,000</td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('client-detail')"><td class="px-5 py-3.5 font-medium"><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-[10px] font-bold">松</span>松下电器</div></td><td class="px-5 py-3.5"><span class="badge badge-amber">A级</span></td><td class="px-5 py-3.5">消费电子</td><td class="px-5 py-3.5"><span class="badge badge-green">合作中</span></td><td class="px-5 py-3.5 text-right font-medium">2</td><td class="px-5 py-3.5 text-right font-medium">¥8,000,000</td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('client-detail')"><td class="px-5 py-3.5 font-medium flex items-center gap-2"><span class="ml-4 text-[10px] text-surface-400">└</span><span class="w-7 h-7 rounded-lg bg-surface-100 text-surface-500 flex items-center justify-center text-[10px] font-bold">智</span>TCL智能科技（宁波）</td><td class="px-5 py-3.5"><span class="badge badge-amber">A级</span></td><td class="px-5 py-3.5">家电</td><td class="px-5 py-3.5"><span class="badge badge-green">合作中</span></td><td class="px-5 py-3.5 text-right font-medium">1</td><td class="px-5 py-3.5 text-right font-medium">¥2,500,000</td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('client-detail')"><td class="px-5 py-3.5 font-medium flex items-center gap-2"><span class="ml-4 text-[10px] text-surface-400">└</span><span class="w-7 h-7 rounded-lg bg-surface-100 text-surface-500 flex items-center justify-center text-[10px] font-bold">酷</span>惠州酷友</td><td class="px-5 py-3.5"><span class="badge badge-blue">B级</span></td><td class="px-5 py-3.5">家电</td><td class="px-5 py-3.5"><span class="badge badge-green">合作中</span></td><td class="px-5 py-3.5 text-right font-medium">1</td><td class="px-5 py-3.5 text-right font-medium">¥800,000</td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('client-detail')"><td class="px-5 py-3.5 font-medium"><div class="flex items-center gap-2"><span class="w-7 h-7 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-[10px] font-bold">云</span>云米科技</div></td><td class="px-5 py-3.5"><span class="badge badge-blue">B级</span></td><td class="px-5 py-3.5">互联网</td><td class="px-5 py-3.5"><span class="badge badge-green">合作中</span></td><td class="px-5 py-3.5 text-right font-medium">1</td><td class="px-5 py-3.5 text-right font-medium">¥350,000</td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ==================== CLIENT DETAIL ==================== -->
-<div id="view-client-detail" class="view">
-  <div class="flex items-center gap-3 mb-5">
-    <button class="text-surface-400 hover:text-surface-600 text-xs" onclick="showView('clients')">← 返回客户列表</button>
-    <span class="text-surface-300">/</span><span class="text-xs text-surface-500" id="cdBreadcrumb">美的集团</span>
-  </div>
-  <div class="bg-white rounded-xl border border-surface-200 p-6 mb-5">
-    <div class="flex items-start justify-between">
-      <div class="flex items-center gap-4">
-        <div class="w-12 h-12 rounded-xl bg-brand-100 text-brand-600 flex items-center justify-center text-lg font-bold" id="cdAvatar">美</div>
-        <div>
-          <h2 class="text-lg font-bold" id="cdName">美的集团</h2>
-          <div class="flex items-center gap-3 mt-1 text-xs text-surface-400"><span class="badge badge-red">S级</span><span class="badge badge-green">合作中</span><span>家电行业</span><span>统一信用代码：91440606719083370N</span></div>
-        </div>
-      </div>
-      <button class="border border-surface-200 rounded-lg px-4 py-2 text-xs hover:bg-surface-50">编辑客户</button>
-    </div>
-    <div class="flex gap-1 mt-5 border-b border-surface-100">
-      <button class="px-4 py-2 text-xs font-medium text-brand-600 border-b-2 border-brand-600 -mb-px cd-tab active" onclick="switchCDTab('overview',this)">客户总览</button>
-      <button class="px-4 py-2 text-xs text-surface-400 hover:text-surface-600 cd-tab" onclick="switchCDTab('contacts',this)">对接人 <span class="text-[10px]">3</span></button>
-      <button class="px-4 py-2 text-xs text-surface-400 hover:text-surface-600 cd-tab" onclick="switchCDTab('cdcontracts',this)">合同 <span class="text-[10px]">3</span></button>
-      <button class="px-4 py-2 text-xs text-surface-400 hover:text-surface-600 cd-tab" onclick="switchCDTab('cdprojects',this)">项目 <span class="text-[10px]">2</span></button>
-      <button class="px-4 py-2 text-xs text-surface-400 hover:text-surface-600 cd-tab" onclick="switchCDTab('cdopps',this)">商机 <span class="text-[10px]">1</span></button>
-    </div>
-  </div>
-  <div id="cdTab-overview" class="cd-tab-panel">
-    <div class="grid grid-cols-4 gap-4 mb-5"><div class="bg-white rounded-lg border border-surface-200 p-4"><div class="text-[10px] text-surface-400">累计合同额</div><div class="text-lg font-bold">¥1,200<span class="text-sm font-normal text-surface-400">万</span></div></div><div class="bg-white rounded-lg border border-surface-200 p-4"><div class="text-[10px] text-surface-400">在途合同</div><div class="text-lg font-bold">3</div></div><div class="bg-white rounded-lg border border-surface-200 p-4"><div class="text-[10px] text-surface-400">在途项目</div><div class="text-lg font-bold">2</div></div><div class="bg-white rounded-lg border border-surface-200 p-4"><div class="text-[10px] text-surface-400">应收账款</div><div class="text-lg font-bold">¥450<span class="text-sm font-normal text-surface-400">万</span></div></div></div>
-    <div class="bg-white rounded-xl border border-surface-200 overflow-hidden"><div class="px-5 py-3 border-b border-surface-100 text-xs font-semibold">关联合同</div><table class="w-full text-xs"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-2.5">合同编号</th><th class="text-left px-5 py-2.5">类型</th><th class="text-right px-5 py-2.5">金额</th><th class="text-center px-5 py-2.5">状态</th></tr></thead><tbody><tr class="hover:bg-surface-50 cursor-pointer" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-002</td><td class="px-5 py-3"><span class="badge badge-blue">年框</span></td><td class="px-5 py-3 text-right">¥10,000,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr><tr class="hover:bg-surface-50 cursor-pointer" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-005</td><td class="px-5 py-3"><span class="badge badge-purple">临时</span></td><td class="px-5 py-3 text-right">¥350,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr></tbody></table></div>
-  </div>
-  <div id="cdTab-contacts" class="cd-tab-panel hidden">
-    <div class="bg-white rounded-xl border border-surface-200 overflow-hidden">
-      <div class="px-5 py-3 border-b border-surface-100 flex items-center justify-between"><span class="text-xs font-semibold">甲方对接人</span><button class="text-xs text-brand-600 hover:underline" onclick="addContactDisplayRow(this)">+ 添加对接人</button></div>
-      <table class="w-full text-xs"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-2.5">姓名</th><th class="text-left px-5 py-2.5">甲方职位</th><th class="text-left px-5 py-2.5">对接平台</th><th class="text-left px-5 py-2.5">手机号</th><th class="text-left px-5 py-2.5">邮箱</th><th class="text-left px-5 py-2.5">微信</th><th class="text-center px-5 py-2.5">主对接人</th><th></th></tr></thead><tbody id="contacts-tbody"><tr><td class="px-5 py-2.5">王总监</td><td class="px-5 py-2.5">品牌营销总监</td><td class="px-5 py-2.5"><span class="badge badge-purple">统筹全局</span></td><td class="px-5 py-2.5">138****6789</td><td class="px-5 py-2.5">wang@midea.com</td><td class="px-5 py-2.5">wang_mkt</td><td class="px-5 py-2.5 text-center"><span class="badge badge-green">是</span></td><td></td></tr><tr><td class="px-5 py-2.5">刘经理</td><td class="px-5 py-2.5">内容运营经理</td><td class="px-5 py-2.5"><span class="badge badge-blue">淘宝</span></td><td class="px-5 py-2.5">139****8901</td><td class="px-5 py-2.5">liu@midea.com</td><td class="px-5 py-2.5">liu_content</td><td class="px-5 py-2.5 text-center"><span class="badge badge-gray">否</span></td><td></td></tr><tr><td class="px-5 py-2.5">陈专员</td><td class="px-5 py-2.5">采购专员</td><td class="px-5 py-2.5"><span class="badge badge-green">京东</span></td><td class="px-5 py-2.5">136****2345</td><td class="px-5 py-2.5">chen@midea.com</td><td class="px-5 py-2.5">-</td><td class="px-5 py-2.5 text-center"><span class="badge badge-gray">否</span></td><td></td></tr></tbody></table>
-    </div>
-  </div>
-  <div id="cdTab-cdcontracts" class="cd-tab-panel hidden"><div class="bg-white rounded-xl border border-surface-200 overflow-hidden"><table class="w-full text-xs"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-2.5">合同编号</th><th class="text-left px-5 py-2.5">类型</th><th class="text-right px-5 py-2.5">金额</th><th class="text-center px-5 py-2.5">状态</th></tr></thead><tbody><tr class="hover:bg-surface-50 cursor-pointer" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-002</td><td class="px-5 py-3"><span class="badge badge-blue">年框</span></td><td class="px-5 py-3 text-right">¥10,000,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr><tr class="hover:bg-surface-50 cursor-pointer" onclick="showView('contract-detail')"><td class="px-5 py-3 font-medium text-brand-600">HT-2026-005</td><td class="px-5 py-3"><span class="badge badge-purple">临时</span></td><td class="px-5 py-3 text-right">¥350,000</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td></tr></tbody></table></div></div>
-  <div id="cdTab-cdprojects" class="cd-tab-panel hidden"><div class="bg-white rounded-xl border border-surface-200 overflow-hidden"><table class="w-full text-xs"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-2.5">项目编号</th><th class="text-left px-5 py-2.5">项目名称</th><th class="text-left px-5 py-2.5">关联合同</th><th class="text-center px-5 py-2.5">状态</th><th class="text-right px-5 py-2.5">消耗</th></tr></thead><tbody><tr><td class="px-5 py-3">PJ-2026-001</td><td class="px-5 py-3">美的年度运营</td><td class="px-5 py-3">HT-2026-002</td><td class="px-5 py-3 text-center"><span class="badge badge-green">执行中</span></td><td class="px-5 py-3 text-right">45%</td></tr><tr><td class="px-5 py-3">PJ-2026-005</td><td class="px-5 py-3">云米618专项</td><td class="px-5 py-3">HT-2026-005</td><td class="px-5 py-3 text-center"><span class="badge badge-amber">准备中</span></td><td class="px-5 py-3 text-right">0%</td></tr></tbody></table></div></div>
-  <div id="cdTab-cdopps" class="cd-tab-panel hidden"><div class="bg-white rounded-xl border border-surface-200 overflow-hidden"><table class="w-full text-xs"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-2.5">商机名称</th><th class="text-left px-5 py-2.5">阶段</th><th class="text-right px-5 py-2.5">预估金额</th><th class="text-center px-5 py-2.5">概率</th></tr></thead><tbody><tr><td class="px-5 py-3">美的2027续签</td><td class="px-5 py-3"><span class="badge badge-blue">需求沟通</span></td><td class="px-5 py-3 text-right">¥12,000,000</td><td class="px-5 py-3 text-center">50%</td></tr></tbody></table></div></div>
-</div>
-
-<!-- ==================== CONTRACTS LIST ==================== -->
-<div id="view-contracts" class="view">
-  <div class="bg-white rounded-xl border border-surface-200 p-4 mb-5 flex items-center gap-4 flex-wrap">
-    <input class="flex-1 min-w-[200px] border border-surface-200 rounded-lg px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-200" placeholder="搜索合同编号 / 客户名称...">
-    <select class="border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>全部类型</option><option>年框</option><option>季度包</option><option>临时需求</option></select>
-    <select class="border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>全部状态</option><option>执行中</option><option>草稿</option><option>已完成</option></select>
-    <input type="date" class="border border-surface-200 rounded-lg px-3 py-2 text-xs" value="2026-01-01">
-    <span class="text-xs text-surface-300">至</span>
-    <input type="date" class="border border-surface-200 rounded-lg px-3 py-2 text-xs" value="2026-12-31">
-    <button class="bg-brand-600 text-white rounded-lg px-4 py-2 text-xs font-medium hover:bg-brand-700" onclick="showView('create-contract')">+ 新建合同</button>
-  </div>
-  <div class="bg-white rounded-xl border border-surface-200 overflow-hidden">
-    <table class="w-full text-xs">
-      <thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-5 py-3 font-medium">合同编号</th><th class="text-left px-5 py-3 font-medium">合同名称</th><th class="text-left px-5 py-3 font-medium">客户</th><th class="text-left px-5 py-3 font-medium">类型</th><th class="text-right px-5 py-3 font-medium">金额</th><th class="text-left px-5 py-3 font-medium">签约日期</th><th class="text-center px-5 py-3 font-medium">状态</th></tr></thead>
-      <tbody>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3.5 font-medium text-brand-600">HT-2026-002</td><td class="px-5 py-3.5">美的集团2026年度内容运营框架协议</td><td class="px-5 py-3.5">美的集团</td><td class="px-5 py-3.5"><span class="badge badge-blue">年框</span></td><td class="px-5 py-3.5 text-right font-medium">¥10,000,000</td><td class="px-5 py-3.5">2026-01-15</td><td class="px-5 py-3.5 text-center"><span class="badge badge-green">执行中</span></td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3.5 font-medium text-brand-600">HT-2026-001</td><td class="px-5 py-3.5">松下电器2026年度内容运营</td><td class="px-5 py-3.5">松下电器</td><td class="px-5 py-3.5"><span class="badge badge-blue">年框</span></td><td class="px-5 py-3.5 text-right font-medium">¥6,000,000</td><td class="px-5 py-3.5">2025-12-20</td><td class="px-5 py-3.5 text-center"><span class="badge badge-green">执行中</span></td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3.5 font-medium text-brand-600">HT-2026-003</td><td class="px-5 py-3.5">TCL智能科技季度内容服务</td><td class="px-5 py-3.5">TCL智能科技</td><td class="px-5 py-3.5"><span class="badge badge-amber">季度包</span></td><td class="px-5 py-3.5 text-right font-medium">¥2,500,000</td><td class="px-5 py-3.5">2026-03-01</td><td class="px-5 py-3.5 text-center"><span class="badge badge-green">执行中</span></td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3.5 font-medium text-brand-600">HT-2026-004</td><td class="px-5 py-3.5">创维电器618大促专项</td><td class="px-5 py-3.5">创维电器</td><td class="px-5 py-3.5"><span class="badge badge-purple">临时</span></td><td class="px-5 py-3.5 text-right font-medium">¥800,000</td><td class="px-5 py-3.5">2026-04-15</td><td class="px-5 py-3.5 text-center"><span class="badge badge-gray">草稿</span></td></tr>
-        <tr class="hover:bg-surface-50 cursor-pointer border-b border-surface-50" onclick="showView('contract-detail')"><td class="px-5 py-3.5 font-medium text-brand-600">HT-2026-005</td><td class="px-5 py-3.5">云米科技618内容专项</td><td class="px-5 py-3.5">云米科技</td><td class="px-5 py-3.5"><span class="badge badge-purple">临时</span></td><td class="px-5 py-3.5 text-right font-medium">¥350,000</td><td class="px-5 py-3.5">2026-05-01</td><td class="px-5 py-3.5 text-center"><span class="badge badge-green">执行中</span></td></tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<!-- ==================== CONTRACT DETAIL ==================== -->
-<div id="view-contract-detail" class="view">
-  <div class="flex items-center gap-3 mb-5">
-    <button class="text-surface-400 hover:text-surface-600 text-xs" onclick="showView('contracts')">← 返回合同列表</button>
-  </div>
-
-  <div class="bg-white rounded-xl border border-surface-200 p-6 mb-5">
-    <div class="flex items-start justify-between">
+      <div class="w-10 h-10 rounded-xl bg-brand-600 flex items-center justify-center text-white font-bold text-lg">YC</div>
       <div>
-        <div class="flex items-center gap-2 mb-1"><span class="text-xs text-surface-400">HT-2026-002</span><span class="badge badge-blue">年框</span><span class="badge badge-green">执行中</span></div>
-        <h2 class="text-lg font-bold">美的集团2026年度内容运营框架协议</h2>
-        <div class="flex flex-wrap gap-4 mt-2 text-xs text-surface-500"><span>客户：<b class="text-surface-700">美的集团</b></span><span>签约：2026-01-15</span><span>到期：2026-12-31</span><span>结算：<span class="badge badge-purple">双重考核 50%+50%</span></span><span>支付：<b>金单 · 90工作日</b></span><span>税率：6%</span></div>
+        <h1 class="text-xl font-bold text-surface-800">业财一体化管理平台</h1>
+        <p class="text-xs text-surface-400">E-commerce Content Operation & Finance Integration</p>
       </div>
-      <div class="flex gap-2"><button class="border border-surface-200 rounded-lg px-3 py-1.5 text-xs hover:bg-surface-50">编辑合同</button><button class="bg-brand-600 text-white rounded-lg px-3 py-1.5 text-xs hover:bg-brand-700" onclick="showAmendmentForm()">+ 创建补充协议</button></div>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-brand-500 flex items-center justify-center text-xs font-bold text-white">张</div>
+      <div class="text-right"><div class="text-sm font-medium text-surface-700">张经理</div><div class="text-[10px] text-surface-400">项目经理</div></div>
     </div>
   </div>
+</header>
 
-  <div class="grid grid-cols-3 gap-4 mb-5">
-    <div class="bg-white rounded-xl border border-surface-200 p-5">
-      <h3 class="text-xs font-semibold text-surface-400 mb-3">📋 金额概览</h3>
-      <div class="space-y-3"><div><div class="text-[10px] text-surface-400">合同总金额</div><div class="text-lg font-bold">¥10,000,000</div></div><div><div class="text-[10px] text-surface-400">单价明细合计</div><div class="text-lg font-bold">¥3,850,000</div><div class="text-[10px] text-amber-500 mt-0.5">剩余 ¥6,150,000 未分配</div></div></div>
-    </div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5">
-      <h3 class="text-xs font-semibold text-surface-400 mb-3">📁 关联项目</h3>
-      <div class="flex items-center justify-between py-1"><span class="text-xs">PJ-2026-001 美的年度运营</span><span class="badge badge-green">执行中</span></div><div class="mt-2 w-full bg-surface-100 rounded-full h-1.5"><div class="bg-brand-500 h-1.5 rounded-full" style="width:45%"></div></div><div class="text-[10px] text-surface-400 mt-1">消耗 45%</div>
-      <div class="text-[10px] text-surface-400 mt-3">补充协议追加已同步到项目预算</div>
-    </div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5">
-      <h3 class="text-xs font-semibold text-surface-400 mb-3">🎯 KPI 考核</h3>
-      <div class="space-y-2">
-        <div class="flex justify-between items-center p-2 bg-surface-50 rounded-lg"><span class="text-xs">👁 UV</span><span class="text-xs font-semibold">1000万</span><span class="text-[10px] text-surface-400">人次</span></div>
-        <div class="flex justify-between items-center p-2 bg-surface-50 rounded-lg"><span class="text-xs">📊 内容数</span><span class="text-xs font-semibold">5,000</span><span class="text-[10px] text-surface-400">篇</span></div>
+<main class="max-w-6xl mx-auto px-6 py-10">
+  <div class="mb-8">
+    <h2 class="text-2xl font-bold text-surface-800">选择业务模块</h2>
+    <p class="text-sm text-surface-400 mt-1">点击卡片进入对应模块的工作台</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+    <a href="crm/index.html" class="module-card bg-white rounded-2xl border border-surface-200 p-6 no-underline text-inherit block">
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-12 h-12 rounded-xl bg-blue-50 flex items-center justify-center">
+          <i class="fas fa-users text-brand-600 text-xl"></i>
+        </div>
+        <span class="badge text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-brand-700 font-medium">v3.2</span>
       </div>
-      <div class="text-[10px] text-surface-400 mt-3">KPI模板：家电行业标准 | 考核费50%<br>阶梯 ≥90%→100% · 80-90%→90% · 60-80%→50% · &lt;60%→0%</div>
-    </div>
-  </div>
-
-  <div class="bg-white rounded-xl border border-surface-200 mb-5 overflow-hidden">
-    <div class="px-5 py-3.5 border-b border-surface-100 flex items-center justify-between"><h3 class="text-xs font-semibold">📋 内容单价明细（当前版本 v2）</h3><div class="flex gap-2"><button class="text-xs text-brand-600 hover:underline" onclick="showPriceVersions()">报价版本对比</button><button class="text-xs text-brand-600 hover:underline" onclick="addPriceRow(this)">+ 添加品类</button></div></div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-[11px]">
-        <thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-4 py-2.5">品类</th><th class="text-left px-4 py-2.5">内容类型</th><th class="text-left px-4 py-2.5">费用类型</th><th class="text-right px-4 py-2.5">单价</th><th class="text-right px-4 py-2.5">数量</th><th class="text-right px-4 py-2.5">小计</th><th class="text-left px-4 py-2.5">阶梯折扣</th><th class="text-right px-4 py-2.5">已消耗</th><th class="text-right px-4 py-2.5">剩余</th><th class="text-center px-4 py-2.5">版本</th><th class="text-left px-4 py-2.5">备注</th></tr></thead>
-        <tbody id="price-tbody">
-          <tr class="border-b border-surface-50"><td class="px-4 py-3 font-medium">🎬 视频</td><td class="px-4 py-3"><span class="badge badge-blue">产品展示</span></td><td class="px-4 py-3"><span class="badge badge-purple">合价</span></td><td class="px-4 py-3 text-right font-medium">150元/条</td><td class="px-4 py-3 text-right">10,000</td><td class="px-4 py-3 text-right font-medium">¥1,500,000</td><td class="px-4 py-3"><span class="text-brand-600 cursor-pointer text-[10px]" onclick="toggleTierPopover()">查看 4档 ▾</span></td><td class="px-4 py-3 text-right">4,200<span class="text-surface-400">(42%)</span></td><td class="px-4 py-3 text-right">5,800</td><td class="px-4 py-3 text-center"><span class="badge badge-purple">v2</span></td><td class="px-4 py-3 text-surface-400">v1:120元 制作+投放</td></tr>
-          <tr class="border-b border-surface-50"><td class="px-4 py-3 font-medium">📝 图文</td><td class="px-4 py-3"><span class="badge badge-blue">视频口播</span></td><td class="px-4 py-3"><span class="badge badge-blue">制作费</span></td><td class="px-4 py-3 text-right font-medium">30元/条</td><td class="px-4 py-3 text-right">50,000</td><td class="px-4 py-3 text-right font-medium">¥1,500,000</td><td class="px-4 py-3 text-surface-300">无阶梯</td><td class="px-4 py-3 text-right">22,000<span class="text-surface-400">(44%)</span></td><td class="px-4 py-3 text-right">28,000</td><td class="px-4 py-3 text-center"><span class="badge badge-green">v1</span></td><td class="px-4 py-3 text-surface-400">仅制作，投放另计</td></tr>
-          <tr class="border-b border-surface-50"><td class="px-4 py-3 font-medium">📝 图文</td><td class="px-4 py-3"><span class="badge badge-blue">视频口播</span></td><td class="px-4 py-3"><span class="badge badge-amber">投放费</span></td><td class="px-4 py-3 text-right font-medium">15元/条</td><td class="px-4 py-3 text-right">50,000</td><td class="px-4 py-3 text-right font-medium">¥750,000</td><td class="px-4 py-3 text-surface-300">无阶梯</td><td class="px-4 py-3 text-right">22,000<span class="text-surface-400">(44%)</span></td><td class="px-4 py-3 text-right">28,000</td><td class="px-4 py-3 text-center"><span class="badge badge-green">v1</span></td><td class="px-4 py-3 text-surface-400">内部核算子项</td></tr>
-          <tr class="border-b border-surface-50"><td class="px-4 py-3 font-medium">📡 直播</td><td class="px-4 py-3"><span class="badge badge-amber">氛围体验</span></td><td class="px-4 py-3"><span class="badge badge-purple">合价</span></td><td class="px-4 py-3 text-right font-medium">500元/条</td><td class="px-4 py-3 text-right">200</td><td class="px-4 py-3 text-right font-medium">¥100,000</td><td class="px-4 py-3 text-surface-300">无阶梯</td><td class="px-4 py-3 text-right">80<span class="text-surface-400">(40%)</span></td><td class="px-4 py-3 text-right">120</td><td class="px-4 py-3 text-center"><span class="badge badge-green">v1</span></td><td class="px-4 py-3">-</td></tr>
-        </tbody>
-        <tfoot><tr class="bg-surface-50 font-semibold text-[11px]"><td class="px-4 py-3">合计</td><td>-</td><td>-</td><td class="text-right">-</td><td class="text-right">110,200条</td><td class="text-right text-sm">¥3,850,000</td><td colspan="5"></td></tr></tfoot>
-      </table>
-    </div>
-    <div id="tier-popover" class="hidden mx-4 mb-4 p-4 bg-amber-50 border border-amber-200 rounded-xl"><div class="text-xs font-semibold mb-2">🎬 视频品类 阶梯折扣</div><table class="text-[11px] w-full"><thead><tr class="text-surface-400"><th class="text-left py-1">数量区间</th><th class="text-left py-1">折扣</th><th class="text-left py-1">折后单价</th></tr></thead><tbody><tr><td class="py-1">0 - 500 条</td><td class="py-1">无折扣</td><td class="py-1">150 元/条</td></tr><tr><td class="py-1">501 - 2,000 条</td><td class="py-1">9 折</td><td class="py-1">135 元/条</td></tr><tr><td class="py-1">2,001 - 5,000 条</td><td class="py-1">8 折</td><td class="py-1">120 元/条</td></tr><tr><td class="py-1">5,001 条以上</td><td class="py-1">7 折</td><td class="py-1">105 元/条</td></tr></tbody></table></div>
-    <div id="price-versions-panel" class="hidden mx-4 mb-4 p-4 bg-surface-50 border border-surface-200 rounded-xl"><div class="flex items-center justify-between mb-3"><span class="text-xs font-semibold">📊 报价版本对比（招标多轮）</span><button class="text-xs text-surface-400 hover:text-surface-600" onclick="hidePriceVersions()">✕</button></div><table class="text-[11px] w-full"><thead><tr class="text-surface-400"><th class="text-left py-1">版本</th><th class="text-left py-1">日期</th><th class="text-right py-1">视频单价</th><th class="text-right py-1">图文单价</th><th class="text-right py-1">直播单价</th><th class="text-right py-1">总报价</th><th class="text-center py-1">状态</th></tr></thead><tbody><tr><td class="py-1">一轮报价 v1</td><td>2025-11-20</td><td class="text-right">180元/条</td><td class="text-right">35元/条</td><td class="text-right">600元/条</td><td class="text-right">¥3,850,000</td><td class="text-center"><span class="badge badge-blue">已提交</span></td></tr><tr><td class="py-1">二轮报价 v2</td><td>2025-12-05</td><td class="text-right">150元/条</td><td class="text-right">30元/条</td><td class="text-right">500元/条</td><td class="text-right">¥3,100,000</td><td class="text-center"><span class="badge badge-purple">二次报价</span></td></tr><tr class="bg-green-50"><td class="py-1 font-semibold">最终 v3 ✔</td><td>2025-12-20</td><td class="text-right font-semibold">150元/条</td><td class="text-right font-semibold">30元/条</td><td class="text-right font-semibold">500元/条</td><td class="text-right font-semibold">¥3,100,000</td><td class="text-center"><span class="badge badge-green">中标</span></td></tr></tbody></table><div class="text-[10px] text-surface-400 mt-2">最终报价 v3 中标后自动复制为合同正式单价</div></div>
-  </div>
-
-  <div class="bg-white rounded-xl border border-surface-200 mb-5">
-    <div class="px-5 py-3.5 border-b border-surface-100"><h3 class="text-xs font-semibold">📝 变更历史 / 补充协议</h3></div>
-    <div class="p-5 space-y-5">
-      <div class="flex gap-4"><div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full bg-brand-500 mt-1"></div><div class="w-px flex-1 bg-surface-200 mt-1"></div></div><div><div class="text-xs text-surface-400">2026-07-01</div><div class="text-xs font-semibold">调整单价（视频）· 补充协议 AMD-2026-002</div><div class="text-[11px] text-surface-500 mt-1">视频单价从 120元/条 调整为 150元/条 · 生效 2026-07-01<span class="badge badge-green ml-2">已生效 · 当前版本</span></div></div></div>
-      <div class="flex gap-4"><div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full bg-surface-300 mt-1"></div><div class="w-px flex-1 bg-surface-200 mt-1"></div></div><div><div class="text-xs text-surface-400">2026-04-01</div><div class="text-xs font-semibold">追加预算（618大促）· 补充协议 AMD-2026-001</div><div class="text-[11px] text-surface-500 mt-1">合同总金额 ¥10,000,000 → ¥12,000,000（+200万）<span class="badge badge-green ml-2">已生效</span></div></div></div>
-      <div class="flex gap-4"><div class="flex flex-col items-center"><div class="w-3 h-3 rounded-full bg-surface-300 mt-1"></div></div><div><div class="text-xs text-surface-400">2026-01-15</div><div class="text-xs font-semibold">合同签约 · 原始版本</div><div class="text-[11px] text-surface-500 mt-1">合同总金额 ¥10,000,000 · 视频 120元×10,000条 · 图文 30元×50,000条 · 直播 500元×200条 · 单价明细合计 ¥2,800,000</div></div></div>
-    </div>
-  </div>
-
-  <div id="amendment-form" class="hidden bg-white rounded-xl border border-surface-200 p-6 mb-5">
-    <div class="flex items-center justify-between mb-4"><h3 class="text-sm font-semibold">创建补充协议</h3><button class="text-surface-400 hover:text-surface-600" onclick="hideAmendmentForm()">✕</button></div>
-    <div class="grid grid-cols-2 gap-4">
-      <div><label class="text-[10px] text-surface-400 block mb-1">变更类型</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs"><option>追加预算</option><option>调整单价</option><option>追加减免</option><option>续签延期</option></select></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">生效日期</label><input type="date" class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" value="2026-07-01"></div>
-      <div class="col-span-2"><label class="text-[10px] text-surface-400 block mb-1">变更描述</label><input class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" placeholder="如：618大促追加预算200万"></div>
-      <div class="col-span-2"><label class="text-[10px] text-surface-400 block mb-1">上传补充协议附件</label><div class="border-2 border-dashed border-surface-200 rounded-xl p-6 text-center text-xs text-surface-400"><i class="fas fa-cloud-upload-alt mr-2"></i>拖拽文件到此处，或 <span class="text-brand-600 cursor-pointer">点击上传</span></div></div>
-    </div>
-    <div class="flex justify-end gap-2 mt-4"><button class="border border-surface-200 rounded-lg px-4 py-2 text-xs" onclick="hideAmendmentForm()">取消</button><button class="bg-brand-600 text-white rounded-lg px-4 py-2 text-xs">提交审批</button></div>
-  </div>
-</div>
-
-<!-- ==================== CREATE CONTRACT ==================== -->
-<div id="view-create-contract" class="view">
-  <div class="flex items-center gap-3 mb-5"><button class="text-surface-400 hover:text-surface-600 text-xs" onclick="showView('contracts')">← 返回合同列表</button></div>
-  <div class="bg-white rounded-xl border border-surface-200 p-6">
-    <h3 class="text-sm font-semibold mb-4">新建合同</h3>
-    <div class="grid grid-cols-2 gap-4">
-      <div><label class="text-[10px] text-surface-400 block mb-1">合同名称 *</label><input class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" placeholder="如：XX品牌2026年度内容运营框架协议"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">关联客户 *</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>请选择客户</option><option>美的集团</option><option>松下电器</option></select></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">合同类型 *</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>年框</option><option>季度包</option><option>临时需求</option></select></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">合同总金额（元） *</label><input class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" placeholder="10,000,000"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">签约日期</label><input type="date" class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" value="2026-06-07"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">生效日期</label><input type="date" class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" value="2026-07-01"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">到期日期</label><input type="date" class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" value="2026-12-31"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">签约人</label><input class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" placeholder="张经理"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">结算模式 *</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white" onchange="toggleKpiTemplate(this.value)"><option value="simple">simple - 单纯计件</option><option value="double_eval" selected>double_eval - 双重考核</option></select></div>
-      <div id="kpi-template-field"><label class="text-[10px] text-surface-400 block mb-1">KPI 考核模板</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>家电行业标准模板</option><option>TCL系考核模板</option><option>纯产出模板</option></select></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">支付方式</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option>电汇</option><option selected>金单</option><option>京准通</option></select></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">支付工作天数</label><input class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" value="90"></div>
-      <div><label class="text-[10px] text-surface-400 block mb-1">增值税率</label><select class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs bg-white"><option selected>6%</option><option>3%</option><option>13%</option></select></div>
-      <div class="col-span-2"><label class="text-[10px] text-surface-400 block mb-1">合同附件</label><div class="border-2 border-dashed border-surface-200 rounded-xl p-4 text-center text-xs text-surface-400"><i class="fas fa-cloud-upload-alt mr-2"></i>拖拽文件到此处，或 <span class="text-brand-600 cursor-pointer">点击上传</span>（Word/PDF/Excel）</div></div>
-    </div>
-    <div id="kpi-template-preview" class="mt-4 p-3 bg-brand-50 border border-brand-100 rounded-xl text-xs text-surface-500">
-      <b>🎯 家电行业标准模板</b>：考核费占比 <b>50%</b>（即产出费50% + 考核费50%）<br>KPI UV（目标1000万人次）+ 内容数（目标5000篇）| 阶梯 ≥90%→100% · 80-90%→90% · 60-80%→50% · &lt;60%→0%
-    </div>
-    <div class="mt-6">
-      <h4 class="text-sm font-semibold mb-3">内容单价明细（必填）</h4>
-      <div class="overflow-x-auto"><table class="w-full text-[11px]"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-3 py-2">品类</th><th class="text-left px-3 py-2">内容类型</th><th class="text-left px-3 py-2">费用类型</th><th class="text-right px-3 py-2">单价</th><th class="text-right px-3 py-2">数量</th><th class="text-right px-3 py-2">小计</th><th class="text-left px-3 py-2">阶梯</th><th></th></tr></thead><tbody id="create-price-tbody">
-        <tr><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>视频</option><option>图文</option><option>直播</option><option>全部内容</option></select></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>产品展示</option><option>视频口播</option><option>开箱测评</option><option>装修家居</option><option>氛围体验</option><option>创意视频</option><option>主图视频</option></select></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>合价</option><option>制作费</option><option>投放费</option></select></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="120"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="10000"></td><td class="px-3 py-2 text-surface-400 text-[11px]">自动计算</td><td class="px-3 py-2"><button class="text-brand-600 text-[10px] hover:underline" onclick="showTierConfig(this)">+ 配置阶梯</button></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr>
-        <tr><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>图文</option><option>视频</option><option>直播</option><option>全部内容</option></select></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>视频口播</option><option>产品展示</option><option>开箱测评</option><option>装修家居</option><option>氛围体验</option><option>创意视频</option><option>主图视频</option></select></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>合价</option><option selected>制作费</option><option>投放费</option></select></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="30"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="50000"></td><td class="px-3 py-2 text-surface-400 text-[11px]">自动计算</td><td class="px-3 py-2 text-surface-300 text-[10px]">无阶梯</td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr>
-      </tbody></table></div>
-      <button class="text-xs text-brand-600 hover:underline mt-2 inline-block" onclick="addPriceFormRow(this)">+ 添加品类</button>
-    </div>
-    <div class="flex justify-end gap-2 mt-6"><button class="border border-surface-200 rounded-lg px-4 py-2 text-xs" onclick="showView('contracts')">取消</button><button class="border border-surface-200 rounded-lg px-4 py-2 text-xs">保存草稿</button><button class="bg-brand-600 text-white rounded-lg px-4 py-2 text-xs">确认创建</button></div>
-  </div>
-</div>
-
-<!-- ==================== KPI TEMPLATES ==================== -->
-<div id="view-kpi-templates" class="view">
-  <div class="bg-white rounded-xl border border-surface-200 p-5 mb-5 flex items-center justify-between">
-    <div><h2 class="text-sm font-semibold">KPI 考核模板</h2><p class="text-xs text-surface-400 mt-0.5">合同创建时选择模板即可快速配置 KPI 考核规则。签约时快照，模板变更不影响已签约合同。</p></div>
-    <button class="bg-brand-600 text-white rounded-lg px-4 py-2 text-xs font-medium hover:bg-brand-700" onclick="showView('kpi-form')">+ 新建模板</button>
-  </div>
-  <div class="grid grid-cols-3 gap-4">
-    <div class="bg-white rounded-xl border border-surface-200 p-5 hover:shadow-md cursor-pointer" onclick="showView('kpi-form')">
-      <div class="flex justify-between items-start mb-3"><h4 class="text-sm font-semibold">家电行业标准模板</h4><span class="badge badge-green">启用</span></div>
-      <div class="flex flex-wrap gap-1 mb-3"><span class="badge badge-purple">UV</span><span class="badge badge-blue">内容产出数</span></div>
-      <div class="text-xs text-surface-400">考核费占比 <b class="text-surface-700">50%</b></div>
-      <div class="text-[10px] text-surface-400 mt-1">阶梯 ≥90%→100% | 80-90%→90% | 60-80%→50%</div>
-    </div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5 hover:shadow-md cursor-pointer" onclick="showView('kpi-form')">
-      <div class="flex justify-between items-start mb-3"><h4 class="text-sm font-semibold">TCL 系考核模板</h4><span class="badge badge-green">启用</span></div>
-      <div class="flex flex-wrap gap-1 mb-3"><span class="badge badge-purple">UV</span><span class="badge badge-amber">曝光量</span><span class="badge badge-blue">CPC</span></div>
-      <div class="text-xs text-surface-400">考核费占比 <b class="text-surface-700">50%</b></div>
-      <div class="text-[10px] text-surface-400 mt-1">阶梯 ≥90%→100% | 80-90%→90% | 60-80%→50%</div>
-    </div>
-    <div class="bg-white rounded-xl border border-surface-200 p-5">
-      <div class="flex justify-between items-start mb-3"><h4 class="text-sm font-semibold">纯产出模板</h4><span class="badge badge-gray">禁用</span></div>
-      <div class="flex flex-wrap gap-1 mb-3"><span class="badge badge-gray">无KPI</span></div>
-      <div class="text-xs text-surface-400">考核费占比 <b class="text-surface-700">0%</b></div>
-      <div class="text-[10px] text-surface-400 mt-1">按产出数量单纯计件结算</div>
-    </div>
-  </div>
-</div>
-
-<!-- ==================== KPI FORM ==================== -->
-<div id="view-kpi-form" class="view">
-  <div class="flex items-center gap-3 mb-5"><button class="text-surface-400 hover:text-surface-600 text-xs" onclick="showView('kpi-templates')">← 返回 KPI 模板列表</button></div>
-  <div class="max-w-3xl">
-    <div class="bg-white rounded-xl border border-surface-200 p-6">
-      <h3 class="text-sm font-semibold mb-4">新建 KPI 考核模板</h3>
-      <div class="grid grid-cols-2 gap-4 mb-6">
-        <div><label class="text-[10px] text-surface-400 block mb-1">模板名称 *</label><input class="w-full border border-surface-200 rounded-lg px-3 py-2 text-xs" placeholder="如：电商通用考核模板"></div>
-        <div><label class="text-[10px] text-surface-400 block mb-1">考核费占比（%）</label><div class="flex items-center gap-2"><input class="w-20 border border-surface-200 rounded-lg px-3 py-2 text-xs" value="50"><span class="text-[10px] text-surface-400">% = 产出费(100−考核费)% + 考核费%</span></div></div>
+      <h3 class="text-lg font-semibold text-surface-800 mb-2">CRM 客户关系管理</h3>
+      <p class="text-xs text-surface-400 leading-relaxed mb-4">客户360视图、合同全生命周期、商机漏斗、KPI考核、对账核销</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">客户管理</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">合同管理</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">商机看板</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">KPI考核</span>
       </div>
-      <div class="mb-6"><div class="flex justify-between items-center mb-2"><h4 class="text-xs font-semibold">KPI 考核指标</h4><span class="text-[10px] text-surface-400">权重之和应为 100%</span></div><table class="w-full text-[11px]"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-3 py-2">指标类型</th><th class="text-left px-3 py-2">目标值</th><th class="text-left px-3 py-2">单位</th><th class="text-left px-3 py-2">权重%</th><th></th></tr></thead><tbody><tr><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>UV</option><option>曝光量</option><option>成交额</option><option>CPC</option><option>内容产出数</option><option>互动率</option></select></td><td class="px-3 py-2"><input class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]" placeholder="10000000"></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>人次</option><option>元</option><option>篇</option><option>%</option></select></td><td class="px-3 py-2"><input class="w-16 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" placeholder="50"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr><tr><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>内容产出数</option><option>UV</option><option>曝光量</option></select></td><td class="px-3 py-2"><input class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]" placeholder="5000"></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>篇</option><option>人次</option><option>元</option></select></td><td class="px-3 py-2"><input class="w-16 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" placeholder="50"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr></tbody></table><button class="text-xs text-brand-600 hover:underline mt-1">+ 添加考核指标</button></div>
-      <div class="mb-6"><h4 class="text-xs font-semibold mb-2">考核阶梯规则</h4><table class="w-full text-[11px]"><thead><tr class="bg-surface-50 text-surface-400"><th class="text-left px-3 py-2">达成率下限（≥%）</th><th class="text-left px-3 py-2">达成率上限（<%）</th><th class="text-left px-3 py-2">结算比例（%）</th><th></th></tr></thead><tbody><tr><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="90"></td><td class="px-3 py-2 text-surface-400 text-[11px]">∞</td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="100"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr><tr><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="80"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="90"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="90"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr><tr><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="60"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="80"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="50"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr><tr><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="0"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="60"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-center" value="0"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest('tr').remove()">删除</button></td></tr></tbody></table><button class="text-xs text-brand-600 hover:underline mt-1">+ 添加阶梯档位</button></div>
-      <div class="flex justify-end gap-2"><button class="border border-surface-200 rounded-lg px-4 py-2 text-xs" onclick="showView('kpi-templates')">取消</button><button class="bg-brand-600 text-white rounded-lg px-4 py-2 text-xs">保存模板</button></div>
+    </a>
+
+    <a href="pm/index.html" class="module-card bg-white rounded-2xl border border-surface-200 p-6 no-underline text-inherit block">
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-12 h-12 rounded-xl bg-purple-50 flex items-center justify-center">
+          <i class="fas fa-folder-tree text-purple-600 text-xl"></i>
+        </div>
+        <span class="badge text-[10px] px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 font-medium">v5.0</span>
+      </div>
+      <h3 class="text-lg font-semibold text-surface-800 mb-2">PM 项目管理</h3>
+      <p class="text-xs text-surface-400 leading-relaxed mb-4">项目批次管理、任务分配、产出对账、成本核算、供应商/样品/场地资源库</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">项目批次</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">任务看板</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">对账矩阵</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">资源库</span>
+      </div>
+    </a>
+
+    <a href="hr/index.html" class="module-card bg-white rounded-2xl border border-surface-200 p-6 no-underline text-inherit block">
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
+          <i class="fas fa-id-card text-green-600 text-xl"></i>
+        </div>
+        <span class="badge text-[10px] px-2 py-0.5 rounded-full bg-green-50 text-green-700 font-medium">v1.0</span>
+      </div>
+      <h3 class="text-lg font-semibold text-surface-800 mb-2">HR 人力资源</h3>
+      <p class="text-xs text-surface-400 leading-relaxed mb-4">员工档案、薪酬核算、绩效管理、考勤假期、外包人员管理</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">员工管理</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">薪酬绩效</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">考勤假期</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">外包管理</span>
+      </div>
+    </a>
+
+    <a href="fm/index.html" class="module-card bg-white rounded-2xl border border-surface-200 p-6 no-underline text-inherit block">
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-12 h-12 rounded-xl bg-amber-50 flex items-center justify-center">
+          <i class="fas fa-calculator text-amber-600 text-xl"></i>
+        </div>
+        <span class="badge text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-medium">v2.0</span>
+      </div>
+      <h3 class="text-lg font-semibold text-surface-800 mb-2">FM 财务管理</h3>
+      <p class="text-xs text-surface-400 leading-relaxed mb-4">应收账款、发票管理、对账核销、利润分析、薪资成本、费用报销</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">应收管理</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">对账核销</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">利润分析</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">费用报销</span>
+      </div>
+    </a>
+
+    <a href="module-h/index.html" class="module-card bg-white rounded-2xl border border-surface-200 p-6 no-underline text-inherit block">
+      <div class="flex items-start justify-between mb-4">
+        <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center">
+          <i class="fas fa-gear text-slate-600 text-xl"></i>
+        </div>
+        <span class="badge text-[10px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-medium">v2.3</span>
+      </div>
+      <h3 class="text-lg font-semibold text-surface-800 mb-2">系统设置</h3>
+      <p class="text-xs text-surface-400 leading-relaxed mb-4">组织架构、数据字典配置、用户权限管理、审批流配置、审计日志</p>
+      <div class="flex flex-wrap gap-1.5">
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">组织架构</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">数据字典</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">用户权限</span>
+        <span class="text-[10px] px-2 py-0.5 rounded bg-surface-50 text-surface-500">审批流</span>
+      </div>
+    </a>
+
+    <div class="module-card bg-white rounded-2xl border border-dashed border-surface-300 p-6 flex flex-col items-center justify-center text-surface-400">
+      <div class="w-12 h-12 rounded-xl bg-surface-50 flex items-center justify-center mb-3">
+        <i class="fas fa-plus text-xl"></i>
+      </div>
+      <p class="text-xs">更多模块即将上线</p>
+    </div>
+
+  </div>
+
+  <div class="mt-12 bg-white rounded-2xl border border-surface-200 p-6">
+    <h3 class="text-sm font-semibold text-surface-700 mb-4">📊 系统概览</h3>
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+      <div><div class="text-2xl font-bold text-brand-600">5</div><div class="text-[10px] text-surface-400 mt-1">业务模块</div></div>
+      <div><div class="text-2xl font-bold text-purple-600">51</div><div class="text-[10px] text-surface-400 mt-1">字典配置项</div></div>
+      <div><div class="text-2xl font-bold text-green-600">7</div><div class="text-[10px] text-surface-400 mt-1">角色类型</div></div>
+      <div><div class="text-2xl font-bold text-amber-600">4</div><div class="text-[10px] text-surface-400 mt-1">审批流模板</div></div>
+      <div><div class="text-2xl font-bold text-slate-600">6</div><div class="text-[10px] text-surface-400 mt-1">原型页面</div></div>
     </div>
   </div>
-</div>
+</main>
 
-<!-- ==================== DICTIONARY CONFIG ==================== -->
-<div id="view-dictionary" class="view">
-  <div class="bg-white rounded-xl border border-surface-200 p-5 mb-5">
-    <div class="flex items-center gap-3"><i class="fas fa-book text-brand-500 text-xl"></i><div><h2 class="text-sm font-semibold">字典配置</h2><p class="text-xs text-surface-400 mt-0.5">管理客户、合同、KPI 模块的下拉枚举值。编辑后实时生效，已引用的值不会被物理删除。</p></div></div>
+<footer class="border-t border-surface-200 mt-12 py-6">
+  <div class="max-w-6xl mx-auto px-6 text-center text-[10px] text-surface-400">
+    &copy; 2026 业财一体化管理平台 · E-commerce Content Operation & Finance Integration Platform
   </div>
-  <div class="grid grid-cols-3 gap-4">
-    <div class="bg-white rounded-xl border border-surface-200"><div class="px-4 py-3 border-b border-surface-100 flex justify-between items-center"><h4 class="text-xs font-semibold">🏢 客户字段</h4><button class="text-[10px] text-surface-400 hover:text-surface-600">恢复默认</button></div><div class="p-4 space-y-3"><div><div class="text-[10px] text-surface-400 mb-1">客户等级</div><div class="flex flex-wrap gap-1"><span class="badge badge-red">S级</span><span class="badge badge-purple">A级</span><span class="badge badge-blue">B级</span><span class="badge badge-amber">C级</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">客户状态</div><div class="flex flex-wrap gap-1"><span class="badge badge-green">合作中</span><span class="badge badge-blue">潜在</span><span class="badge badge-amber">已终止</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">行业</div><div class="flex flex-wrap gap-1"><span class="badge badge-gray">家电</span><span class="badge badge-gray">消费电子</span><span class="badge badge-gray">互联网</span><span class="badge badge-gray">其他</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div></div></div>
-    <div class="bg-white rounded-xl border border-surface-200"><div class="px-4 py-3 border-b border-surface-100 flex justify-between items-center"><h4 class="text-xs font-semibold">📋 合同字段</h4><button class="text-[10px] text-surface-400 hover:text-surface-600">恢复默认</button></div><div class="p-4 space-y-3"><div><div class="text-[10px] text-surface-400 mb-1">合同类型</div><div class="flex flex-wrap gap-1"><span class="badge badge-blue">年框</span><span class="badge badge-purple">季度包</span><span class="badge badge-amber">临时需求</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">内容类型</div><div class="flex flex-wrap gap-1"><span class="badge badge-purple">产品展示</span><span class="badge badge-blue">视频口播</span><span class="badge badge-green">开箱测评</span><span class="badge badge-gray">装修家居</span><span class="badge badge-gray">氛围体验</span><span class="badge badge-gray">创意视频</span><span class="badge badge-gray">主图视频</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">结算模式</div><div class="flex flex-wrap gap-1"><span class="badge badge-green">simple 计件</span><span class="badge badge-purple">double 双重考核</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">支付方式</div><div class="flex flex-wrap gap-1"><span class="badge badge-gray">电汇</span><span class="badge badge-gray">金单</span><span class="badge badge-gray">京准通</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">税率</div><div class="flex flex-wrap gap-1"><span class="badge badge-gray">6%</span><span class="badge badge-gray">3%</span><span class="badge badge-gray">13%</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div></div></div>
-    <div class="bg-white rounded-xl border border-surface-200"><div class="px-4 py-3 border-b border-surface-100 flex justify-between items-center"><h4 class="text-xs font-semibold">🎯 KPI 字段</h4><button class="text-[10px] text-surface-400 hover:text-surface-600">恢复默认</button></div><div class="p-4 space-y-3"><div><div class="text-[10px] text-surface-400 mb-1">KPI 类型</div><div class="flex flex-wrap gap-1"><span class="badge badge-purple">UV</span><span class="badge badge-blue">曝光量</span><span class="badge badge-green">成交额</span><span class="badge badge-amber">CPC</span><span class="badge badge-gray">内容产出数</span><span class="badge badge-gray">互动率</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div><div><div class="text-[10px] text-surface-400 mb-1">KPI 单位</div><div class="flex flex-wrap gap-1"><span class="badge badge-gray">人次</span><span class="badge badge-gray">元</span><span class="badge badge-gray">篇</span><span class="badge badge-gray">%</span><button class="text-[10px] text-brand-500 hover:underline">+</button></div></div></div></div>
-  </div>
-</div>
+</footer>
 
-</main></div>
-
-<script>
-var titles={dashboard:'CRM 工作台',clients:'客户列表',contracts:'合同列表','client-detail':'客户详情','contract-detail':'合同详情','create-contract':'新建合同','kpi-templates':'KPI 模板管理','kpi-form':'KPI 模板管理 · 新建模板',dictionary:'系统设置 · 字典配置'};
-var subs={dashboard:'概览客户、合同与商机',clients:'管理甲方品牌客户信息',contracts:'管理年框、季度包、临时合同','client-detail':'客户360视图','contract-detail':'合同详情与变更','create-contract':'签约新合同','kpi-templates':'配置考核模板与阶梯规则','kpi-form':'创建或编辑考核模板',dictionary:'统一维护系统枚举字典值'};
-
-function showView(name){
-  document.querySelectorAll('.view').forEach(function(v){v.classList.remove('active');});
-  var el=document.getElementById('view-'+name);
-  if(el)el.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(function(n){n.classList.remove('active');});
-  var n=document.querySelector('[data-nav="'+name+'"]');
-  if(n)n.classList.add('active');
-  document.getElementById('topbarTitle').textContent=titles[name]||'CRM';
-  document.getElementById('topbarSub').textContent=subs[name]||'';
-  hideAmendmentForm();
-  window.scrollTo(0,0);
-}
-
-function showAmendmentForm(){var f=document.getElementById('amendment-form');if(f){f.classList.remove('hidden');setTimeout(function(){f.scrollIntoView({behavior:'smooth'});},100);}}
-function hideAmendmentForm(){var f=document.getElementById('amendment-form');if(f)f.classList.add('hidden');}
-function showPriceVersions(){var p=document.getElementById('price-versions-panel');if(p)p.classList.remove('hidden');}
-function hidePriceVersions(){var p=document.getElementById('price-versions-panel');if(p)p.classList.add('hidden');}
-function toggleTierPopover(){var t=document.getElementById('tier-popover');if(t)t.classList.toggle('hidden');}
-function toggleKpiTemplate(v){var f=document.getElementById('kpi-template-field');var p=document.getElementById('kpi-template-preview');var d=v==='double_eval'?'block':'none';if(f)f.style.display=d;if(p)p.style.display=d;}
-
-function switchCDTab(name,el){
-  document.querySelectorAll('.cd-tab-panel').forEach(function(p){p.classList.add('hidden');});
-  var panel=document.getElementById('cdTab-'+name);
-  if(panel)panel.classList.remove('hidden');
-  document.querySelectorAll('.cd-tab').forEach(function(t){t.classList.remove('active','text-brand-600','border-b-2','border-brand-600','-mb-px');t.classList.add('text-surface-400');});
-  if(el){el.classList.add('active','text-brand-600','border-b-2','border-brand-600','-mb-px');el.classList.remove('text-surface-400');}
-}
-
-function showCreateClient(){alert('新建客户功能（占位）');}
-
-function addContactDisplayRow(btn){
-  var tbody=document.getElementById('contacts-tbody');
-  var tr=document.createElement('tr');
-  tr.innerHTML='<td class="px-5 py-2.5"><input class="border border-surface-200 rounded px-2 py-1 text-[11px] w-16" placeholder="姓名"></td><td class="px-5 py-2.5"><input class="border border-surface-200 rounded px-2 py-1 text-[11px] w-24" placeholder="甲方职位"></td><td class="px-5 py-2.5"><input class="border border-surface-200 rounded px-2 py-1 text-[11px] w-20" placeholder="对接平台"></td><td class="px-5 py-2.5"><input class="border border-surface-200 rounded px-2 py-1 text-[11px] w-24" placeholder="手机号"></td><td class="px-5 py-2.5"><input class="border border-surface-200 rounded px-2 py-1 text-[11px] w-32" placeholder="邮箱"></td><td class="px-5 py-2.5"><input class="border border-surface-200 rounded px-2 py-1 text-[11px] w-20" placeholder="微信"></td><td class="px-5 py-2.5 text-center"><input type="checkbox" style="accent-color:#2563eb;"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest(\'tr\').remove()">删除</button></td>';
-  tbody.appendChild(tr);
-  tr.querySelector('input').focus();
-}
-
-function addPriceRow(btn){
-  var tbody=document.getElementById('price-tbody');
-  var tr=document.createElement('tr');
-  tr.className='border-b border-surface-50';
-  tr.innerHTML='<td class="px-4 py-3"><select class="border border-surface-200 rounded px-2 py-1 text-[11px]"><option>视频</option><option>图文</option><option>直播</option></select></td><td class="px-4 py-3"><select class="border border-surface-200 rounded px-2 py-1 text-[11px]"><option>产品展示</option><option>视频口播</option><option>开箱测评</option><option>装修家居</option><option>氛围体验</option><option>创意视频</option><option>主图视频</option></select></td><td class="px-4 py-3"><select class="border border-surface-200 rounded px-2 py-1 text-[11px]"><option>合价</option><option>制作费</option><option>投放费</option></select></td><td class="px-4 py-3 text-right"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="0"></td><td class="px-4 py-3 text-right"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="0"></td><td class="px-4 py-3 text-right text-surface-400 text-[11px]">自动计算</td><td class="px-4 py-3 text-surface-300 text-[10px]">无阶梯</td><td class="px-4 py-3 text-right text-[11px]">-</td><td class="px-4 py-3 text-right text-[11px]">-</td><td class="px-4 py-3 text-center"><span class="badge badge-green">v1</span></td><td class="px-4 py-3">-</td>';
-  tbody.appendChild(tr);
-}
-
-function addPriceFormRow(btn){
-  var tbody=document.getElementById('create-price-tbody');
-  var tr=document.createElement('tr');
-  tr.innerHTML='<td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>视频</option><option>图文</option><option>直播</option><option>全部内容</option></select></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>产品展示</option><option>视频口播</option><option>开箱测评</option><option>装修家居</option><option>氛围体验</option><option>创意视频</option><option>主图视频</option></select></td><td class="px-3 py-2"><select class="w-full border border-surface-200 rounded px-2 py-1 text-[11px]"><option>合价</option><option>制作费</option><option>投放费</option></select></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="0"></td><td class="px-3 py-2"><input class="w-20 border border-surface-200 rounded px-2 py-1 text-[11px] text-right" placeholder="0"></td><td class="px-3 py-2 text-surface-400 text-[11px]">自动计算</td><td class="px-3 py-2"><button class="text-brand-600 text-[10px] hover:underline" onclick="showTierConfig(this)">+ 配置阶梯</button></td><td><button class="text-red-400 hover:text-red-600 text-[10px]" onclick="this.closest(\'tr\').remove()">删除</button></td>';
-  tbody.appendChild(tr);
-}
-
-function showTierConfig(btn){
-  var row=btn.closest('tr');
-  var ex=row.nextElementSibling;
-  if(ex&&ex.classList.contains('tier-row')){ex.remove();btn.textContent='+ 配置阶梯';return;}
-  var tr=document.createElement('tr');
-  tr.className='tier-row';
-  tr.innerHTML='<td colspan="8" class="px-4 py-3 bg-amber-50 border-t border-amber-200"><div class="flex items-center justify-between mb-2"><span class="text-[11px] font-semibold">阶梯折扣配置</span><button class="text-[10px] text-surface-400 hover:text-surface-600" onclick="this.closest(\'tr\').remove();var r=this.closest(\'table\').querySelector(\'tr:has(td)\');if(r){var b=r.querySelector(\'button[onclick*=\"showTierConfig\"]\');if(b)b.textContent=\'+ 配置阶梯\';}">✕ 关闭</button></div><table class="text-[10px] w-full"><thead><tr class="text-surface-400"><th class="text-left py-1">数量下限（≥）</th><th class="text-left py-1">数量上限（<）</th><th class="text-left py-1">折扣（%）</th><th></th></tr></thead><tbody id="tier-sub"><tr><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="0"></td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="500"></td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="100"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]">删除</button></td></tr><tr><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="501"></td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="2000"></td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="90"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]">删除</button></td></tr><tr><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="2001"></td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="5000"></td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="80"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]">删除</button></td></tr><tr><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="5001"></td><td class="text-surface-400">∞</td><td><input class="w-16 border border-surface-200 rounded px-2 py-0.5" value="70"></td><td><button class="text-red-400 hover:text-red-600 text-[10px]">删除</button></td></tr></tbody></table><button class="text-[10px] text-brand-600 hover:underline mt-1">+ 添加阶梯档位</button></td>';
-  row.parentNode.insertBefore(tr,row.nextSibling);
-  btn.textContent='收起阶梯 ▴';
-}
-</script>
 </body>
 </html>
