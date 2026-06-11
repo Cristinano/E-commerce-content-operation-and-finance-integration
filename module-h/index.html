@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业财一体化 · 系统设置</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script>tailwind.config={theme:{extend:{colors:{brand:'#1A365D',accent:'#FF6B35',accentl:'#FFF0E0',surface:'#f8f9fb'}}}}</script>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif}
+.sidebar-item.active{background:#FFF0E0;color:#E55A20;font-weight:600;border-right:3px solid #FF6B35}
+.sidebar-item:hover:not(.active){background:#f0f1f3}
+.subnav-item.active{background:#E8F0FE;color:#2D5A8E;font-weight:500}
+.subnav-item:hover:not(.active){background:#f0f4f8}
+.card{background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,0.06);border:1px solid #eef0f2}
+.page{display:none}.page.active{display:block}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:100;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.toast{position:fixed;top:24px;right:24px;z-index:200;padding:12px 20px;border-radius:10px;color:#fff;font-size:14px;opacity:0;transform:translateY(-10px);transition:all 0.3s}
+.toast.show{opacity:1;transform:translateY(0)}
+.tab-btn.active{border-bottom:2px solid #FF6B35;color:#E55A20;font-weight:600}
+input,select,textarea{border:1px solid #dde0e4;border-radius:8px;padding:8px 12px;font-size:13px;outline:none;width:100%;box-sizing:border-box;transition:border-color 0.2s}
+input:focus,select:focus,textarea:focus{border-color:#FF6B35;box-shadow:0 0 0 3px #FFF0E0}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all 0.2s}
+.btn-primary{background:#FF6B35;color:#fff}.btn-primary:hover{background:#E55A20}
+.btn-secondary{background:#fff;color:#1A365D;border:1px solid #dde0e4}.btn-secondary:hover{background:#f5f7fa}
+.btn-danger{background:#fee;color:#d32f2f}.btn-danger:hover{background:#fdd}
+.btn-sm{padding:4px 12px;font-size:12px}
+.tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600}
+.tag-orange{background:#FFF0E0;color:#E55A20}
+.tag-blue{background:#E8F0FE;color:#2D5A8E}
+.tag-green{background:#e8f5e9;color:#2e7d32}
+.tag-red{background:#fff0f0;color:#c62828}
+.tag-gray{background:#f0f1f3;color:#666}
+</style>
+</head>
+<body class="bg-surface h-screen flex flex-col">
+
+<!-- Toast -->
+<div id="toast" class="toast"></div>
+
+<!-- Login Page -->
+<div id="page-login" class="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200">
+  <div class="bg-white rounded-2xl shadow-2xl p-10 w-[400px]">
+    <div class="text-center mb-8">
+      <div class="w-14 h-14 bg-accent rounded-xl flex items-center justify-center mx-auto mb-4">
+        <i class="fa-solid fa-building-columns text-white text-2xl"></i>
+      </div>
+      <h1 class="text-xl font-bold text-brand">业财一体化管理平台</h1>
+      <p class="text-gray-400 text-sm mt-2">Module H · 基础数据与系统管理</p>
+    </div>
+    <div class="space-y-4">
+      <div><label class="text-xs text-gray-500 mb-1 block">用户名</label><input id="login-username" value="admin" placeholder="请输入用户名"></div>
+      <div><label class="text-xs text-gray-500 mb-1 block">密码</label><input id="login-password" type="password" value="admin123" placeholder="请输入密码"></div>
+      <button class="btn btn-primary w-full justify-center py-3 text-base" onclick="doLogin()">登 录</button>
+    </div>
+    <p class="text-xs text-gray-400 text-center mt-6">默认管理员账号已预置 · 密码错误5次将锁定30分钟</p>
+  </div>
+</div>
+
+<!-- Main Layout -->
+<div id="app-layout" class="hidden flex-1 flex h-full">
+  <!-- Left Sidebar -->
+  <aside class="w-56 bg-white border-r border-gray-200 flex flex-col shrink-0">
+    <div class="px-5 py-4 border-b border-gray-100 flex items-center gap-3">
+      <div class="w-8 h-8 bg-accent rounded-lg flex items-center justify-center"><i class="fa-solid fa-building-columns text-white text-sm"></i></div>
+      <span class="font-bold text-brand text-sm">业财一体化</span>
+    </div>
+    <nav class="flex-1 py-3 space-y-0.5 px-2">
+      <div class="sidebar-item px-3 py-2.5 rounded-lg text-sm cursor-pointer flex items-center gap-2" onclick="navigate('crm')"><i class="fa-solid fa-users w-4 text-center"></i> 客户管理</div>
+      <div class="sidebar-item px-3 py-2.5 rounded-lg text-sm cursor-pointer flex items-center gap-2" onclick="navigate('pm')"><i class="fa-solid fa-diagram-project w-4 text-center"></i> 项目管理</div>
+      <div class="sidebar-item px-3 py-2.5 rounded-lg text-sm cursor-pointer flex items-center gap-2" onclick="navigate('fm')"><i class="fa-solid fa-coins w-4 text-center"></i> 财务管理</div>
+      <div class="sidebar-item px-3 py-2.5 rounded-lg text-sm cursor-pointer flex items-center gap-2" onclick="navigate('hr')"><i class="fa-solid fa-address-card w-4 text-center"></i> 人力资源</div>
+      <div class="mt-3 pt-3 border-t border-gray-100"></div>
+      <div class="sidebar-item active px-3 py-2.5 rounded-lg text-sm cursor-pointer flex items-center gap-2" onclick="switchSettings('org')"><i class="fa-solid fa-gear w-4 text-center"></i> 系统设置</div>
+      <!-- Sub-nav -->
+      <div class="ml-6 mt-1 space-y-0.5" id="subnav">
+        <div class="subnav-item active px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('org')">组织架构</div>
+        <div class="subnav-item px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('users')">用户管理</div>
+        <div class="subnav-item px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('approval')">审批流配置</div>
+        <div class="subnav-item px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('coeff')">难度系数字典</div>
+        <div class="subnav-item px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('dict')">系统字典</div>
+        <div class="subnav-item px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('audit')">审计日志</div>
+        <div class="subnav-item px-3 py-1.5 rounded text-xs cursor-pointer" onclick="switchSettings('config')">系统参数</div>
+      </div>
+    </nav>
+    <div class="px-5 py-3 border-t border-gray-100 flex items-center gap-3">
+      <div class="w-8 h-8 bg-brand rounded-full flex items-center justify-center text-white text-xs font-bold">陈</div>
+      <div><div class="text-xs font-medium text-brand">陈明</div><div class="text-[10px] text-gray-400">系统管理员</div></div>
+      <button class="ml-auto text-gray-400 hover:text-red-500" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket text-xs"></i></button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="flex-1 overflow-auto bg-surface">
+    <!-- Header -->
+    <div class="bg-white border-b border-gray-100 px-8 py-4 flex items-center justify-between">
+      <div><h1 class="text-lg font-bold text-brand" id="page-title">组织架构</h1><p class="text-xs text-gray-400" id="page-subtitle">部门管理 / 岗位管理</p></div>
+      <div class="flex items-center gap-4"><span class="text-xs text-gray-400">最后登录: 2026-06-11 14:02</span></div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="p-8">
+
+      <!-- ===== PAGE: 组织架构 ===== -->
+      <div id="p-org" class="page active">
+        <div class="flex gap-6" style="min-height:500px">
+          <div class="card p-5 w-72 shrink-0">
+            <div class="flex items-center justify-between mb-4"><span class="font-bold text-sm text-brand">部门树</span><button class="btn btn-sm btn-primary" onclick="showDeptModal()">+ 新增</button></div>
+            <div class="text-sm space-y-0.5" id="dept-tree">
+              <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer" onclick="selectDept(this,'公司')"><i class="fa-solid fa-caret-down text-gray-400 text-xs w-3"></i><span>公司</span></div>
+              <div class="ml-4 space-y-0.5" id="dept-children">
+                <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'管理层')"><span class="w-3"></span><span>管理层</span></div>
+                <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'人资部')"><span class="w-3"></span><span>人资部</span></div>
+                <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'财务部')"><span class="w-3"></span><span>财务部</span></div>
+                <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'仓务')"><span class="w-3"></span><span>仓务</span></div>
+                <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'场景拍摄')"><span class="w-3"></span><span>场景拍摄管理</span></div>
+                <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer font-medium" onclick="selectDept(this,'项目部')"><i class="fa-solid fa-caret-down text-gray-400 text-xs w-3"></i><span>项目部</span></div>
+                <div class="ml-4 space-y-0.5" id="pm-children">
+                  <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'项目经理')"><span class="w-3"></span><span>项目经理</span></div>
+                  <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'项目AE')"><span class="w-3"></span><span>项目AE</span></div>
+                  <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'执行组')"><i class="fa-solid fa-caret-down text-gray-400 text-xs w-3"></i><span>执行组</span></div>
+                  <div class="ml-4 space-y-0.5" id="exec-children">
+                    <div class="flex items-center gap-1 py-1 px-2 rounded bg-accentl text-accent font-medium" onclick="selectDept(this,'编导组')"><span class="w-3"></span><span>编导组</span></div>
+                    <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'拍摄组')"><span class="w-3"></span><span>拍摄组</span></div>
+                    <div class="flex items-center gap-1 py-1 px-2 rounded hover:bg-gray-50 cursor-pointer text-gray-500" onclick="selectDept(this,'剪辑组')"><span class="w-3"></span><span>剪辑组</span></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flex-1 card p-5">
+            <div class="flex items-center justify-between mb-4">
+              <span class="font-bold text-sm text-brand">岗位列表 · <span class="text-accent" id="selected-dept-name">编导组</span></span>
+              <button class="btn btn-sm btn-primary" onclick="showPosModal()">+ 新增岗位</button>
+            </div>
+            <table class="w-full text-sm">
+              <thead><tr class="text-left text-gray-400 text-xs border-b border-gray-100"><th class="pb-3 font-medium">岗位名称</th><th class="pb-3 font-medium">岗位类型</th><th class="pb-3 font-medium">状态</th><th class="pb-3 font-medium text-right">操作</th></tr></thead>
+              <tbody>
+                <tr class="border-b border-gray-50"><td class="py-3 font-medium">编导</td><td class="py-3"><span class="tag tag-orange">产出岗</span></td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">删除</button></td></tr>
+                <tr class="border-b border-gray-50"><td class="py-3 font-medium">AE</td><td class="py-3"><span class="tag tag-blue">非产出岗</span></td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">删除</button></td></tr>
+                <tr class="border-b border-gray-50"><td class="py-3 font-medium">拍摄</td><td class="py-3"><span class="tag tag-orange">产出岗</span></td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">删除</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 用户管理 ===== -->
+      <div id="p-users" class="page">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-5">
+            <div class="flex items-center gap-4">
+              <input placeholder="搜索用户名/姓名" class="w-48" style="width:200px">
+              <select class="w-32"><option>全部角色</option><option>系统管理员</option><option>老板</option><option>项目经理</option><option>项目AE</option><option>财务</option><option>HR</option><option>执行人员</option><option>外包供应商</option></select>
+              <select class="w-24"><option>全部状态</option><option>正常</option><option>已停用</option></select>
+            </div>
+            <button class="btn btn-primary" onclick="showUserModal()"><i class="fa-solid fa-plus"></i> 新建用户</button>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-left text-gray-400 text-xs border-b border-gray-100"><th class="pb-3 font-medium">用户名</th><th class="pb-3 font-medium">显示名</th><th class="pb-3 font-medium">关联员工</th><th class="pb-3 font-medium">角色</th><th class="pb-3 font-medium">最后登录</th><th class="pb-3 font-medium">状态</th><th class="pb-3 font-medium text-right">操作</th></tr></thead>
+            <tbody>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">chenming</td><td class="py-3">陈明</td><td class="py-3 text-gray-500">EMP-001 陈明</td><td class="py-3"><span class="tag tag-gray">系统管理员</span></td><td class="py-3 text-gray-400">06-11 14:02</td><td class="py-3"><span class="tag tag-green">正常</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">停用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">zhangwei</td><td class="py-3">张伟</td><td class="py-3 text-gray-500">EMP-002 张伟</td><td class="py-3"><span class="tag tag-orange">项目经理</span> <span class="tag tag-blue">项目AE</span></td><td class="py-3 text-gray-400">06-11 09:15</td><td class="py-3"><span class="tag tag-green">正常</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">停用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">liuyang</td><td class="py-3">刘洋</td><td class="py-3 text-gray-500">EMP-005 刘洋</td><td class="py-3"><span class="tag tag-blue">执行人员</span></td><td class="py-3 text-gray-400">06-11 08:00</td><td class="py-3"><span class="tag tag-green">正常</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">停用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">wangjie</td><td class="py-3">王杰</td><td class="py-3 text-gray-500">EMP-V01 王杰</td><td class="py-3"><span class="tag tag-orange">外包供应商</span></td><td class="py-3 text-gray-400">06-10 16:30</td><td class="py-3"><span class="tag tag-green">正常</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">停用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">liming</td><td class="py-3">李明</td><td class="py-3 text-gray-500">EMP-003 李明</td><td class="py-3"><span class="tag tag-blue">财务</span></td><td class="py-3 text-gray-400">05-30 10:00</td><td class="py-3"><span class="tag tag-red">已停用</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-secondary">启用</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 审批流配置 ===== -->
+      <div id="p-approval" class="page">
+        <div class="flex gap-6" style="min-height:460px">
+          <div class="card p-5 w-72 shrink-0">
+            <div class="flex items-center justify-between mb-4"><span class="font-bold text-sm text-brand">审批流模板</span><button class="btn btn-sm btn-primary">+ 新建</button></div>
+            <div class="space-y-1 text-sm">
+              <div class="py-2 px-3 rounded-lg bg-accentl text-accent font-medium text-xs cursor-pointer" onclick="selectFlow(this)">费用报销审批 (expense_report)</div>
+              <div class="py-2 px-3 rounded-lg hover:bg-gray-50 text-xs cursor-pointer" onclick="selectFlow(this)">难度系数调整 (coefficient_adjust)</div>
+              <div class="py-2 px-3 rounded-lg hover:bg-gray-50 text-xs cursor-pointer" onclick="selectFlow(this)">合同变更审批 (contract_amendment)</div>
+            </div>
+          </div>
+          <div class="flex-1 card p-5">
+            <div class="flex items-center justify-between mb-4"><span class="font-bold text-sm text-brand">模板详情 · 费用报销审批</span><div class="flex gap-2"><button class="btn btn-sm btn-secondary">编辑</button><button class="btn btn-sm btn-danger">禁用</button></div></div>
+            <div class="mb-4 flex gap-4 text-xs"><div><span class="text-gray-400">业务类型：</span><span class="font-mono bg-gray-100 px-2 py-0.5 rounded">expense_report</span></div><div><span class="text-gray-400">状态：</span><span class="tag tag-green">active</span></div></div>
+            <div class="space-y-3">
+              <div class="border border-gray-100 rounded-lg p-4 flex items-start gap-4">
+                <div class="w-7 h-7 rounded-full bg-accent text-white flex items-center justify-center text-xs font-bold shrink-0">1</div>
+                <div class="flex-1">
+                  <div class="font-bold text-sm text-brand mb-2">项目经理审批</div>
+                  <div class="flex gap-6 text-xs text-gray-500"><span>审批人类型: <b>role</b></span><span>审批人值: <b>pm</b></span><span>允许驳回: <b class="text-green-600">是</b></span><span>超时: <b>24小时</b></span><span>超时操作: <b class="text-orange-500">升级</b></span></div>
+                </div>
+              </div>
+              <div class="text-center text-gray-300"><i class="fa-solid fa-arrow-down"></i></div>
+              <div class="border border-gray-100 rounded-lg p-4 flex items-start gap-4">
+                <div class="w-7 h-7 rounded-full bg-brand text-white flex items-center justify-center text-xs font-bold shrink-0">2</div>
+                <div class="flex-1">
+                  <div class="font-bold text-sm text-brand mb-2">财务审批</div>
+                  <div class="flex gap-6 text-xs text-gray-500"><span>审批人类型: <b>role</b></span><span>审批人值: <b>finance</b></span><span>允许驳回: <b class="text-green-600">是</b></span><span>超时: <b>48小时</b></span><span>超时操作: <b class="text-blue-500">通知</b></span></div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-gray-100 text-xs text-gray-400">审批回调：通过后自动 <code class="bg-gray-100 px-1 rounded">INSERT t_cost_item</code></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 难度系数字典 ===== -->
+      <div id="p-coeff" class="page">
+        <div class="card p-5">
+          <div class="flex items-center justify-between mb-5"><span class="font-bold text-sm text-brand">难度系数字典</span><button class="btn btn-primary" onclick="showCoeffModal()"><i class="fa-solid fa-plus"></i> 新增系数</button></div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-left text-gray-400 text-xs border-b border-gray-100"><th class="pb-3 font-medium">名称</th><th class="pb-3 font-medium">适用产出类型</th><th class="pb-3 font-medium">系数值</th><th class="pb-3 font-medium">排序</th><th class="pb-3 font-medium">状态</th><th class="pb-3 font-medium text-right">操作</th></tr></thead>
+            <tbody>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">基准系数</td><td class="py-3"><span class="tag tag-blue">all</span></td><td class="py-3 font-mono font-bold text-accent">1.0</td><td class="py-3 text-gray-400">1</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">15秒视频</td><td class="py-3"><span class="tag tag-orange">shooting</span></td><td class="py-3 font-mono font-bold text-accent">1.0</td><td class="py-3 text-gray-400">2</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">30秒视频</td><td class="py-3"><span class="tag tag-orange">shooting</span></td><td class="py-3 font-mono font-bold text-accent">1.5</td><td class="py-3 text-gray-400">3</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">60秒视频</td><td class="py-3"><span class="tag tag-orange">shooting</span></td><td class="py-3 font-mono font-bold text-accent">2.0</td><td class="py-3 text-gray-400">4</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">简单图文</td><td class="py-3"><span class="tag tag-blue">script</span></td><td class="py-3 font-mono font-bold text-accent">0.8</td><td class="py-3 text-gray-400">5</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">复杂图文</td><td class="py-3"><span class="tag tag-blue">script</span></td><td class="py-3 font-mono font-bold text-accent">1.2</td><td class="py-3 text-gray-400">6</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">基础脚本</td><td class="py-3"><span class="tag tag-blue">script</span></td><td class="py-3 font-mono font-bold text-accent">1.0</td><td class="py-3 text-gray-400">7</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 font-medium">创意脚本</td><td class="py-3"><span class="tag tag-blue">script</span></td><td class="py-3 font-mono font-bold text-accent">1.5</td><td class="py-3 text-gray-400">8</td><td class="py-3"><span class="tag tag-green">active</span></td><td class="py-3 text-right"><button class="btn btn-sm btn-secondary mr-1">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 系统字典 v2.3 ===== -->
+      <div id="p-dict" class="page">
+        <div class="flex gap-6" style="min-height:600px">
+          <!-- Left: Module Tree -->
+          <div class="card p-3 w-56 shrink-0 text-sm overflow-auto" style="max-height:600px">
+            <div class="flex items-center justify-between mb-3"><span class="font-bold text-xs text-brand">字典分类导航</span><span class="text-[10px] text-gray-400">共51项</span></div>
+            <div class="space-y-0.5">
+              <div class="flex items-center gap-1 text-xs font-medium text-accent mt-1 mb-1" onclick="toggleDictGroup('crm')"><i id="dict-arrow-crm" class="fa-solid fa-caret-down text-gray-400 text-[10px] w-3"></i>CRM <span class="text-[10px] text-gray-400 ml-auto">15项</span></div>
+              <div id="dict-group-crm" class="ml-3 space-y-0.5">
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="client_grade" onclick="selectDictItem(this,'client_grade')">客户等级</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="client_status" onclick="selectDictItem(this,'client_status')">客户状态</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="client_industry" onclick="selectDictItem(this,'client_industry')">行业</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="contract_type" onclick="selectDictItem(this,'contract_type')">合同类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="contract_status" onclick="selectDictItem(this,'contract_status')">合同状态</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="content_type" onclick="selectDictItem(this,'content_type')">品类 ⚠️</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="content_subtype" onclick="selectDictItem(this,'content_subtype')">内容类型 ⚠️</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fee_type" onclick="selectDictItem(this,'fee_type')">费用类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="settlement_model" onclick="selectDictItem(this,'settlement_model')">结算模式</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="payment_method" onclick="selectDictItem(this,'payment_method')">支付方式</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="tax_rate" onclick="selectDictItem(this,'tax_rate')">税率</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="opportunity_stage" onclick="selectDictItem(this,'opportunity_stage')">商机阶段</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="amendment_type" onclick="selectDictItem(this,'amendment_type')">变更类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="kpi_type" onclick="selectDictItem(this,'kpi_type')">KPI类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="kpi_unit" onclick="selectDictItem(this,'kpi_unit')">KPI单位</div>
+              </div>
+              <div class="flex items-center gap-1 text-xs font-medium text-brand mt-2 mb-1" onclick="toggleDictGroup('pm')"><i id="dict-arrow-pm" class="fa-solid fa-caret-down text-gray-400 text-[10px] w-3"></i>PM <span class="text-[10px] text-gray-400 ml-auto">21项</span></div>
+              <div id="dict-group-pm" class="ml-3 space-y-0.5">
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_platform" onclick="selectDictItem(this,'pm_platform')">发布平台</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_product_category" onclick="selectDictItem(this,'pm_product_category')">产品品类</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_service_type" onclick="selectDictItem(this,'pm_service_type')">供应商服务类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_ae_content_type" onclick="selectDictItem(this,'pm_ae_content_type')">AE内容类型 ⚠️</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_cooperation_status" onclick="selectDictItem(this,'pm_cooperation_status')">供应商合作状态</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_settled_by" onclick="selectDictItem(this,'pm_settled_by')">供应商结算方式</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_model_grade" onclick="selectDictItem(this,'pm_model_grade')">模特分级</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_venue_type" onclick="selectDictItem(this,'pm_venue_type')">场地类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_venue_style" onclick="selectDictItem(this,'pm_venue_style')">场地风格</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_scene_type" onclick="selectDictItem(this,'pm_scene_type')">拍摄场景</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_billing_mode" onclick="selectDictItem(this,'pm_billing_mode')">场地计费规则</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_account_type" onclick="selectDictItem(this,'pm_account_type')">账号类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_account_platform" onclick="selectDictItem(this,'pm_account_platform')">账号平台 (↗同发布平台)</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_deliverable_type" onclick="selectDictItem(this,'pm_deliverable_type')">交付物类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_cost_category" onclick="selectDictItem(this,'pm_cost_category')">额外成本类别</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_billing_unit" onclick="selectDictItem(this,'pm_billing_unit')">计费单位</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_distribution_mode" onclick="selectDictItem(this,'pm_distribution_mode')">分配模式</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_gender" onclick="selectDictItem(this,'pm_gender')">性别</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_task_tag" onclick="selectDictItem(this,'pm_task_tag')">任务标签</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_product_line" onclick="selectDictItem(this,'pm_product_line')">产品线</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="pm_sample_status" onclick="selectDictItem(this,'pm_sample_status')">样机状态</div>
+              </div>
+              <div class="flex items-center gap-1 text-xs font-medium text-orange-600 mt-2 mb-1" onclick="toggleDictGroup('hr')"><i id="dict-arrow-hr" class="fa-solid fa-caret-down text-gray-400 text-[10px] w-3"></i>HR <span class="text-[10px] text-gray-400 ml-auto">6项</span></div>
+              <div id="dict-group-hr" class="ml-3 space-y-0.5">
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="hr_employee_type" onclick="selectDictItem(this,'hr_employee_type')">员工类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="hr_employee_status" onclick="selectDictItem(this,'hr_employee_status')">员工状态</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="hr_adjustment_type" onclick="selectDictItem(this,'hr_adjustment_type')">薪酬调整类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="hr_adjustment_scope" onclick="selectDictItem(this,'hr_adjustment_scope')">调整影响范围</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="hr_salary_calc_status" onclick="selectDictItem(this,'hr_salary_calc_status')">薪酬计算状态</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="hr_leave_type" onclick="selectDictItem(this,'hr_leave_type')">请假类型 P2</div>
+              </div>
+              <div class="flex items-center gap-1 text-xs font-medium text-purple-700 mt-2 mb-1" onclick="toggleDictGroup('fm')"><i id="dict-arrow-fm" class="fa-solid fa-caret-down text-gray-400 text-[10px] w-3"></i>FM <span class="text-[10px] text-gray-400 ml-auto">9+2项</span></div>
+              <div id="dict-group-fm" class="ml-3 space-y-0.5">
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_allocation_type" onclick="selectDictItem(this,'fm_allocation_type')">分摊类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_cost_item_type" onclick="selectDictItem(this,'fm_cost_item_type')">成本子类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_cost_type" onclick="selectDictItem(this,'fm_cost_type')">成本类型聚合</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_payment_direction" onclick="selectDictItem(this,'fm_payment_direction')">收付款方向</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_expense_category" onclick="selectDictItem(this,'fm_expense_category')">费用报销类别</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_reconciliation_flag" onclick="selectDictItem(this,'fm_reconciliation_flag')">对账条目标记</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_cost_check_status" onclick="selectDictItem(this,'fm_cost_check_status')">成本核对状态</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_invoice_type" onclick="selectDictItem(this,'fm_invoice_type')">发票类型</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_payment_method" onclick="selectDictItem(this,'fm_payment_method')">付款方式 (↗CRM)</div>
+                <div class="dict-item py-1 px-2 rounded text-[11px] cursor-pointer hover:bg-gray-50" data-key="fm_dispute_reason" onclick="selectDictItem(this,'fm_dispute_reason')">对账争议原因</div>
+              </div>
+              <div class="border-t border-gray-100 mt-2 pt-2 text-[10px] text-gray-400 space-y-0.5">
+                <div class="px-2">⚠️ 跨模块影响</div>
+                <div class="px-2">↗ 共用字典源</div>
+                <div class="px-2">P2 延迟上线</div>
+              </div>
+            </div>
+          </div>
+          <!-- Right: Dict Detail Table -->
+          <div class="flex-1 card p-5 overflow-auto" style="max-height:600px">
+            <div class="flex items-center justify-between mb-1">
+              <span class="font-bold text-sm text-brand">字典详情 · <span class="text-accent" id="dict-label">请从左侧选择一个字典</span></span>
+              <div class="flex gap-2">
+                <button class="btn btn-sm btn-secondary" id="dict-reset-btn" style="display:none" onclick="showToast('已恢复默认值','#2e7d32')"><i class="fa-solid fa-rotate-left"></i> 重置默认</button>
+                <button class="btn btn-sm btn-primary" onclick="showDictAddModal()"><i class="fa-solid fa-plus"></i> 新增条目</button>
+              </div>
+            </div>
+            <div class="flex gap-4 mb-3 text-[10px] text-gray-400">
+              <span id="dict-mapping">映射字段: —</span>
+              <span id="dict-module-tag"></span>
+              <span id="dict-link-tag"></span>
+            </div>
+            <!-- Entries Table -->
+            <table class="w-full text-xs"><thead><tr class="text-left text-gray-400 border-b border-gray-100"><th class="pb-2 font-medium w-36">value</th><th class="pb-2 font-medium">label</th><th class="pb-2 font-medium w-16">颜色</th><th class="pb-2 font-medium w-12">排序</th><th class="pb-2 font-medium w-16">默认</th><th class="pb-2 font-medium w-20">状态</th><th class="pb-2 font-medium w-30 text-right">操作</th></tr></thead>
+              <tbody id="dict-entries-body">
+                <tr><td colspan="7" class="py-8 text-center text-gray-400 text-sm"><i class="fa-solid fa-arrow-left text-2xl mb-2 block"></i>请从左侧选择一个字典查看详情</td></tr>
+              </tbody>
+            </table>
+            <!-- Reference Protection -->
+            <div class="mt-4 pt-3 border-t border-gray-100">
+              <div class="flex items-start gap-2">
+                <i class="fa-solid fa-shield-halved text-accent text-xs mt-0.5"></i>
+                <div>
+                  <div class="text-[11px] font-medium text-brand mb-1">引用保护</div>
+                  <div class="text-[10px] text-gray-400" id="dict-ref-info">—</div>
+                  <div class="text-[10px] text-gray-400 mt-0.5" id="dict-cross-info"></div>
+                </div>
+              </div>
+            </div>
+            <!-- Cross-module Warning -->
+            <div id="dict-cross-warning" class="mt-3 p-3 bg-amber-50 border border-amber-200 rounded-lg text-[10px] text-amber-700" style="display:none">
+              <i class="fa-solid fa-triangle-exclamation mr-1"></i>
+              <span id="dict-cross-warning-text"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dict Add Item Modal -->
+      <div id="modal-dict-add" class="modal">
+        <div class="bg-white rounded-2xl p-8 w-[440px] shadow-2xl">
+          <h2 class="text-lg font-bold text-brand mb-6">新增字典条目 · <span class="text-accent" id="modal-dict-name">—</span></h2>
+          <div class="space-y-3 text-sm">
+            <div class="grid grid-cols-2 gap-3">
+              <div><label class="text-xs text-gray-500 block mb-1">value <span class="text-red-400">*</span></label><input placeholder="如: ctr"></div>
+              <div><label class="text-xs text-gray-500 block mb-1">label 显示名 <span class="text-red-400">*</span></label><input placeholder="如: 点击率"></div>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <div><label class="text-xs text-gray-500 block mb-1">颜色</label><input type="color" class="p-1 h-9 cursor-pointer"></div>
+              <div><label class="text-xs text-gray-500 block mb-1">排序号</label><input value="99" placeholder="≥0"></div>
+              <div><label class="text-xs text-gray-500 block mb-1">设为默认</label><select class="mt-[18px]"><option>否</option><option>是</option></select></div>
+            </div>
+            <div><label class="text-xs text-gray-500 block mb-1">说明</label><input placeholder="条目用途说明"></div>
+          </div>
+          <div class="mt-4 p-3 bg-gray-50 rounded-lg text-[10px] text-gray-500">
+            <i class="fa-solid fa-circle-info mr-1"></i>新增后将扫描引用表，确认无冲突后写入。跨模块字典项需走审批流。
+          </div>
+          <div class="flex justify-end gap-3 mt-5">
+            <button class="btn btn-secondary" onclick="closeModal('modal-dict-add')">取消</button>
+            <button class="btn btn-primary" onclick="closeModal('modal-dict-add');showToast('字典条目新增成功，已写入变更日志','#2e7d32')">保存</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 审计日志 ===== -->
+      <div id="p-audit" class="page">
+        <div class="card p-5">
+          <div class="flex items-center gap-4 mb-5 flex-wrap">
+            <input placeholder="操作人" class="w-36">
+            <select class="w-28"><option>全部模块</option><option>PM</option><option>FM</option><option>HR</option><option>CRM</option><option>System</option></select>
+            <select class="w-28"><option>全部操作</option><option>CREATE</option><option>UPDATE</option><option>DELETE</option><option>LOGIN</option><option>APPROVE</option></select>
+            <input type="date" class="w-36" value="2026-06-01">
+            <span class="text-gray-300">~</span>
+            <input type="date" class="w-36" value="2026-06-11">
+            <button class="btn btn-primary btn-sm">搜索</button>
+            <button class="btn btn-secondary btn-sm ml-auto"><i class="fa-solid fa-download"></i> 导出CSV</button>
+          </div>
+          <table class="w-full text-sm">
+            <thead><tr class="text-left text-gray-400 text-xs border-b border-gray-100"><th class="pb-3 font-medium">时间</th><th class="pb-3 font-medium">操作人</th><th class="pb-3 font-medium">模块</th><th class="pb-3 font-medium">操作</th><th class="pb-3 font-medium">详情</th><th class="pb-3 font-medium">IP</th></tr></thead>
+            <tbody>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 text-xs">06-11 14:02</td><td class="py-3">张伟</td><td class="py-3"><span class="tag tag-blue">hr</span></td><td class="py-3"><span class="tag tag-orange">UPDATE</span></td><td class="py-3 text-xs text-gray-500">薪酬结构 底薪:5000→5500</td><td class="py-3 text-xs text-gray-400">192.168.1.5</td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 text-xs">06-11 11:30</td><td class="py-3">刘洋</td><td class="py-3"><span class="tag tag-orange">pm</span></td><td class="py-3"><span class="tag tag-green">APPROVE</span></td><td class="py-3 text-xs text-gray-500">脚本审核通过 SCP-2026-042</td><td class="py-3 text-xs text-gray-400">192.168.1.8</td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 text-xs">06-11 10:00</td><td class="py-3">陈明</td><td class="py-3"><span class="tag tag-gray">system</span></td><td class="py-3"><span class="tag tag-blue">LOGIN</span></td><td class="py-3 text-xs text-gray-500">登录成功</td><td class="py-3 text-xs text-gray-400">192.168.1.1</td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 text-xs">06-10 16:45</td><td class="py-3">李明</td><td class="py-3"><span class="tag tag-blue">fm</span></td><td class="py-3"><span class="tag tag-red">CREATE</span></td><td class="py-3 text-xs text-gray-500">对账单生成 RCN-2026-06-001</td><td class="py-3 text-xs text-gray-400">192.168.1.3</td></tr>
+              <tr class="border-b border-gray-50 hover:bg-gray-50"><td class="py-3 text-xs">06-10 14:20</td><td class="py-3">张伟</td><td class="py-3"><span class="tag tag-orange">crm</span></td><td class="py-3"><span class="tag tag-orange">UPDATE</span></td><td class="py-3 text-xs text-gray-500">合同单价变更 视频120→150</td><td class="py-3 text-xs text-gray-400">192.168.1.5</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ===== PAGE: 系统参数 ===== -->
+      <div id="p-config" class="page">
+        <div class="card p-5 max-w-2xl">
+          <div class="font-bold text-sm text-brand mb-5">系统参数配置</div>
+          <div class="space-y-3">
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">系统名称</label><input value="业财一体化管理平台" class="flex-1"></div>
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">默认增值税率</label><input value="0.06" class="flex-1 w-24"><span class="text-xs text-gray-400">6%</span></div>
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">默认支付工作天数</label><input value="90" class="flex-1 w-24"><span class="text-xs text-gray-400">天</span></div>
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">默认支付方式</label><select class="flex-1 w-32"><option>电汇</option><option>金单</option><option>京准通</option></select></div>
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">登录最大尝试次数</label><input value="5" class="flex-1 w-24"><span class="text-xs text-gray-400">次</span></div>
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">登录锁定分钟数</label><input value="30" class="flex-1 w-24"><span class="text-xs text-gray-400">分钟</span></div>
+            <div class="flex items-center gap-4 text-sm"><label class="w-40 text-gray-500 shrink-0">JWT Token 过期小时数</label><input value="8" class="flex-1 w-24"><span class="text-xs text-gray-400">小时</span></div>
+          </div>
+          <div class="mt-6"><button class="btn btn-primary" onclick="showToast('系统参数已保存','#2e7d32')">保存配置</button></div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- Modals -->
+<!-- User Create Modal -->
+<div id="modal-user" class="modal">
+  <div class="bg-white rounded-2xl p-8 w-[480px] shadow-2xl">
+    <h2 class="text-lg font-bold text-brand mb-6">新建用户</h2>
+    <div class="space-y-4 text-sm">
+      <div><label class="text-xs text-gray-500 block mb-1">用户名 <span class="text-red-400">*</span></label><input placeholder="4-20位字母数字下划线"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">密码 <span class="text-red-400">*</span></label><input type="password" placeholder="至少8位，含大小写字母+数字"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">确认密码 <span class="text-red-400">*</span></label><input type="password"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">显示名称 <span class="text-red-400">*</span></label><input placeholder="界面显示名"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">关联员工 <span class="text-red-400">*</span></label><select><option>搜索员工姓名或工号...</option><option>EMP-001 陈明</option><option>EMP-002 张伟</option><option>EMP-005 刘洋</option></select></div>
+      <div><label class="text-xs text-gray-500 block mb-2">角色</label>
+        <div class="grid grid-cols-4 gap-2">
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> 老板</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> 项目经理</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> 项目AE</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> 财务</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> HR</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox" checked> 执行人员</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> 外包供应商</label>
+          <label class="flex items-center gap-1 text-xs"><input type="checkbox"> 系统管理员</label>
+        </div>
+      </div>
+    </div>
+    <div class="flex justify-end gap-3 mt-6">
+      <button class="btn btn-secondary" onclick="closeModal('modal-user')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-user');showToast('用户创建成功','#2e7d32')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Department Modal -->
+<div id="modal-dept" class="modal">
+  <div class="bg-white rounded-2xl p-8 w-[400px] shadow-2xl">
+    <h2 class="text-lg font-bold text-brand mb-6">新增部门</h2>
+    <div class="space-y-4 text-sm">
+      <div><label class="text-xs text-gray-500 block mb-1">部门名称 <span class="text-red-400">*</span></label><input placeholder="如：编导组"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">上级部门</label><select><option>公司（根节点）</option><option>项目部</option><option>执行组</option></select></div>
+      <div><label class="text-xs text-gray-500 block mb-1">部门类型</label><select><option>execution（执行组）</option><option>functional（职能部）</option><option>management（管理层）</option></select></div>
+      <div><label class="text-xs text-gray-500 block mb-1">排序号</label><input placeholder="≥0 整数" value="0"></div>
+    </div>
+    <div class="flex justify-end gap-3 mt-6">
+      <button class="btn btn-secondary" onclick="closeModal('modal-dept')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-dept');showToast('部门创建成功','#2e7d32')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Position Modal -->
+<div id="modal-pos" class="modal">
+  <div class="bg-white rounded-2xl p-8 w-[400px] shadow-2xl">
+    <h2 class="text-lg font-bold text-brand mb-6">新增岗位 · 编导组</h2>
+    <div class="space-y-4 text-sm">
+      <div><label class="text-xs text-gray-500 block mb-1">岗位名称 <span class="text-red-400">*</span></label><input placeholder="全系统唯一"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">所属部门</label><input value="编导组" disabled class="bg-gray-50"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">岗位类型</label><select><option>production（产出岗）</option><option>non_production（非产出岗）</option></select></div>
+    </div>
+    <div class="flex justify-end gap-3 mt-6">
+      <button class="btn btn-secondary" onclick="closeModal('modal-pos')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-pos');showToast('岗位创建成功','#2e7d32')">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Coefficient Modal -->
+<div id="modal-coeff" class="modal">
+  <div class="bg-white rounded-2xl p-8 w-[400px] shadow-2xl">
+    <h2 class="text-lg font-bold text-brand mb-6">新增难度系数</h2>
+    <div class="space-y-4 text-sm">
+      <div><label class="text-xs text-gray-500 block mb-1">系数名称 <span class="text-red-400">*</span></label><input placeholder="如：15秒视频"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">适用产出类型</label><select><option>script（脚本）</option><option>shooting（拍摄）</option><option>editing（剪辑）</option><option>all（全部）</option></select></div>
+      <div><label class="text-xs text-gray-500 block mb-1">系数值 <span class="text-red-400">*</span></label><input placeholder="如 1.0 / 1.5 / 0.8"></div>
+      <div><label class="text-xs text-gray-500 block mb-1">排序号</label><input placeholder="≥0 整数" value="0"></div>
+    </div>
+    <div class="flex justify-end gap-3 mt-6">
+      <button class="btn btn-secondary" onclick="closeModal('modal-coeff')">取消</button>
+      <button class="btn btn-primary" onclick="closeModal('modal-coeff');showToast('系数创建成功','#2e7d32')">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Navigation
+function navigate(module){showToast('跳转到 ' + module.toUpperCase() + ' 模块（原型占位）','#1A365D')}
+function switchSettings(tab){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'))
+  document.querySelectorAll('.subnav-item').forEach(s=>s.classList.remove('active'))
+  document.getElementById('p-'+tab).classList.add('active')
+  event.target.classList.add('active')
+  const titles={org:'组织架构',users:'用户管理',approval:'审批流配置',coeff:'难度系数字典',dict:'系统字典',audit:'审计日志',config:'系统参数'}
+  const subs={org:'部门管理 / 岗位管理',users:'用户列表 / 新建 / 编辑',approval:'审批流模板 / 审批记录',coeff:'系数列表 / 新增 / 编辑',dict:'按模块分类的字典管理',audit:'操作记录查询 / 导出',config:'键值对列表编辑'}
+  document.getElementById('page-title').innerText=titles[tab]
+  document.getElementById('page-subtitle').innerText=subs[tab]
+}
+function selectDept(el,name){
+  document.querySelectorAll('#dept-children [class*="bg-accentl"], #pm-children [class*="bg-accentl"], #exec-children [class*="bg-accentl"]').forEach(d=>d.classList.remove('bg-accentl','text-accent','font-medium'))
+  el.classList.add('bg-accentl','text-accent','font-medium')
+  document.getElementById('selected-dept-name').innerText=name
+}
+function selectFlow(el){
+  document.querySelectorAll('#p-approval .bg-accentl').forEach(d=>d.classList.remove('bg-accentl','text-accent','font-medium'))
+  el.classList.add('bg-accentl','text-accent','font-medium')
+}
+function selectDictItem(el,name){document.getElementById('dict-label').innerText=name}
+
+// Dictionary Data (v2.3)
+const dictData = {
+  client_grade: { label:'客户等级', mapping:'t_client.grade', module:'CRM', entries:[
+    {v:'S',l:'S级',c:'#c62828',s:1,d:false,a:true},{v:'A',l:'A级',c:'#E55A20',s:2,d:true,a:true},{v:'B',l:'B级',c:'#2D5A8E',s:3,d:false,a:true},{v:'C',l:'C级',c:'#8C8C8C',s:4,d:false,a:true}
+  ],ref:'t_client.grade'},
+  client_status: { label:'客户状态', mapping:'t_client.status', module:'CRM', entries:[
+    {v:'prospect',l:'潜在',c:'#8C8C8C',s:1,d:true,a:true},{v:'active',l:'合作中',c:'#2e7d32',s:2,d:false,a:true},{v:'terminated',l:'已终止',c:'#c62828',s:3,d:false,a:true}
+  ],ref:'t_client.status',extra:'terminated 客户禁止新建合同/项目'},
+  client_industry: { label:'行业', mapping:'t_client.industry', module:'CRM', entries:[
+    {v:'appliance',l:'家电',c:'#1A365D',s:1,d:true,a:true},{v:'consumer_electronics',l:'消费电子',c:'#2D5A8E',s:2,d:false,a:true},{v:'internet',l:'互联网',c:'#E55A20',s:3,d:false,a:true},{v:'other',l:'其他',c:'#8C8C8C',s:99,d:false,a:true}
+  ],ref:'t_client.industry',editable:true},
+  contract_type: { label:'合同类型', mapping:'t_contract.contract_type', module:'CRM', entries:[
+    {v:'annual',l:'年框',c:'#E55A20',s:1,d:true,a:true},{v:'quarterly',l:'季度包',c:'#2D5A8E',s:2,d:false,a:true},{v:'temp',l:'临时需求',c:'#8C8C8C',s:3,d:false,a:true}
+  ],ref:'t_contract.contract_type + t_project.project_type',cross:'PM项目类型继承'},
+  contract_status: { label:'合同状态', mapping:'t_contract.status', module:'CRM', entries:[
+    {v:'draft',l:'草稿',c:'#8C8C8C',s:1,d:false,a:true},{v:'signed',l:'已签约',c:'#2D5A8E',s:2,d:false,a:true},{v:'executing',l:'执行中',c:'#2e7d32',s:3,d:false,a:true},{v:'completed',l:'已完成',c:'#52C41A',s:4,d:false,a:true},{v:'terminated',l:'已终止',c:'#c62828',s:5,d:false,a:true}
+  ],ref:'t_contract.status',note:'系统预置不可增删，仅可改label'},
+  content_type: { label:'品类', mapping:'t_contract_price.content_type', module:'CRM', entries:[
+    {v:'video',l:'视频',c:'#E55A20',s:1,d:true,a:true},{v:'graphic',l:'图文',c:'#2D5A8E',s:2,d:false,a:true},{v:'live',l:'直播',c:'#52C41A',s:3,d:false,a:true},{v:'other',l:'全部内容',c:'#8C8C8C',s:4,d:false,a:true}
+  ],ref:'t_contract_price + t_task + t_output_record + t_difficulty_coefficient',cross:'PM产出登记 + HR难度系数 + FM对账',warn:'禁止删除 ⚠️ 跨3个模块复用'},
+  content_subtype: { label:'内容类型', mapping:'t_contract_price.content_subtype', module:'CRM', entries:[
+    {v:'product_display',l:'产品展示',c:'#E55A20',s:1,d:false,a:true,extra:'适用:video'},{v:'oral_review',l:'视频口播',c:'#2D5A8E',s:2,d:false,a:true,extra:'适用:video'},{v:'unboxing',l:'开箱测评',c:'#52C41A',s:3,d:false,a:true,extra:'适用:video'},{v:'home_decor',l:'装修家居',c:'#795548',s:4,d:false,a:true,extra:'适用:video,graphic'},{v:'atmosphere',l:'氛围体验',c:'#E91E63',s:5,d:false,a:true,extra:'适用:video'},{v:'creative',l:'创意视频',c:'#9C27B0',s:6,d:false,a:true,extra:'适用:video'},{v:'main_image',l:'主图视频',c:'#607D8B',s:7,d:false,a:true,extra:'适用:video'}
+  ],ref:'t_contract_price.content_subtype + t_task.content_subtype',cross:'PM任务拆解基准维度',warn:'新增/编辑需走审批流 ⚠️ PM+HR双确认'},
+  fee_type: { label:'费用类型', mapping:'t_contract_price.fee_type', module:'CRM', entries:[
+    {v:'combined',l:'合价',c:'#E55A20',s:1,d:true,a:true,extra:'✅结算'},{v:'production',l:'制作费',c:'#2D5A8E',s:2,d:false,a:true,extra:'✅结算'},{v:'distribution',l:'投放费',c:'#8C8C8C',s:3,d:false,a:true,extra:'❌不结算'}
+  ],ref:'t_contract_price.fee_type'},
+  settlement_model: { label:'结算模式', mapping:'t_contract.settlement_model', module:'CRM', entries:[
+    {v:'simple',l:'单纯计件',c:'#2D5A8E',s:1,d:true,a:true},{v:'double_eval',l:'双重考核',c:'#E55A20',s:2,d:false,a:true}
+  ],ref:'t_contract.settlement_model'},
+  payment_method: { label:'支付方式', mapping:'t_contract.payment_method', module:'CRM', entries:[
+    {v:'wire',l:'电汇',c:'#2D5A8E',s:1,d:true,a:true},{v:'gold_note',l:'金单',c:'#DAA520',s:2,d:false,a:true},{v:'jzt',l:'京准通',c:'#E55A20',s:3,d:false,a:true}
+  ],ref:'t_contract.payment_method + t_payment_received.payment_method',cross:'FM付款方式共享 wire/gold_note/jzt',editable:true},
+  tax_rate: { label:'税率', mapping:'t_contract.tax_rate', module:'CRM', entries:[
+    {v:'0.06',l:'6%',c:'#2D5A8E',s:1,d:true,a:true},{v:'0.03',l:'3%',c:'#8C8C8C',s:2,d:false,a:true},{v:'0.13',l:'13%',c:'#E55A20',s:3,d:false,a:true},{v:'0.01',l:'1%',c:'#8C8C8C',s:4,d:false,a:true},{v:'0.09',l:'9%',c:'#8C8C8C',s:5,d:false,a:true}
+  ],ref:'t_contract.tax_rate',editable:true},
+  opportunity_stage: { label:'商机阶段', mapping:'t_opportunity.stage', module:'CRM', entries:[
+    {v:'lead',l:'线索',c:'#8C8C8C',s:1,d:false,a:true},{v:'communication',l:'需求沟通',c:'#2D5A8E',s:2,d:false,a:true},{v:'quotation',l:'报价',c:'#E55A20',s:3,d:false,a:true},{v:'won',l:'赢单',c:'#2e7d32',s:4,d:false,a:true},{v:'lost',l:'输单',c:'#c62828',s:5,d:false,a:true}
+  ],ref:'t_opportunity.stage',note:'系统预置不可增删value'},
+  amendment_type: { label:'变更类型', mapping:'t_contract_amendment.amendment_type', module:'CRM', entries:[
+    {v:'budget_increase',l:'追加预算',c:'#E55A20',s:1,d:false,a:true,extra:'✅同步项目'},{v:'price_adjust',l:'调整单价',c:'#2D5A8E',s:2,d:false,a:true,extra:'✅同步项目'},{v:'quantity_reduce',l:'追加减免',c:'#8C8C8C',s:3,d:false,a:true,extra:'✅同步项目'},{v:'renewal',l:'续签延期',c:'#52C41A',s:4,d:false,a:true,extra:'✅同步项目'}
+  ],ref:'t_contract_amendment.amendment_type'},
+  kpi_type: { label:'KPI类型', mapping:'t_kpi_template_indicator.kpi_type', module:'CRM', entries:[
+    {v:'uv',l:'UV',c:'#2D5A8E',s:1,d:false,a:true},{v:'exposure',l:'曝光量',c:'#E55A20',s:2,d:false,a:true},{v:'gmv',l:'成交额(GMV)',c:'#52C41A',s:3,d:false,a:true},{v:'cpc',l:'CPC',c:'#8C8C8C',s:4,d:false,a:true},{v:'output_count',l:'内容产出数',c:'#2D5A8E',s:5,d:false,a:true},{v:'engagement',l:'互动率',c:'#E91E63',s:6,d:false,a:true}
+  ],ref:'t_kpi_template_indicator + t_contract_kpi',cross:'FM双重考核结算',editable:true},
+  kpi_unit: { label:'KPI单位', mapping:'t_kpi_template_indicator.kpi_unit', module:'CRM', entries:[
+    {v:'person_times',l:'人次',c:'#2D5A8E',s:1,d:false,a:true},{v:'yuan',l:'元',c:'#E55A20',s:2,d:false,a:true},{v:'article',l:'篇',c:'#52C41A',s:3,d:false,a:true},{v:'percent',l:'%',c:'#8C8C8C',s:4,d:false,a:true},{v:'times',l:'次',c:'#8C8C8C',s:5,d:false,a:true}
+  ],ref:'t_kpi_template_indicator + t_contract_kpi',editable:true},
+  // PM
+  pm_platform: { label:'发布平台', mapping:'t_task.platform', module:'PM', entries:[
+    {v:'jd',l:'京东',c:'#E55A20',s:1,d:true,a:true},{v:'tmall',l:'天猫',c:'#2D5A8E',s:2,d:false,a:true},{v:'douyin',l:'抖音',c:'#52C41A',s:3,d:false,a:true},{v:'xiaohongshu',l:'小红书',c:'#E91E63',s:4,d:false,a:true},{v:'bilibili',l:'B站',c:'#9C27B0',s:5,d:false,a:true},{v:'pdd',l:'拼多多',c:'#E55A20',s:6,d:false,a:true}
+  ],ref:'t_task.platform + t_ae_req.platform + t_publish_account.platform',editable:true},
+  pm_product_category: { label:'产品品类', mapping:'t_task.category', module:'PM', entries:[
+    {v:'cooker_hood',l:'烟灶',c:'#8C8C8C',s:1,d:true,a:true},{v:'water_purifier',l:'净水器',c:'#2D5A8E',s:2,d:false,a:true},{v:'gas_heater',l:'燃热',c:'#E55A20',s:3,d:false,a:true},{v:'electric_heater',l:'电热',c:'#E55A20',s:4,d:false,a:true},{v:'sterilizer',l:'消毒柜',c:'#2D5A8E',s:5,d:false,a:true},{v:'dishwasher',l:'洗碗机',c:'#2D5A8E',s:6,d:false,a:true},{v:'water_dispenser',l:'饮水机',c:'#52C41A',s:7,d:false,a:true},{v:'stove',l:'灶具',c:'#8C8C8C',s:8,d:false,a:true}
+  ],ref:'t_task.category + t_ae_req.category',editable:true},
+  pm_service_type: { label:'供应商服务类型', mapping:'t_vendor_service.service_type', module:'PM', entries:[
+    {v:'script',l:'脚本',c:'#2D5A8E',s:1,d:false,a:true},{v:'shooting',l:'拍摄',c:'#E55A20',s:2,d:false,a:true},{v:'editing',l:'剪辑',c:'#52C41A',s:3,d:false,a:true}
+  ],ref:'t_vendor_service_price.service_type',cross:'HR外包匹配',note:'多选'},
+  pm_ae_content_type: { label:'AE内容类型', mapping:'t_ae_req.content_type', module:'PM', entries:[
+    {v:'product_explanation',l:'商品讲解',c:'#2D5A8E',s:1,d:true,a:true,extra:'权重1.0'},{v:'product_display',l:'产品展示',c:'#E55A20',s:2,d:false,a:true,extra:'权重1.2'},{v:'strategy_review',l:'攻略测评',c:'#c62828',s:3,d:false,a:true,extra:'权重1.5'},{v:'good_share',l:'好物分享',c:'#52C41A',s:4,d:false,a:true,extra:'权重1.0'},{v:'advanced_graphic',l:'图文(进阶)',c:'#9C27B0',s:5,d:false,a:true,extra:'权重1.3'}
+  ],ref:'t_ae_req.content_type + t_task.ae_content_type',cross:'驱动加权产出→HR薪酬计算',warn:'⚠️ 权重变更需PM+HR双审批',editable:true},
+  pm_cooperation_status: { label:'供应商合作状态', mapping:'t_vendor_resource.status', module:'PM', entries:[
+    {v:'active',l:'合作中',c:'#2e7d32',s:1,d:true,a:true},{v:'inactive',l:'已暂停',c:'#8C8C8C',s:2,d:false,a:true},{v:'blacklisted',l:'黑名单',c:'#c62828',s:3,d:false,a:true}
+  ],ref:'t_vendor_resource.cooperation_status',extra:'blacklisted冻结FM付款'},
+  pm_settled_by: { label:'供应商结算方式', mapping:'t_vendor_service_price.settled_by', module:'PM', entries:[
+    {v:'per_piece',l:'按条计件',c:'#E55A20',s:1,d:true,a:true},{v:'monthly_package',l:'月包',c:'#2D5A8E',s:2,d:false,a:true},{v:'project_package',l:'项目包',c:'#52C41A',s:3,d:false,a:true}
+  ],ref:'t_vendor_service_price.settled_by',cross:'FM月结计算'},
+  pm_model_grade: { label:'模特分级', mapping:'t_model.grade', module:'PM', entries:[
+    {v:'S',l:'S级',c:'#c62828',s:1,d:false,a:true},{v:'A',l:'A级',c:'#E55A20',s:2,d:false,a:true},{v:'B',l:'B级',c:'#2D5A8E',s:3,d:false,a:true},{v:'C',l:'C级',c:'#8C8C8C',s:4,d:false,a:true}
+  ],ref:'t_model.grade',editable:true},
+  pm_venue_type: { label:'场地类型', mapping:'t_venue.venue_type', module:'PM', entries:[
+    {v:'external',l:'外部场地',c:'#E55A20',s:1,d:true,a:true},{v:'internal',l:'企业自建',c:'#52C41A',s:2,d:false,a:true}
+  ],ref:'t_venue.venue_type'},
+  pm_venue_style: { label:'场地风格', mapping:'t_venue.style', module:'PM', entries:[
+    {v:'italian',l:'意式',c:'#795548',s:1,d:false,a:true},{v:'modern',l:'现代',c:'#607D8B',s:2,d:false,a:true},{v:'light_luxury',l:'轻奢',c:'#DAA520',s:3,d:false,a:true},{v:'cream',l:'奶油',c:'#FFE0B2',s:4,d:false,a:true},{v:'wood',l:'原木',c:'#8D6E63',s:5,d:false,a:true}
+  ],ref:'t_venue.style',editable:true},
+  pm_scene_type: { label:'拍摄场景', mapping:'t_venue_scene.scene_type', module:'PM', entries:[
+    {v:'living_room',l:'客厅',c:'#2D5A8E',s:1,d:false,a:true},{v:'kitchen',l:'厨房',c:'#E55A20',s:2,d:false,a:true},{v:'bedroom',l:'卧室',c:'#9C27B0',s:3,d:false,a:true},{v:'balcony',l:'阳台',c:'#52C41A',s:4,d:false,a:true}
+  ],ref:'t_venue_scene.scene_type',editable:true},
+  pm_billing_mode: { label:'场地计费规则', mapping:'t_venue.billing_mode', module:'PM', entries:[
+    {v:'hourly',l:'按小时',c:'#E55A20',s:1,d:true,a:true},{v:'slot',l:'固定时段',c:'#2D5A8E',s:2,d:false,a:true},{v:'daily',l:'按天',c:'#52C41A',s:3,d:false,a:true}
+  ],ref:'t_venue.billing_mode'},
+  pm_account_type: { label:'账号类型', mapping:'t_publish_account.account_type', module:'PM', entries:[
+    {v:'talent',l:'达人账号',c:'#E55A20',s:1,d:true,a:true},{v:'shop',l:'店铺账号',c:'#2D5A8E',s:2,d:false,a:true}
+  ],ref:'t_publish_account.account_type'},
+  pm_account_platform: { label:'账号平台', mapping:'t_publish_account.platform', module:'PM', note:'与发布平台(pm_platform)共用同一字典源，无需重复维护', ref:'t_publish_account.platform',entries:[]},
+  pm_deliverable_type: { label:'交付物类型', mapping:'t_deliverable.type', module:'PM', entries:[
+    {v:'video',l:'视频成片',c:'#E55A20',s:1,d:false,a:true},{v:'image',l:'图片素材',c:'#2D5A8E',s:2,d:false,a:true},{v:'text',l:'脚本文案',c:'#52C41A',s:3,d:false,a:true},{v:'composite',l:'混合作品',c:'#9C27B0',s:4,d:false,a:true}
+  ],ref:'t_deliverable.type',cross:'FM对账汇总'},
+  pm_cost_category: { label:'额外成本类别', mapping:'t_cost_item_preset.category', module:'PM', entries:[
+    {v:'model_fee',l:'模特费',c:'#E91E63',s:1,d:false,a:true},{v:'venue_rental',l:'场地租赁',c:'#795548',s:2,d:false,a:true},{v:'prop_fee',l:'道具费',c:'#607D8B',s:3,d:false,a:true},{v:'copyright',l:'版权',c:'#c62828',s:4,d:false,a:true},{v:'travel',l:'差旅',c:'#8C8C8C',s:5,d:false,a:true},{v:'custom',l:'自定义',c:'#8C8C8C',s:99,d:false,a:true}
+  ],ref:'t_cost_item_preset.category',cross:'FM成本归集',editable:true},
+  pm_billing_unit: { label:'计费单位', mapping:'t_cost_item_preset.unit', module:'PM', entries:[
+    {v:'per_day',l:'元/天',c:'#E55A20',s:1,d:true,a:true},{v:'per_time',l:'元/次',c:'#2D5A8E',s:2,d:false,a:true},{v:'per_piece',l:'元/条',c:'#52C41A',s:3,d:false,a:true},{v:'per_person',l:'元/人',c:'#9C27B0',s:4,d:false,a:true}
+  ],ref:'t_cost_item_preset.unit',editable:true},
+  pm_distribution_mode: { label:'分配模式', mapping:'t_ae_req.distribution_mode', module:'PM', entries:[
+    {v:'unified',l:'统一分配',c:'#2D5A8E',s:1,d:true,a:true},{v:'mixed',l:'混合分配',c:'#E55A20',s:2,d:false,a:true}
+  ],ref:'t_ae_req.distribution_mode'},
+  pm_gender: { label:'性别', mapping:'t_model.gender', module:'PM', entries:[
+    {v:'male',l:'男',c:'#2D5A8E',s:1,d:true,a:true},{v:'female',l:'女',c:'#E91E63',s:2,d:false,a:true}
+  ],ref:'t_model.gender',note:'通用基础字典，HR可复用'},
+  pm_task_tag: { label:'任务标签', mapping:'t_task.tags (JSONB)', module:'PM', entries:[
+    {v:'outsource',l:'外包',c:'#E55A20',s:1,d:false,a:true},{v:'sample',l:'样机',c:'#2D5A8E',s:2,d:false,a:true},{v:'scene',l:'场景',c:'#52C41A',s:3,d:false,a:true}
+  ],note:'多选标签，存储JSONB数组',editable:true},
+  pm_product_line: { label:'产品线', mapping:'t_sample.product_line', module:'PM', entries:[
+    {v:'air_conditioner',l:'空调',c:'#2D5A8E',s:1,d:false,a:true},{v:'refrigerator',l:'冰箱',c:'#52C41A',s:2,d:false,a:true},{v:'washing_machine',l:'洗衣机',c:'#E55A20',s:3,d:false,a:true},{v:'water_heater',l:'热水器',c:'#c62828',s:4,d:false,a:true},{v:'tv',l:'电视',c:'#9C27B0',s:5,d:false,a:true},{v:'small_appliance',l:'小家电',c:'#8C8C8C',s:99,d:false,a:true}
+  ],ref:'t_sample.product_line',editable:true},
+  pm_sample_status: { label:'样机状态', mapping:'t_sample.status', module:'PM', entries:[
+    {v:'available',l:'可领用',c:'#2e7d32',s:1,d:true,a:true},{v:'in_use',l:'使用中',c:'#E55A20',s:2,d:false,a:true},{v:'damaged',l:'已损坏',c:'#c62828',s:3,d:false,a:true},{v:'scrapped',l:'已报废',c:'#8C8C8C',s:4,d:false,a:true}
+  ],ref:'t_sample.status'},
+  // HR
+  hr_employee_type: { label:'员工类型', mapping:'t_employee.employee_type', module:'HR', entries:[
+    {v:'internal',l:'内部员工',c:'#E55A20',s:1,d:true,a:true},{v:'vendor',l:'外包供应商',c:'#2D5A8E',s:2,d:false,a:true}
+  ],ref:'t_employee.employee_type'},
+  hr_employee_status: { label:'员工状态', mapping:'t_employee.status', module:'HR', entries:[
+    {v:'active',l:'在职',c:'#2e7d32',s:1,d:true,a:true},{v:'resigned',l:'已离职',c:'#c62828',s:2,d:false,a:true},{v:'suspended',l:'停薪留职',c:'#FAAD14',s:3,d:false,a:true}
+  ],ref:'t_employee.status',extra:'resigned触发级联停用system_user'},
+  hr_adjustment_type: { label:'薪酬调整类型', mapping:'t_salary_adjustment.adjustment_type', module:'HR', entries:[
+    {v:'bonus',l:'奖励',c:'#52C41A',s:1,d:false,a:true},{v:'deduction',l:'扣款',c:'#c62828',s:2,d:false,a:true},{v:'correction',l:'修正',c:'#2D5A8E',s:3,d:false,a:true},{v:'other',l:'其他',c:'#8C8C8C',s:99,d:false,a:true}
+  ],ref:'t_salary_adjustment.adjustment_type'},
+  hr_adjustment_scope: { label:'调整影响范围', mapping:'t_salary_adjustment scope', module:'HR', entries:[
+    {v:'total_only',l:'仅影响薪酬总额',c:'#2D5A8E',s:1,d:true,a:true},{v:'affect_project',l:'影响某个项目分摊',c:'#E55A20',s:2,d:false,a:true}
+  ],ref:'t_salary_adjustment scope'},
+  hr_salary_calc_status: { label:'薪酬计算状态', mapping:'t_salary_calculation.status', module:'HR', entries:[
+    {v:'draft',l:'草稿',c:'#FAAD14',s:1,d:true,a:true},{v:'confirmed',l:'已确认',c:'#2e7d32',s:2,d:false,a:true}
+  ],ref:'t_salary_calculation.status',note:'硬编码状态机，字典仅用于前端渲染'},
+  hr_leave_type: { label:'请假类型 (P2)', mapping:'t_attendance.leave_type', module:'HR', entries:[
+    {v:'sick_leave',l:'病假',c:'#2D5A8E',s:1,d:false,a:true,extra:'否扣薪'},{v:'personal_leave',l:'事假',c:'#E55A20',s:2,d:false,a:true,extra:'是扣薪'},{v:'annual_leave',l:'年假',c:'#52C41A',s:3,d:false,a:true,extra:'否扣薪'},{v:'marriage_leave',l:'婚假',c:'#E91E63',s:4,d:false,a:true,extra:'否扣薪'},{v:'maternity_leave',l:'产假',c:'#9C27B0',s:5,d:false,a:true,extra:'否扣薪'},{v:'other',l:'其他',c:'#8C8C8C',s:99,d:false,a:true,extra:'/'}
+  ],ref:'t_attendance.leave_type',note:'P2阶段接入考勤系统',editable:true},
+  // FM
+  fm_allocation_type: { label:'分摊类型', mapping:'t_cost_item.allocation_type', module:'FM', entries:[
+    {v:'direct',l:'直接归属',c:'#2D5A8E',s:1,d:true,a:true},{v:'allocated',l:'按比例分摊',c:'#8C8C8C',s:2,d:false,a:true},{v:'piecework',l:'提成归属',c:'#E55A20',s:3,d:false,a:true},{v:'overhead',l:'管理费用',c:'#d0d0d0',s:4,d:false,a:true}
+  ],ref:'t_cost_item.allocation_type'},
+  fm_cost_item_type: { label:'成本子类型', mapping:'t_cost_item.cost_item_type', module:'FM', entries:[
+    {v:'base_salary',l:'底薪分摊',c:'#8C8C8C',s:1,d:false,a:true},{v:'performance',l:'绩效归属',c:'#2e7d32',s:2,d:false,a:true},{v:'piecework',l:'提成(计件)',c:'#E55A20',s:3,d:false,a:true}
+  ],ref:'t_cost_item.cost_item_type'},
+  fm_cost_type: { label:'成本类型聚合', mapping:'t_cost_item.cost_type', module:'FM', entries:[
+    {v:'internal_labor',l:'内部人力',c:'#2D5A8E',s:1,d:false,a:true},{v:'vendor_labor',l:'外包成本',c:'#E55A20',s:2,d:false,a:true},{v:'platform',l:'平台投放',c:'#7B1FA2',s:3,d:false,a:true},{v:'travel',l:'差旅费',c:'#8C8C8C',s:4,d:false,a:true},{v:'other',l:'其他费用',c:'#8C8C8C',s:5,d:false,a:true},{v:'overhead',l:'管理费用',c:'#d0d0d0',s:6,d:false,a:true}
+  ],ref:'t_cost_item.cost_type'},
+  fm_payment_direction: { label:'收付款方向', mapping:'t_payment_received.direction', module:'FM', entries:[
+    {v:'income',l:'客户回款',c:'#2e7d32',s:1,d:true,a:true},{v:'expense',l:'供应商付款',c:'#E55A20',s:2,d:false,a:true}
+  ],ref:'t_payment_received.direction'},
+  fm_expense_category: { label:'费用报销类别', mapping:'t_expense_item.category', module:'FM', entries:[
+    {v:'platform',l:'平台投放',c:'#7B1FA2',s:1,d:false,a:true},{v:'venue',l:'场地租赁',c:'#795548',s:2,d:false,a:true},{v:'model',l:'模特',c:'#E91E63',s:3,d:false,a:true},{v:'equipment',l:'设备',c:'#607D8B',s:4,d:false,a:true},{v:'other',l:'其他',c:'#8C8C8C',s:99,d:false,a:true}
+  ],ref:'t_expense_item.category',editable:true},
+  fm_reconciliation_flag: { label:'对账条目标记', mapping:'对账明细标记', module:'FM', entries:[
+    {v:'normal',l:'正常',c:'#2e7d32',s:1,d:true,a:true},{v:'reconciled',l:'已对账',c:'#2e7d32',s:2,d:false,a:true},{v:'carry_over',l:'前期遗留',c:'#E55A20',s:3,d:false,a:true,extra:'必填说明'},{v:'early_complete',l:'前置完成',c:'#2D5A8E',s:4,d:false,a:true,extra:'必填说明'}
+  ],ref:'对账明细标记'},
+  fm_cost_check_status: { label:'成本核对状态', mapping:'对账成本状态', module:'FM', entries:[
+    {v:'pending_check',l:'待核对',c:'#E55A20',s:1,d:true,a:true},{v:'checked',l:'已核对',c:'#2e7d32',s:2,d:false,a:true}
+  ],ref:'对账成本状态'},
+  fm_invoice_type: { label:'发票类型', mapping:'t_invoice.invoice_type', module:'FM', entries:[
+    {v:'vat_special',l:'增值税专用发票',c:'#2D5A8E',s:1,d:true,a:true},{v:'vat_normal',l:'增值税普通发票',c:'#8C8C8C',s:2,d:false,a:true}
+  ],ref:'t_invoice.invoice_type'},
+  fm_payment_method: { label:'付款方式', mapping:'t_payment_received.payment_method', module:'FM', entries:[
+    {v:'wire',l:'电汇',c:'#2D5A8E',s:1,d:true,a:true},{v:'gold_note',l:'金单',c:'#DAA520',s:2,d:false,a:true},{v:'jzt',l:'京准通',c:'#E55A20',s:3,d:false,a:true},{v:'other',l:'其他',c:'#8C8C8C',s:4,d:false,a:true}
+  ],ref:'t_payment_received.payment_method',cross:'wire/gold_note/jzt 引用CRM同一字典源 + FM专属other',editable:true},
+  fm_dispute_reason: { label:'对账争议原因', mapping:'t_reconciliation.dispute_reason', module:'FM', entries:[
+    {v:'qty_mismatch',l:'产出数量不符',c:'#E55A20',s:1,d:false,a:true},{v:'price_mismatch',l:'单价有误',c:'#c62828',s:2,d:false,a:true},{v:'kpi_dispute',l:'KPI达成率争议',c:'#2D5A8E',s:3,d:false,a:true},{v:'content_quality',l:'内容质量争议',c:'#9C27B0',s:4,d:false,a:true},{v:'contract_mismatch',l:'合同条款理解差异',c:'#8C8C8C',s:5,d:false,a:true},{v:'other',l:'其他',c:'#8C8C8C',s:99,d:false,a:true}
+  ],ref:'t_reconciliation.dispute_reason',editable:true}
+}
+
+function toggleDictGroup(mod){
+  const grp = document.getElementById('dict-group-'+mod)
+  const arrow = document.getElementById('dict-arrow-'+mod)
+  if(grp.style.display==='none'){grp.style.display='';arrow.className='fa-solid fa-caret-down text-gray-400 text-[10px] w-3'}
+  else{grp.style.display='none';arrow.className='fa-solid fa-caret-right text-gray-400 text-[10px] w-3'}
+}
+function selectDictItem(el,key){
+  document.querySelectorAll('.dict-item').forEach(d=>d.classList.remove('bg-accentl','text-accent','font-medium'))
+  el.classList.add('bg-accentl','text-accent','font-medium')
+  const d=dictData[key]
+  if(!d)return
+  document.getElementById('dict-label').innerText=d.label
+  document.getElementById('dict-mapping').innerText='映射字段: '+d.mapping
+  document.getElementById('dict-module-tag').innerHTML='<span class="tag tag-orange">'+d.module+'</span>'
+  document.getElementById('dict-link-tag').innerHTML=d.cross?'<span style="color:#7B1FA2">⟷ '+d.cross+'</span>':''
+  document.getElementById('dict-ref-info').innerText='引用保护: '+(d.ref||'—')+(d.extra?(' · '+d.extra):'')+(d.note?(' · '+d.note):'')
+  document.getElementById('dict-cross-info').innerText=d.cross?'跨模块: '+d.cross:''
+  document.getElementById('dict-reset-btn').style.display=(d.editable||d.entries.length>0)?'inline-flex':'none'
+  // Warning
+  const warn = document.getElementById('dict-cross-warning')
+  if(d.warn){warn.style.display='';document.getElementById('dict-cross-warning-text').innerText=d.warn}
+  else{warn.style.display='none'}
+  document.getElementById('modal-dict-name').innerText=d.label
+  // Entries
+  const tbody = document.getElementById('dict-entries-body')
+  if(!d.entries||d.entries.length===0){
+    tbody.innerHTML='<tr><td colspan="7" class="py-8 text-center text-gray-400 text-sm">此字典无独立条目（共用其他字典源）</td></tr>'
+    return
+  }
+  tbody.innerHTML=d.entries.map(e=>
+    '<tr class="border-b border-gray-50 hover:bg-gray-50">'+
+    '<td class="py-2 font-mono">'+e.v+'</td>'+
+    '<td class="py-2 font-medium">'+e.l+'</td>'+
+    '<td class="py-2"><span style="display:inline-block;width:16px;height:16px;border-radius:4px;background:'+e.c+'"></span></td>'+
+    '<td class="py-2 text-gray-400">'+e.s+'</td>'+
+    '<td class="py-2">'+(e.d?'<span class="tag tag-green">默认</span>':'')+'</td>'+
+    '<td class="py-2">'+(e.a?'<span class="tag tag-green">active</span>':'<span class="tag tag-red">禁用</span>')+'</td>'+
+    '<td class="py-2 text-right" style="white-space:nowrap">'+(e.extra?'<span class="text-[10px] text-gray-400 mr-2">'+e.extra+'</span>':'')+'<button class="btn btn-sm btn-secondary mr-0.5">编辑</button><button class="btn btn-sm btn-danger">禁用</button></td>'+
+    '</tr>'
+  ).join('')
+}
+function showDictAddModal(){
+  const nameEl = document.getElementById('dict-label')
+  document.getElementById('modal-dict-name').innerText=nameEl.innerText!=='请从左侧选择一个字典'?nameEl.innerText:'请先选择字典'
+  document.getElementById('modal-dict-add').classList.add('show')
+}
+function closeModal(id){document.getElementById(id).classList.remove('show')}
+function showUserModal(){document.getElementById('modal-user').classList.add('show')}
+function showDeptModal(){document.getElementById('modal-dept').classList.add('show')}
+function showPosModal(){document.getElementById('modal-pos').classList.add('show')}
+function showCoeffModal(){document.getElementById('modal-coeff').classList.add('show')}
+document.querySelectorAll('.modal').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('show')}))
+// Select first dict item on page load
+setTimeout(()=>{const first=document.querySelector('.dict-item');if(first)selectDictItem(first,first.dataset.key)},300)
+
+// Login / Logout
+function doLogin(){
+  document.getElementById('page-login').style.display='none'
+  document.getElementById('app-layout').classList.remove('hidden')
+  showToast('登录成功，欢迎回来','#2e7d32')
+}
+function doLogout(){
+  document.getElementById('app-layout').classList.add('hidden')
+  document.getElementById('page-login').style.display='flex'
+  showToast('已安全退出','#666')
+}
+
+// Toast
+let toastTimer
+function showToast(msg,color){
+  const t=document.getElementById('toast')
+  t.textContent=msg;t.style.background=color;t.classList.add('show')
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove('show'),2500)
+}
+</script>
+</body>
+</html>
