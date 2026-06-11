@@ -275,6 +275,7 @@ tbody tr:hover{background:#f8f9fb}
     <div class="nav-sub" data-nav="modellist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><circle cx="12" cy="10" r="4"/><path d="M5 20v-1a5 5 0 015-5h4a5 5 0 015 5v1"/></svg>模特资源库</div>
     <div class="nav-sub" data-nav="venuelist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M8 3v5"/><path d="M16 3v5"/><path d="M3 13h18"/></svg>场地资源库</div>
     <div class="nav-sub" data-nav="samplist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v8m-4-4h8"/></svg>样机资源库</div>
+    <div class="nav-sub" data-nav="resusage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>📋 资源使用记录</div>
     <div class="sidebar-subsection">供应商资源库</div>
     <div class="nav-sub" data-nav="vendorlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><circle cx="12" cy="14" r="2"/><path d="M8 14h-1a2 2 0 00-2 2v1m14-3h1a2 2 0 012 2v1"/></svg>供应商资源库</div>
     <div class="sidebar-subsection">发布账号管理</div>
@@ -399,7 +400,7 @@ tbody tr:hover{background:#f8f9fb}
 
 <!-- MY TASKS -->
 <section class="page" id="pg-mytasks">
-<div class="topbar"><div class="topbar-left"><h1 class="topbar-title">我的任务</h1><div class="topbar-breadcrumb">执行工作台 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span id="mt-role-label">编导 · 巫昭仪</span></div></div><div class="topbar-actions"><div class="filter-row" style="gap:6px"><span class="muted">切换视角：</span><select class="filter-select" id="mt-role-select" onchange="switchMyTaskRole(this.value)"><option value="script_巫昭仪">编导 · 巫昭仪</option><option value="script_梁记">编导 · 梁记</option><option value="script_苏韵婷">编导 · 苏韵婷</option><option value="script_soso">编导 · soso</option><option value="script_刘泽琛">编导 · 刘泽琛</option><option value="shooting_李四">拍摄 · 李四</option><option value="shooting_XX工作室">拍摄 · XX工作室</option><option value="editing_王五">剪辑 · 王五</option><option value="editing_XX工作室">剪辑 · XX工作室</option><option value="publishing_赵六">发布 · 赵六(AE)</option><option value="publishing_钱七">发布 · 钱七(AE)</option></select><span class="muted" id="mt-view-toggle" style="cursor:pointer" onclick="toggleMTView()">📊 看板</span></div></div></div>
+<div class="topbar"><div class="topbar-left"><h1 class="topbar-title">我的任务</h1><div class="topbar-breadcrumb">执行工作台 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span id="mt-role-label">编导 · 巫昭仪</span></div></div><div class="topbar-actions"><div class="filter-row" style="gap:6px"><span class="muted">项目：</span><select class="filter-select" id="mt-project-select" onchange="switchMTProject(this.value)"><option value="all">全部项目</option><option value="1">美的 · PJ-001</option><option value="2">松下 · PJ-002</option><option value="3">TCL · PJ-003</option><option value="4">创维 · PJ-004</option></select><span class="muted">视角：</span><select class="filter-select" id="mt-role-select" onchange="switchMyTaskRole(this.value)"><option value="script_巫昭仪">编导 · 巫昭仪</option><option value="script_梁记">编导 · 梁记</option><option value="script_苏韵婷">编导 · 苏韵婷</option><option value="script_soso">编导 · soso</option><option value="script_刘泽琛">编导 · 刘泽琛</option><option value="shooting_李四">拍摄 · 李四</option><option value="shooting_XX工作室">拍摄 · XX工作室</option><option value="editing_王五">剪辑 · 王五</option><option value="editing_XX工作室">剪辑 · XX工作室</option><option value="publishing_赵六">发布 · 赵六(AE)</option><option value="publishing_钱七">发布 · 钱七(AE)</option></select><span class="muted" id="mt-view-toggle" style="cursor:pointer" onclick="toggleMTView()">📊 看板</span></div></div></div>
 <div class="content">
   <div id="mt-stats"></div>
   <!-- Kanban Board -->
@@ -414,22 +415,22 @@ tbody tr:hover{background:#f8f9fb}
 
 <!-- CONTENT REVIEW -->
 <section class="page" id="pg-review">
-<div class="topbar"><div class="topbar-left"><h1 class="topbar-title">内容审核</h1><div class="topbar-breadcrumb">执行工作台 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span id="review-project-label">全部项目</span></div></div><div class="topbar-actions"><span class="badge badge-purple" id="review-pending-badge"><span class="badge-dot"></span>待审核 8 条</span></div></div>
+<div class="topbar"><div class="topbar-left"><h1 class="topbar-title">内容审核</h1><div class="topbar-breadcrumb">执行工作台 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span id="review-project-label">全部项目</span></div></div><div class="topbar-actions"><div class="filter-row" style="gap:6px"><span class="muted">项目：</span><select class="filter-select" id="review-project-select" onchange="switchReviewProject(this.value)"><option value="all">全部项目</option><option value="1">美的 · PJ-001</option><option value="2">松下 · PJ-002</option><option value="3">TCL · PJ-003</option><option value="4">创维 · PJ-004</option></select><span class="badge badge-purple" id="review-pending-badge"><span class="badge-dot"></span>待审核 8 条</span></div></div></div>
 <div class="content" style="padding-top:0">
   <!-- Project Selector Row -->
   <div class="card anim" style="border-radius:0 0 var(--radius-md) var(--radius-md);border-top:0">
-    <div class="card-header" style="border-bottom:0;padding-bottom:4px">
-      <div class="filter-row" id="review-project-chips">
-        <button class="filter-chip active" data-revpid="all">全部项目</button>
-        <button class="filter-chip" data-revpid="1">美的 · PJ-001</button>
-        <button class="filter-chip" data-revpid="2">松下 · PJ-002</button>
-        <button class="filter-chip" data-revpid="3">TCL · PJ-003</button>
-        <button class="filter-chip" data-revpid="4">创维 · PJ-004</button>
-        <div class="filter-spacer"></div>
-        <button class="filter-chip active" id="rev-type-all" data-revtype="all">全部</button>
+    <div class="card-header" style="border-bottom:0;padding-bottom:4px;flex-wrap:wrap;gap:8px">
+      <div class="filter-row" id="review-status-chips">
+        <button class="filter-chip active" data-revst="all">全部状态</button>
+        <button class="filter-chip" data-revst="reviewing">待审核</button>
+        <button class="filter-chip" data-revst="returned">待修改</button>
+      </div>
+      <div class="filter-row" id="review-type-chips">
+        <button class="filter-chip active" id="rev-type-all" data-revtype="all">全部类型</button>
         <button class="filter-chip" id="rev-type-script" data-revtype="script">✏️ 脚本</button>
         <button class="filter-chip" id="rev-type-cut" data-revtype="cut">✂️ 成片</button>
       </div>
+      <div style="display:flex;align-items:center;gap:4px;margin-left:auto"><span class="muted" style="font-size:10.5px">内容类型</span><select class="filter-select" id="rev-ctype-select" onchange="revCtype=this.value;renderReview()"><option value="all">全部</option><option value="商品讲解">商品讲解</option><option value="攻略测评">攻略测评</option><option value="产品展示">产品展示</option><option value="好物分享">好物分享</option></select></div>
     </div>
   </div>
 
@@ -493,6 +494,23 @@ tbody tr:hover{background:#f8f9fb}
       </div>
       <div class="form-row">
         <div class="form-group"><div class="form-label">需求详情 / 甲方Brief</div><input class="form-input" placeholder="可选"></div>
+      </div>
+      <div class="form-section-divider" style="margin:12px 0;border-top:1px dashed var(--border-light);padding-top:10px">
+        <div style="font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px">─ 拍摄资源预设（选填）─</div>
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">拍摄模特</div><select class="form-input form-select" onchange="updateShootCostEstimate()"><option value="">不预设</option><option value="zhangdanni">张丹妮 · ¥1,500/天</option><option value="lisi">李四 · ¥1,200/天</option><option value="wangwu">王五 · ¥2,000/天</option></select></div>
+          <div class="form-group"><div class="form-label">拍摄场地</div><select class="form-input form-select" onchange="updateShootCostEstimate()"><option value="">不预设</option><option value="gztit">广州TIT创意园 · ¥800/天</option><option value="foshan">佛山创意园 · ¥900/天</option></select></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><div class="form-label">预计拍摄天数</div><input class="form-input" type="number" placeholder="如填3" min="1" oninput="updateShootCostEstimate()" id="shoot-days" style="width:120px"></div>
+          <div class="form-group" style="align-self:flex-end"><div id="shoot-cost-estimate" style="font-size:11px;color:var(--text-tertiary)"></div></div>
+        </div>
+        <div class="form-group"><div class="form-label">适用任务</div>
+          <div style="display:flex;gap:16px;font-size:11px">
+            <label><input type="radio" name="shoot-scope" checked onchange="toggleShootScope()" value="all"> 全部拍摄任务</label>
+            <label><input type="radio" name="shoot-scope" onchange="toggleShootScope()" value="selected"> 手动选取（在下方任务列表中勾选适用行）</label>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -993,6 +1011,27 @@ tbody tr:hover{background:#f8f9fb}
       </div>
     </div>
     <div class="table-wrap"><table><thead><tr><th style="width:80px">预览图</th><th style="width:80px">编号</th><th style="width:120px">样机名称</th><th style="width:100px">所属客户</th><th style="width:100px">产品型号</th><th style="width:120px">机身编号</th><th style="width:60px">机身颜色</th><th style="width:50px">数量</th><th style="width:100px">存放位置</th><th style="width:200px">配套附件</th><th style="width:50px">状态</th><th style="width:100px">操作</th></tr></thead><tbody id="sample-list-tbody"></tbody></table></div>
+  </div>
+</div>
+</section>
+
+<!-- RESOURCE USAGE RECORDS -->
+<section class="page" id="pg-resusage">
+<div class="topbar"><div class="topbar-left"><h1 class="topbar-title">📋 资源使用记录</h1><div class="topbar-breadcrumb">资源管理 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span>使用记录</span></div></div><div class="topbar-actions"><div class="filter-row" style="gap:6px"><span class="muted">资源类型：</span><select class="filter-select" id="ru-type" onchange="renderResourceUsage()"><option value="all">全部</option><option value="model">模特</option><option value="venue">场地</option><option value="sample">样机</option></select><span class="muted">项目：</span><select class="filter-select" id="ru-project" onchange="renderResourceUsage()"><option value="all">全部项目</option><option value="1">美的 · PJ-001</option><option value="2">松下 · PJ-002</option><option value="3">TCL · PJ-003</option><option value="4">创维 · PJ-004</option></select></div></div></div>
+<div class="content" style="padding-top:0">
+  <div class="card anim" style="border-radius:0 0 var(--radius-md) var(--radius-md);border-top:0">
+    <div class="card-header" style="border-bottom:0;padding-bottom:4px">
+      <div class="filter-row" id="ru-status-chips">
+        <button class="filter-chip active" data-rust="all">全部状态</button>
+        <button class="filter-chip" data-rust="reserved">已预约</button>
+        <button class="filter-chip" data-rust="in_use">使用中</button>
+        <button class="filter-chip" data-rust="returned">已归还</button>
+        <button class="filter-chip" data-rust="settled">已结算</button>
+      </div>
+    </div>
+  </div>
+  <div class="card" id="ru-list-card">
+    <div class="table-wrap"><table><thead><tr><th style="width:90px">编号</th><th style="width:55px">类型</th><th style="width:110px">资源名称</th><th style="width:65px">项目</th><th style="width:85px">关联任务</th><th style="width:110px">使用日期</th><th style="width:40px">天数</th><th style="width:75px">金额</th><th style="width:65px">状态</th></tr></thead><tbody id="ru-tbody"></tbody></table></div>
   </div>
 </div>
 </section>
@@ -1628,7 +1667,7 @@ tbody tr:hover{background:#f8f9fb}
 <div class="toast" id="toast"></div>
 
 <script>
-const pages = ['projects','batch','detail','mytasks','review','recon','matrix','archiveproj','costconfig','modellist','venuelist','samplist','vendorlist','talentlist','shoplist'];
+const pages = ['projects','batch','detail','mytasks','review','recon','matrix','archiveproj','costconfig','modellist','venuelist','samplist','resusage','vendorlist','talentlist','shoplist'];
 const projects = {'1':{name:'美的2026年度框架',code:'PJ-2026-001',client:'美的集团',type:'年框',pm:'张三',ae:'赵六,钱七',budget:'¥10,000,000',contract:'HT-2026-001'},'2':{name:'松下Q1季度包',code:'PJ-2026-002',client:'松下',type:'季度包',pm:'李四',ae:'王总',budget:'¥1,000,000',contract:'HT-2026-002'},'3':{name:'TCL新春campaign',code:'PJ-2026-003',client:'TCL',type:'临时',pm:'王五',ae:'钱七',budget:'¥500,000',contract:'HT-2026-003'},'4':{name:'创维年度框架',code:'PJ-2026-004',client:'创维',type:'年框',pm:'张三',ae:'赵六',budget:'¥8,000,000',contract:'HT-2026-004'},'5':{name:'长虹2025年度框架',code:'PJ-2025-012',client:'长虹',type:'年框',pm:'李四',ae:'王总',budget:'¥6,000,000',contract:'HT-2025-012'}};
 let currentPid='1';
 
@@ -3102,6 +3141,28 @@ function toggleBatchDistMode(mode){
   document.getElementById('batch-mixed-panel').style.display=mode==='mixed'?'block':'none';
 }
 function updateMixTotal(){const s=parseInt(document.getElementById('batch-mix-jj').value||0)+parseInt(document.getElementById('batch-mix-cp').value||0)+parseInt(document.getElementById('batch-mix-gl').value||0)+parseInt(document.getElementById('batch-mix-hw').value||0);document.getElementById('batch-mix-total').textContent='总计：'+s+' 条'}
+function updateShootCostEstimate(){
+  let days = parseInt(document.getElementById('shoot-days').value) || 0;
+  let modelSelect = document.querySelector('#batch-form select option[value]:checked') || {textContent:'¥0'};
+  let modelRate = 0, venueRate = 0;
+  let m = modelSelect.textContent.match(/¥([\d,]+)/);
+  if(m) modelRate = parseInt(m[1].replace(',',''));
+  let venueOpt = document.querySelector('.form-section-divider select:last-of-type option:checked');
+  if(venueOpt){
+    let v = venueOpt.textContent.match(/¥([\d,]+)/);
+    if(v) venueRate = parseInt(v[1].replace(',',''));
+  }
+  let total = (modelRate + venueRate) * days;
+  let el = document.getElementById('shoot-cost-estimate');
+  if(days > 0 && total > 0){
+    el.innerHTML = '预估成本：模特 ¥' + (modelRate*days).toLocaleString() + ' + 场地 ¥' + (venueRate*days).toLocaleString() + ' = <b style="color:var(--accent)">¥' + total.toLocaleString() + '</b>';
+  } else {
+    el.innerHTML = '';
+  }
+}
+function toggleShootScope(){
+  // '手动选取'时提示：在下方任务列表中勾选适用行即可
+}
 function selectAllBatchRows(checked){
   const cbs=document.querySelectorAll('#batch-tbody .batch-row-cb');
   if(checked===true||checked===false){cbs.forEach(cb=>cb.checked=checked)}
@@ -4899,7 +4960,13 @@ const kanbanCols={
     {key:'published',label:'已发布',sub:'上线完成',map:['published']}]
 };
 
-let mtStage='script';let mtPerson='巫昭仪';let mtViewMode='list';let mtListFilter='all';let mtListCtype='all';let mtListMonth='all';
+let mtStage='script';let mtPerson='巫昭仪';let mtViewMode='list';let mtListFilter='all';let mtListCtype='all';let mtListMonth='all';let mtProject='all';
+
+function switchMTProject(pid){
+  mtProject=pid;
+  if(mtViewMode==='kanban')renderMTKanban(mtStage,mtPerson);
+  else renderMTList(mtStage,mtPerson,true);
+}
 
 function toggleMTView(){
   mtViewMode=mtViewMode==='kanban'?'list':'kanban';
@@ -4916,6 +4983,7 @@ function renderMTKanban(stage,person){
   if(stage==='shooting'&&person==='XX工作室'){tasks=pipeData.filter(t=>t.stage==='shooting'&&t.person==='XX工作室')}
   else if(stage==='editing'&&person==='XX工作室'){tasks=pipeData.filter(t=>t.stage==='editing'&&t.person==='XX工作室')}
   else{tasks=tasks.filter(t=>t.person===person||t.person==='待指派'||(t.sub==='pending'&&!t.person))}
+  if(mtProject!=='all'){tasks=tasks.filter(function(t){let h=0;for(var i=0;i<t.id.length;i++){h=((h<<5)-h)+t.id.charCodeAt(i);h|=0}return (Math.abs(h)%4+1).toString()===mtProject})}
   const cols=kanbanCols[stage]||kanbanCols.script;
   const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
   const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
@@ -4940,6 +5008,7 @@ function renderMTList(stage,person,rebindFilters){
   if(stage==='shooting'&&person==='XX工作室'){tasks=pipeData.filter(t=>t.stage==='shooting'&&t.person==='XX工作室')}
   else if(stage==='editing'&&person==='XX工作室'){tasks=pipeData.filter(t=>t.stage==='editing'&&t.person==='XX工作室')}
   else{tasks=tasks.filter(t=>t.person===person||t.person==='待指派'||(t.sub==='pending'&&!t.person))}
+  if(mtProject!=='all'){tasks=tasks.filter(function(t){let h=0;for(var i=0;i<t.id.length;i++){h=((h<<5)-h)+t.id.charCodeAt(i);h|=0}return (Math.abs(h)%4+1).toString()===mtProject})}
   const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
   const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
   const colChips=kanbanCols[stage]||kanbanCols.script;
@@ -4990,7 +5059,7 @@ function renderMTList(stage,person,rebindFilters){
 }
 
 // --- Content Review ---
-let revPid='all';let revType='all';
+let revPid='all';let revType='all';let revStatus='all';let revCtype='all';
 
 function reviewTaskProject(t){
   const m=parseInt((t.month||'01').substring(5));
@@ -5010,6 +5079,8 @@ function renderReview(){
   });
   if(revPid!=='all') items=items.filter(t=>t.pid===revPid);
   if(revType!=='all') items=items.filter(t=>t.revType===revType);
+  if(revStatus!=='all') items=items.filter(t=>t.sub===revStatus);
+  if(revCtype!=='all') items=items.filter(t=>t.ctype===revCtype);
 
   const projNames={'1':'美的','2':'松下','3':'TCL','4':'创维'};
   const badgeMap={'reviewing':'badge-purple','returned':'badge-red'};
@@ -5019,6 +5090,7 @@ function renderReview(){
   document.getElementById('review-pending-badge').innerHTML=`<span class="badge-dot"></span>待审核 ${pendingCount} 条`;
   const label=revPid==='all'?'全部项目':(projNames[revPid]||'')+' · PJ-00'+revPid;
   document.getElementById('review-project-label').textContent=label;
+  var ctypeSel=document.getElementById('rev-ctype-select'); if(ctypeSel)ctypeSel.value=revCtype;
 
   document.getElementById('review-tbody').innerHTML=items.map(t=>{
     const typeIcon=t.revType==='script'?'✏️':'✂️';
@@ -5039,17 +5111,24 @@ function renderReview(){
   }).join('')||'<tr><td colspan="10" style="text-align:center;padding:32px;color:var(--text-tertiary);font-size:13px">暂无待审核内容</td></tr>';
 }
 
-document.querySelectorAll('#review-project-chips .filter-chip[data-revpid]').forEach(chip=>{
+function switchReviewProject(pid){
+  revPid=pid;
+  document.getElementById('review-project-select').value=pid;
+  document.getElementById('review-project-label').textContent=pid==='all'?'全部项目':(projNames[pid]||'')+' · PJ-00'+pid;
+  renderReview();
+}
+
+document.querySelectorAll('#review-status-chips .filter-chip[data-revst]').forEach(chip=>{
   chip.addEventListener('click',function(){
-    this.parentElement.querySelectorAll('.filter-chip[data-revpid]').forEach(c=>c.classList.remove('active'));
+    this.parentElement.querySelectorAll('.filter-chip[data-revst]').forEach(c=>c.classList.remove('active'));
     this.classList.add('active');
-    revPid=this.dataset.revpid;
+    revStatus=this.dataset.revst;
     renderReview();
   });
 });
-document.querySelectorAll('#review-project-chips .filter-chip[data-revtype]').forEach(chip=>{
+document.querySelectorAll('#review-type-chips .filter-chip[data-revtype]').forEach(chip=>{
   chip.addEventListener('click',function(){
-    document.querySelectorAll('#review-project-chips .filter-chip[data-revtype]').forEach(c=>c.classList.remove('active'));
+    document.querySelectorAll('#review-type-chips .filter-chip[data-revtype]').forEach(c=>c.classList.remove('active'));
     this.classList.add('active');
     revType=this.dataset.revtype;
     renderReview();
@@ -5059,7 +5138,16 @@ document.querySelectorAll('#review-project-chips .filter-chip[data-revtype]').fo
 switchMyTaskRole('script_巫昭仪');
 
 // Cost config logic
-const globalCostItems=[];
+const globalCostItems=[
+  {id:'p1',name:'模特费（S级）',price:'¥1,200',unit:'元/天',type:'预设',active:true},
+  {id:'p2',name:'模特费（A级）',price:'¥800',unit:'元/天',type:'预设',active:true},
+  {id:'p3',name:'模特费（B级）',price:'¥500',unit:'元/天',type:'预设',active:true},
+  {id:'p4',name:'场地租赁费（外租影棚）',price:'¥1,500',unit:'元/天',type:'预设',active:true},
+  {id:'p5',name:'场地租赁费（自建拍摄间）',price:'¥260',unit:'元/天',type:'预设',active:true},
+  {id:'p6',name:'道具采购',price:'¥0',unit:'元/次',type:'预设',active:true},
+  {id:'p7',name:'交通差旅',price:'¥0',unit:'元/次',type:'预设',active:true},
+  {id:'p8',name:'版权音乐',price:'¥300',unit:'元/首',type:'预设',active:true}
+];
 
 function renderCostConfig(){
   document.getElementById('cost-config-tbody').innerHTML=globalCostItems.map(ci=>
@@ -5140,6 +5228,7 @@ function toggleCostItem(id){
    if(id==='talentlist') setTimeout(renderTalentList,0);
    if(id==='shoplist') setTimeout(renderShopList,0);
    if(id==='samplist') setTimeout(renderSampleList,0);
+   if(id==='resusage') setTimeout(renderResourceUsage,0);
   };
 
 // Talent list data & render
@@ -6265,6 +6354,56 @@ function renderSampleList() {
     </tr>`;
   }).join('');
 }
+
+// ------ Resource Usage Records ------
+const resourceTypeLabels={model:'模特',venue:'场地',sample:'样机'};
+const resourceUsageData=[
+  {id:'UR-001',type:'model',name:'小林 (S级)',projectId:'1',projectName:'美的',taskId:'sh05',taskTitle:'拍摄-净水白泽1000G产品01',start:'2026-06-08',end:'2026-06-10',days:3,price:1200,amount:3600,status:'settled',detail:'肖像类型：时尚/家居类 · ¥1,200/天 × 3天 · 登记人：李四 · 2026-06-07 16:30'},
+  {id:'UR-002',type:'venue',name:'广州天河创意园A区',projectId:'1',projectName:'美的',taskId:'sh05',taskTitle:'拍摄-净水白泽1000G产品01',start:'2026-06-08',end:'2026-06-08',days:1,price:1500,amount:1500,status:'settled',detail:'类型：外部场地 · 面积：120㎡ · 风格：现代简约 · ¥1,500/天 × 1天 · 登记人：李四 · 2026-06-07 17:00'},
+  {id:'UR-003',type:'sample',name:'AK5 PRO (烟灶)',projectId:'1',projectName:'美的',taskId:'sh09',taskTitle:'拍摄-烟机AK5pro商品03',start:'2026-06-08',end:'2026-06-15',days:7,price:0,amount:0,status:'returned',detail:'机身编号：AK5-2026-001 · 颜色：星云灰 · 存放位置：A-3-2 · 登记人：李四 · 2026-06-07 17:15'},
+  {id:'UR-004',type:'model',name:'阿杰 (A级)',projectId:'2',projectName:'松下',taskId:'sh11',taskTitle:'拍摄-电热UDpro展示01',start:'2026-06-12',end:'2026-06-12',days:1,price:800,amount:800,status:'in_use',detail:'肖像类型：生活/科技类 · ¥800/天 × 1天 · 登记人：张摄 · 2026-06-11 14:20'},
+  {id:'UR-005',type:'venue',name:'深圳南山摄影棚B02',projectId:'3',projectName:'TCL',taskId:'sh10',taskTitle:'拍摄-消毒柜110HQ2商品01',start:'2026-06-15',end:'2026-06-15',days:1,price:800,amount:1600,status:'reserved',detail:'类型：外部场地 · 面积：80㎡ · 风格：工业风 · ¥800/天 × 2天(双棚) · 登记人：张摄 · 2026-06-10 09:00'},
+  {id:'UR-006',type:'model',name:'小王 (B级)',projectId:'4',projectName:'创维',taskId:'sh13',taskTitle:'拍摄-燃热HWF商品01',start:'2026-06-18',end:'2026-06-18',days:1,price:500,amount:500,status:'reserved',detail:'肖像类型：厨房场景 · ¥500/天 × 1天 · 登记人：陈影 · 2026-06-13 10:30'},
+  {id:'UR-007',type:'venue',name:'公司自建拍摄间-客厅场景',projectId:'1',projectName:'美的',taskId:'sh06',taskTitle:'拍摄-燃热LN7PRO商品01',start:'2026-06-05',end:'2026-06-09',days:5,price:260,amount:1300,status:'settled',detail:'类型：企业自建 · 面积：60㎡ · 风格：奶油风 · ¥260/天(月租分摊) × 5天 · 登记人：李四 · 2026-06-02 09:00'},
+  {id:'UR-008',type:'sample',name:'JM1 (电热)',projectId:'2',projectName:'松下',taskId:'sh12',taskTitle:'拍摄-电热JM1成片01',start:'2026-06-10',end:'2026-06-14',days:4,price:0,amount:0,status:'in_use',detail:'机身编号：JM1-2026-003 · 颜色：象牙白 · 存放位置：A-2-1 · 登记人：张摄 · 2026-06-09 16:45'},
+];
+let ruType='all';let ruProject='all';let ruStatus='all';
+function renderResourceUsage(){
+  let items=resourceUsageData.slice();
+  if(ruType!=='all') items=items.filter(r=>r.type===ruType);
+  if(ruProject!=='all') items=items.filter(r=>r.projectId===ruProject);
+  if(ruStatus!=='all') items=items.filter(r=>r.status===ruStatus);
+  const statusMap={reserved:'已预约',in_use:'使用中',returned:'已归还',settled:'已结算'};
+  const statusBadge={reserved:'badge-blue',in_use:'badge-amber',returned:'badge-teal',settled:'badge-gray'};
+  document.getElementById('ru-tbody').innerHTML=items.map(r=>`<tr onclick="toggleRUDetail('${r.id}')" style="cursor:pointer">
+    <td class="code">${r.id}</td>
+    <td><span class="badge ${r.type==='model'?'badge-purple':r.type==='venue'?'badge-teal':'badge-blue'}" style="font-size:10px">${resourceTypeLabels[r.type]||r.type}</span></td>
+    <td><strong>${r.name}</strong></td>
+    <td>${r.projectName}</td>
+    <td class="code" style="font-size:10.5px;cursor:pointer" onclick="event.stopPropagation();showPipeDrawer('${r.taskId||''}')">${r.taskId||'—'}</td>
+    <td>${r.start}~${r.end}</td>
+    <td class="code">${r.days}天</td>
+    <td class="code" style="font-weight:600;color:${r.price>0?'var(--text-primary)':'var(--text-tertiary)'}">${r.price>0?'¥'+r.amount.toLocaleString():'¥0'}</td>
+    <td><span class="badge ${statusBadge[r.status]||'badge-gray'}"><span class="badge-dot"></span>${statusMap[r.status]||r.status}</span></td>
+  </tr>
+  <tr id="ru-detail-${r.id}" style="display:none;background:#f8f9fb">
+    <td colspan="9" style="padding:10px 16px;font-size:12px;color:var(--text-secondary);border-top:1px dashed var(--border-light)">
+      📌 ${r.detail} · <a href="javascript:void(0)" onclick="event.stopPropagation();showPipeDrawer('${r.taskId||''}')" style="color:var(--blue)">查看关联任务</a>
+    </td>
+  </tr>`).join('')||'<tr><td colspan="9" style="text-align:center;padding:32px;color:var(--text-tertiary);font-size:13px">暂无使用记录</td></tr>';
+}
+function toggleRUDetail(id){
+  const row=document.getElementById('ru-detail-'+id);
+  if(row) row.style.display=row.style.display==='none'?'':'none';
+}
+document.querySelectorAll('#ru-status-chips .filter-chip[data-rust]').forEach(chip=>{
+  chip.addEventListener('click',function(){
+    this.parentElement.querySelectorAll('.filter-chip[data-rust]').forEach(c=>c.classList.remove('active'));
+    this.classList.add('active');
+    ruStatus=this.dataset.rust;
+    renderResourceUsage();
+  });
+});
 
 // ------ Vendor Resource Management ------
 const vendors=[
