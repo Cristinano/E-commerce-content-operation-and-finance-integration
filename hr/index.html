@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>业财一体化 · HR 人力资源</title>
+<link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,600,700,900&f[]=clash-display@400,500,600,700&f[]=jetbrains-mono@400,500,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-body: #f2f3f5; --bg-surface: #ffffff; --bg-sidebar: #0f1419;
+  --bg-sidebar-hover: #1a2029; --bg-sidebar-active: #1e2733;
+  --bg-input: #f6f7f8; --border: #e2e5e9; --border-light: #eef0f2;
+  --text-primary: #13161b; --text-secondary: #59636e; --text-tertiary: #8b949e;
+  --text-sidebar: #8190a0; --accent: #6366f1; --accent-hover: #5558e6;
+  --accent-light: #f3f2ff; --accent-glow: rgba(99,102,241,0.12);
+  --teal: #0d8555; --teal-light: #edfaf3; --amber: #c26d0a; --amber-light: #fef8ee;
+  --blue: #2662d9; --blue-light: #edf3fd; --purple: #7c3aed; --purple-light: #f5f2fe;
+  --shadow-xs: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.05), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+  --radius-xs: 4px; --radius-sm: 6px; --radius-md: 10px; --radius-lg: 14px;
+  --font-body: 'Satoshi', system-ui, -apple-system, sans-serif;
+  --font-display: 'Clash Display', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:var(--font-body);background:var(--bg-body);color:var(--text-primary);display:flex;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:3px}
+/* ---- Sidebar ---- */
+.sidebar{width:220px;flex-shrink:0;background:var(--bg-sidebar);display:flex;flex-direction:column;z-index:20}
+.sidebar-brand{display:flex;align-items:center;gap:10px;padding:20px 16px 22px;border-bottom:1px solid rgba(255,255,255,.05)}
+.sidebar-logo{width:32px;height:32px;border-radius:var(--radius-xs);background:var(--accent);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-weight:700;font-size:15px;color:#fff;letter-spacing:-.5px}
+.sidebar-brand-text{color:#fff;font-family:var(--font-display);font-weight:600;font-size:14px;letter-spacing:-.2px}
+.sidebar-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:1px;overflow-y:auto}
+.sidebar-section{padding:14px 10px 4px;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.25);text-transform:uppercase;letter-spacing:1px}
+.sidebar-module-label{padding:8px 10px;font-size:9px;font-weight:700;color:rgba(255,255,255,.18);text-transform:uppercase;letter-spacing:2px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);color:var(--text-sidebar);font-size:13px;font-weight:500;cursor:pointer;transition:all .15s}
+.nav-item:hover{background:var(--bg-sidebar-hover);color:#c8cfd6}
+.nav-item.active{background:var(--bg-sidebar-active);color:#fff;font-weight:600}
+.nav-item .badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:8px;font-family:var(--font-mono);min-width:18px;text-align:center}
+.nav-sub{display:flex;align-items:center;gap:9px;padding:7px 10px 7px 30px;border-radius:var(--radius-sm);color:var(--text-sidebar);font-size:12.5px;font-weight:500;cursor:pointer;transition:all .15s;text-decoration:none;position:relative}
+.nav-sub:hover{background:var(--bg-sidebar-hover);color:#c8cfd6}
+.nav-sub.active{background:var(--bg-sidebar-active);color:#fff;font-weight:600}
+.nav-sub.active::before{content:'';position:absolute;left:18px;top:50%;transform:translateY(-50%);width:4px;height:4px;border-radius:50%;background:var(--accent)}
+.sidebar-footer{border-top:1px solid rgba(255,255,255,.05);padding:12px 14px;display:flex;align-items:center;gap:10px}
+.sidebar-avatar{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700}
+.sidebar-name{color:#e8ecef;font-size:12px;font-weight:600}
+.sidebar-role{color:rgba(255,255,255,.35);font-size:10.5px}
+/* ---- Main Layout ---- */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.page{display:none;flex-direction:column;flex:1;overflow:hidden}
+.page.active{display:flex}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:11px 24px;background:var(--bg-surface);border-bottom:1px solid var(--border);flex-shrink:0;min-height:50px}
+.topbar-left{display:flex;align-items:center;gap:10px}
+.topbar-title{font-family:var(--font-display);font-size:17px;font-weight:600;letter-spacing:-.3px}
+.topbar-breadcrumb{font-size:11px;color:var(--text-tertiary);display:flex;align-items:center;gap:5px}
+.topbar-actions{display:flex;gap:8px;align-items:center}
+.content{flex:1;overflow-y:auto;padding:18px 24px;display:flex;flex-direction:column;gap:14px}
+/* ---- Cards & Stats ---- */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stats-grid.col3{grid-template-columns:repeat(3,1fr)}
+.stats-grid.col2{grid-template-columns:repeat(2,1fr)}
+.stat-card{background:#fff;border-radius:var(--radius-md);border:1px solid var(--border);padding:14px 16px;box-shadow:var(--shadow-xs);transition:all .15s}
+.stat-card:hover{box-shadow:var(--shadow-sm);border-color:#d1d5db}
+.stat-label{font-size:10.5px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}
+.stat-value{font-family:var(--font-display);font-size:24px;font-weight:700;letter-spacing:-.5px;line-height:1.1}
+.stat-sub{font-size:10.5px;color:var(--text-tertiary);margin-top:1px}
+.stat-card.accent{border-left:3px solid var(--accent)}
+.stat-card.teal{border-left:3px solid var(--teal)}
+.stat-card.amber{border-left:3px solid var(--amber)}
+.stat-card.blue{border-left:3px solid var(--blue)}
+.stat-card.purple{border-left:3px solid var(--purple)}
+.card{background:#fff;border-radius:var(--radius-md);border:1px solid var(--border);box-shadow:var(--shadow-xs)}
+.card-header{padding:13px 16px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-family:var(--font-display);font-size:13px;font-weight:600;letter-spacing:-.2px}
+.card-body{padding:16px}.card-body-sm{padding:12px 16px}
+/* ---- Table ---- */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+thead th{text-align:left;padding:8px 10px;font-size:10.5px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--border);white-space:nowrap;background:#fafbfc}
+tbody td{padding:10px 10px;border-bottom:1px solid var(--border-light);vertical-align:middle}
+tbody tr{transition:background .1s;cursor:pointer}tbody tr:hover{background:#f8f9fb}
+/* ---- Badges ---- */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0}
+.badge-gray{background:#f3f4f6;color:#6b7280}.badge-gray .badge-dot{background:#9ca3af}
+.badge-blue{background:var(--blue-light);color:var(--blue)}.badge-blue .badge-dot{background:var(--blue)}
+.badge-teal{background:var(--teal-light);color:var(--teal)}.badge-teal .badge-dot{background:var(--teal)}
+.badge-amber{background:var(--amber-light);color:var(--amber)}.badge-amber .badge-dot{background:var(--amber)}
+.badge-accent{background:var(--accent-light);color:var(--accent)}.badge-accent .badge-dot{background:var(--accent)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}.badge-purple .badge-dot{background:var(--purple)}
+/* ---- Buttons ---- */
+.btn{padding:6px 13px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .15s;font-family:var(--font-body);display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-hover);box-shadow:0 2px 8px var(--accent-glow)}
+.btn-primary.teal{background:var(--teal)}.btn-primary.teal:hover{background:#0b7148;box-shadow:0 2px 8px rgba(13,133,85,0.2)}
+.btn-secondary{background:var(--bg-input);color:var(--text-primary);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border-light)}
+.btn-ghost{background:transparent;color:var(--text-secondary)}.btn-ghost:hover{background:var(--bg-input)}
+.btn-sm{padding:4px 10px;font-size:11px}.btn-xs{padding:3px 7px;font-size:10.5px;border-radius:var(--radius-xs)}
+/* ---- Progress ---- */
+.progress{height:6px;border-radius:3px;background:#eef0f2;overflow:hidden;min-width:60px}
+.progress-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.progress-fill.teal{background:var(--teal)}.progress-fill.amber{background:var(--amber)}.progress-fill.accent{background:var(--accent)}
+/* ---- Filters ---- */
+.filter-row{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.filter-chip{padding:5px 13px;border-radius:16px;border:1px solid var(--border);background:#fff;color:var(--text-secondary);font-size:11.5px;font-weight:500;cursor:pointer;transition:all .12s}
+.filter-chip:hover{border-color:#c4c7cc}
+.filter-chip.active{background:var(--text-primary);color:#fff;border-color:var(--text-primary)}
+.filter-select{padding:5px 24px 5px 10px;border-radius:16px;border:1px solid var(--border);background:#fff;font-size:11.5px;font-weight:500;color:var(--text-secondary);cursor:pointer;font-family:var(--font-body);appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='9' height='5' viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%238b949e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center}
+.filter-spacer{flex:1}
+.search-input{padding:5px 12px;border-radius:16px;border:1px solid var(--border);font-size:11.5px;font-family:var(--font-body);outline:none;width:220px}
+.search-input:focus{border-color:var(--accent)}
+/* ---- Tabs ---- */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border-light)}
+.tab{padding:10px 16px;font-size:12.5px;font-weight:600;color:var(--text-tertiary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:var(--font-body)}
+.tab:hover{color:var(--text-secondary)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}.tab-content.active{display:block}
+/* ---- Form ---- */
+.form-group{display:flex;flex-direction:column;gap:5px}
+.form-label{font-size:11.5px;font-weight:600;color:var(--text-secondary)}
+.form-input,.form-select{padding:7px 11px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:var(--font-body);transition:border-color .15s;background:var(--bg-input)}
+.form-input:focus,.form-select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.1);background:#fff}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='9' height='5' viewBox='0 0 9 5' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l3.5 3L8 1' stroke='%238b949e' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row.col3{grid-template-columns:1fr 1fr 1fr}.form-row.col4{grid-template-columns:1fr 1fr 1fr 1fr}
+textarea.form-input{min-height:80px;resize:vertical}
+/* ---- Alerts ---- */
+.alert{padding:12px 16px;border-radius:var(--radius-sm);font-size:12px;font-weight:500;display:flex;align-items:center;gap:8px}
+.alert-warn{background:var(--amber-light);color:var(--amber);border:1px solid rgba(194,109,10,0.15)}
+.alert-info{background:var(--blue-light);color:var(--blue);border:1px solid rgba(38,98,217,0.15)}
+.alert-accent{background:var(--accent-light);color:var(--accent);border:1px solid rgba(99,102,241,0.15)}
+.att-day-input{width:72px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-family:var(--font-mono);text-align:center;color:var(--text-primary);background:var(--bg-input);transition:all .15s}.att-day-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow);background:#fff}.att-day-input:hover:not(:focus){border-color:#c4c8ce}
+.perf-input{width:88px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-xs);font-size:12px;font-family:var(--font-mono);text-align:right;color:var(--text-primary);background:var(--bg-input);transition:all .15s}.perf-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 2px var(--accent-glow);background:#fff}.perf-input:hover:not(:focus){border-color:#c4c8ce}
+/* ---- Modal ---- */
+.modal-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,20,25,.5);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding-top:50px;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal{background:#fff;border-radius:var(--radius-lg);width:660px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,0.12)}
+.modal.wide{width:800px}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-family:var(--font-display);font-size:15px;font-weight:600}
+.modal-body{padding:18px 20px;display:flex;flex-direction:column;gap:14px}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+/* ---- Toast ---- */
+.toast{position:fixed;top:20px;right:20px;z-index:300;background:#13161b;color:#fff;padding:11px 18px;border-radius:var(--radius-sm);font-size:12.5px;font-weight:500;box-shadow:var(--shadow-lg);opacity:0;transform:translateY(-10px);transition:all .2s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.ok{background:var(--teal)}.toast.warn{background:var(--amber)}
+/* ---- Efficiency ---- */
+.eff-bar{display:flex;align-items:flex-end;gap:3px;height:100px;padding:0 4px}
+.eff-bar .bar-col{flex:1;background:var(--accent);border-radius:3px 3px 0 0;transition:height .3s;min-width:6px;position:relative}
+.eff-bar .bar-col:hover{opacity:.8}
+.eff-bar .bar-val{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:9px;font-family:var(--font-mono);color:var(--text-secondary);white-space:nowrap}
+.eff-bar .bar-label{text-align:center;font-size:9px;color:var(--text-tertiary);margin-top:4px}
+.eff-gauge{position:relative;width:72px;height:72px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-mono);font-size:16px;font-weight:700}
+.eff-gauge circle{fill:none;stroke-width:6}
+.eff-gauge .bg{stroke:var(--border)}
+.eff-gauge .fg{stroke:var(--accent);stroke-linecap:round;transform:rotate(-90deg);transform-origin:center}
+.eff-tag{padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600}
+.eff-tag.high{background:var(--teal-light);color:var(--teal)}
+.eff-tag.steady{background:var(--blue-light);color:var(--blue)}
+.eff-tag.warn{background:var(--amber-light);color:var(--amber)}
+.eff-rank{width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;font-family:var(--font-mono)}
+.eff-rank.gold{background:#fef3c7;color:#b45309}.eff-rank.silver{background:#f1f5f9;color:#475569}.eff-rank.bronze{background:#fef2f2;color:#b91c1c}
+.eff-compare-row{display:flex;align-items:center;gap:8px;padding:6px 0}
+.eff-compare-bar{flex:1;height:20px;border-radius:4px;display:flex;align-items:center;padding:0 8px;font-size:11px;font-weight:600;color:#fff;min-width:40px;transition:width .4s}
+/* ---- Misc ---- */
+.muted{color:var(--text-tertiary);font-size:11px}
+.number{font-family:var(--font-mono);font-weight:600;font-size:12.5px}
+.number.lg{font-size:18px;font-weight:700}
+.row-between{display:flex;align-items:center;justify-content:space-between}
+.gap-sm{gap:6px}.gap-md{gap:12px}
+.flex{display:flex}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}
+.mb-sm{margin-bottom:8px}.mb-md{margin-bottom:14px}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px}
+.info-row{display:flex;padding:4px 0}
+.info-label{color:var(--text-tertiary);font-size:11.5px;width:100px;flex-shrink:0}
+.info-value{font-size:12.5px;font-weight:500}
+.expand-row{background:#f8f9fb;border-bottom:2px solid var(--accent)}
+.expand-cell{padding:14px 16px}
+/* ---- Employee Card ---- */
+.emp-card{background:#fff;border:1px solid var(--border);border-radius:var(--radius-md);padding:18px 20px;display:flex;align-items:center;gap:16px}
+.emp-avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#818cf8,#6366f1);display:flex;align-items:center;justify-content:center;color:#fff;font-size:18px;font-weight:700;flex-shrink:0}
+.emp-info{flex:1}.emp-name{font-family:var(--font-display);font-size:16px;font-weight:600}.emp-meta{font-size:11.5px;color:var(--text-secondary);margin-top:2px}
+/* ---- Toggle ---- */
+.toggle-row{display:flex;align-items:center;gap:8px}
+.toggle{width:36px;height:20px;border-radius:10px;background:#d1d5db;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s}
+.toggle.on::after{left:18px}
+</style>
+</head>
+<body>
+
+<!-- ====== SIDEBAR ====== -->
+<div class="sidebar">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo">H</div>
+    <div class="sidebar-brand-text">业财一体化</div>
+  </div>
+  <div class="sidebar-nav">
+    <div class="sidebar-module-label">模块导航</div>
+    <div class="nav-item" onclick="alert('CRM模块')" style="opacity:.45">CRM 客户商机</div>
+    <div class="nav-item" onclick="alert('PM模块')" style="opacity:.45">PM 项目管理</div>
+    <div class="nav-item" onclick="alert('FM模块')" style="opacity:.45">FM 财务管理</div>
+    <div class="sidebar-section">人力资源</div>
+    <div class="nav-item active" data-nav="dashboard">📊 工作台</div>
+    <div class="nav-item" data-nav="efficiency">📊 人效分析</div>
+    <div class="nav-item" data-nav="employee">👥 员工管理 <span class="badge">22</span></div>
+    <div class="nav-item" data-nav="attendance">🗓️ 月度考勤管理</div>
+    <div class="nav-item" data-nav="salary">🧮 薪酬管理 <span class="badge" style="background:var(--amber)">待确认</span></div>
+    <div class="nav-item" data-nav="dict">📖 字典配置</div>
+    <div class="sidebar-section">其他模块</div>
+    <div class="nav-item" onclick="alert('仓务模块')" style="opacity:.45">WMS 仓务管理</div>
+    <div class="nav-item" onclick="alert('BI模块')" style="opacity:.45">BI 经营分析</div>
+  </div>
+  <div class="sidebar-footer">
+    <div class="sidebar-avatar">HR</div>
+    <div><div class="sidebar-name">陈HR</div><div class="sidebar-role">人资部 · 主管</div></div>
+  </div>
+</div>
+
+<!-- ====== MAIN ====== -->
+<div class="main">
+
+<!-- ===== PAGE: Dashboard ===== -->
+<section class="page active" id="pg-dashboard">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title">HR 工作台</span></div><div class="topbar-actions"><span class="muted">2026年9月1日 周一 · 8月薪酬待确认</span></div></div>
+<div class="content">
+
+<div class="stats-grid">
+  <div class="stat-card accent"><div class="stat-label">👥 在职人数</div><div class="stat-value">22</div><div class="stat-sub">内部18 + 外包4</div></div>
+  <div class="stat-card teal"><div class="stat-label">📥 本月入职</div><div class="stat-value">2</div><div class="stat-sub">编导1 + 拍摄1</div></div>
+  <div class="stat-card amber"><div class="stat-label">📤 本月离职</div><div class="stat-value">1</div><div class="stat-sub">待定</div></div>
+  <div class="stat-card purple"><div class="stat-label">🎯 上月绩效达标率</div><div class="stat-value">78.6%</div><div class="stat-sub">11/14 达标</div></div>
+</div>
+
+<div class="stats-grid col2">
+  <div class="stat-card blue"><div class="stat-label">📊 待确认薪酬</div><div class="stat-value">2026-08</div><div class="stat-sub">10人 · ¥59,563 <a href="#" onclick="navTo('salary')" style="color:var(--accent);font-weight:600">去确认 →</a></div></div>
+  <div class="stat-card"><div class="stat-label">🗓️ 考勤录入</div><div class="stat-value">2026-09</div><div class="stat-sub">标准22工作日 <a href="#" onclick="navTo('attendance')" style="color:var(--accent);font-weight:600">去录入 →</a></div></div>
+</div>
+
+<div class="card"><div class="card-header"><span class="card-title">待处理事项</span></div>
+  <div class="card-body-sm">
+    <div class="alert alert-warn" style="margin-bottom:6px">📊 <b>8月薪酬待确认</b> · 10人 · 总额 ¥59,563 · <a href="#" onclick="navTo('salary')" style="color:var(--amber);font-weight:700">去确认</a></div>
+    <div class="alert alert-accent" style="margin-bottom:6px">⚠️ <b>3条产出未验收</b> · PJ-001: 2条, PJ-003: 1条 · <a href="#" style="color:var(--accent);font-weight:700">催验收</a></div>
+    <div class="alert alert-info">📋 <b>薪酬变更待生效</b> · 巫昭仪提成单价 9月1日起 ¥15→¥18 · <a href="#" onclick="navTo('employee-detail')" style="color:var(--blue);font-weight:700">查看</a></div>
+  </div>
+</div>
+
+<div class="card"><div class="card-header"><span class="card-title">📈 绩效达标率趋势（近6个月）</span></div>
+  <div class="card-body">
+    <div style="display:flex;gap:24px;align-items:flex-end;height:80px">
+      <div style="text-align:center"><div style="width:40px;height:66px;background:var(--teal);border-radius:4px 4px 0 0;opacity:.8"></div><div style="font-size:10px;margin-top:4px;font-weight:600">03月<br>82%</div></div>
+      <div style="text-align:center"><div style="width:40px;height:56px;background:linear-gradient(180deg,var(--teal),var(--amber));border-radius:4px 4px 0 0;opacity:.8"></div><div style="font-size:10px;margin-top:4px;font-weight:600">04月<br>75%</div></div>
+      <div style="text-align:center"><div style="width:40px;height:60px;background:var(--teal);border-radius:4px 4px 0 0;opacity:.8"></div><div style="font-size:10px;margin-top:4px;font-weight:600">05月<br>80%</div></div>
+      <div style="text-align:center"><div style="width:40px;height:69px;background:var(--teal);border-radius:4px 4px 0 0;opacity:.8"></div><div style="font-size:10px;margin-top:4px;font-weight:600">06月<br>85%</div></div>
+      <div style="text-align:center"><div style="width:40px;height:60px;background:var(--teal);border-radius:4px 4px 0 0;opacity:.8"></div><div style="font-size:10px;margin-top:4px;font-weight:600">07月<br>78%</div></div>
+      <div style="text-align:center"><div style="width:40px;height:65px;background:var(--accent);border-radius:4px 4px 0 0;opacity:.8"></div><div style="font-size:10px;margin-top:4px;font-weight:600">08月<br>81%</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="card"><div class="card-header"><span class="card-title">🏆 人效排行（上月 TOP5）</span></div>
+  <div class="card-body" style="padding:0">
+    <table><thead><tr><th>排名</th><th>姓名</th><th>岗位</th><th>加权产出</th><th>本月薪酬</th><th>产出/薪酬比</th></tr></thead>
+    <tbody>
+      <tr onclick="navTo('employee-detail','1')"><td>1</td><td>巫昭仪</td><td>编导</td><td class="number">600</td><td class="number">¥8,500</td><td class="number">7.1%</td></tr>
+      <tr onclick="navTo('employee-detail','2')"><td>2</td><td>李四</td><td>拍摄</td><td class="number">480</td><td class="number">¥8,940</td><td class="number">5.4%</td></tr>
+<tr><td>3</td><td>梁记</td><td>编导</td><td class="number">550</td><td class="number">¥7,550</td><td class="number">7.3%</td></tr>
+      <tr><td>4</td><td>苏韵婷</td><td>编导</td><td class="number">520</td><td class="number">¥6,600</td><td class="number">7.9%</td></tr>
+      <tr><td>5</td><td>王五</td><td>剪辑</td><td class="number">460</td><td class="number">¥8,160</td><td class="number">5.6%</td></tr>
+    </tbody></table>
+  </div>
+</div>
+</div>
+</section>
+
+<!-- ===== PAGE: Employee List ===== -->
+<section class="page" id="pg-employee">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">员工管理</span></div><div class="topbar-actions"><button class="btn btn-primary" onclick="openModal('modal-emp-new')">+ 新员工</button></div></div>
+<div class="content">
+<div class="filter-row">
+  <span class="filter-chip active">全部</span><select class="filter-select"><option>全部岗位</option><option>编导</option><option>拍摄</option><option>剪辑</option><option>PM</option><option>AE</option></select>
+  <select class="filter-select"><option>在职</option><option>离职</option></select><div class="filter-spacer"></div><input type="text" class="search-input" placeholder="搜索姓名/工号...">
+</div>
+<div class="card"><div class="card-body" style="padding:0">
+<table><thead><tr><th>工号</th><th>姓名</th><th>岗位</th><th>部门</th><th>底薪</th><th>绩效</th><th>达标参考</th><th>计件单价</th><th>入职</th><th>状态</th><th>分摊</th><th>操作</th></tr></thead>
+<tbody>
+<tr onclick="navTo('employee-detail','1')"><td class="number">EMP-2025-001</td><td>巫昭仪</td><td>编导</td><td>编导组</td><td class="number">¥5,000</td><td class="number">¥2,000</td><td class="number">500</td><td class="number">¥15/条</td><td>2025-03</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation()">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('巫昭仪','编导','编导组')" style="color:var(--accent)">转岗</button></td></tr>
+<tr onclick="navTo('employee-detail','2')"><td class="number">EMP-2025-002</td><td>梁记</td><td>编导</td><td>编导组</td><td class="number">¥5,000</td><td class="number">¥1,800</td><td class="number">500</td><td class="number">¥15/条</td><td>2025-04</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation()">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('梁记','编导','编导组')" style="color:var(--accent)">转岗</button></td></tr>
+<tr onclick="navTo('employee-detail','3')"><td class="number">EMP-2025-003</td><td>苏韵婷</td><td>编导</td><td>编导组</td><td class="number">¥4,500</td><td class="number">¥1,500</td><td class="number">500</td><td class="number">¥15/条</td><td>2025-06</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation()">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('苏韵婷','编导','编导组')" style="color:var(--accent)">转岗</button></td></tr>
+<tr><td class="number">EMP-2023-001</td><td>李四</td><td>拍摄</td><td>拍摄组</td><td class="number">¥5,500</td><td class="number">¥2,000</td><td class="number">400</td><td class="number">¥18/条</td><td>2023-02</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('李四','拍摄','拍摄组')" style="color:var(--accent)">转岗</button></td></tr>
+<tr><td class="number">EMP-2024-005</td><td>王五</td><td>剪辑</td><td>剪辑组</td><td class="number">¥5,000</td><td class="number">¥1,800</td><td class="number">450</td><td class="number">¥16/条</td><td>2024-07</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('王五','剪辑','剪辑组')" style="color:var(--accent)">转岗</button></td></tr>
+<tr><td class="number">EMP-2025-007</td><td>王PM</td><td>PM</td><td>项目部</td><td class="number">¥6,000</td><td>-</td><td>-</td><td>-</td><td>2025-01</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><div class="toggle on" onclick="event.stopPropagation()" title="点击切换分摊到项目（按项目数均分底薪）"></div></td><td><button class="btn btn-xs btn-ghost">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('王PM','PM','项目部')" style="color:var(--accent)">转岗</button></td></tr>
+<tr><td class="number">EMP-2025-004</td><td>soso</td><td>编导</td><td>编导组</td><td class="number">¥5,000</td><td class="number">¥1,000</td><td class="number">500</td><td class="number">¥15/条</td><td>2025-08</td><td><span class="badge badge-gray"><span class="badge-dot"></span>离职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
+</tbody></table>
+</div></div>
+<div class="row-between"><span class="muted">共22条记录，第1-8条</span><div class="flex gap-sm"><button class="btn btn-sm btn-secondary" disabled>上一页</button><button class="btn btn-sm btn-secondary">下一页</button></div></div>
+</div>
+</section>
+
+<!-- ===== PAGE: Employee Detail ===== -->
+<section class="page" id="pg-employee-detail">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('employee')">←</span><span class="topbar-title" style="margin-left:8px">员工详情</span></div><div class="topbar-actions"><button class="btn btn-secondary btn-sm">编辑</button><button class="btn btn-ghost btn-sm" onclick="openTransfer('巫昭仪','编导','编导组')" style="color:var(--accent)">转岗</button><button class="btn btn-ghost btn-sm" style="color:var(--amber)">办理离职</button></div></div>
+<div class="content">
+
+<div class="emp-card">
+  <div class="emp-avatar">巫</div>
+  <div class="emp-info">
+    <div class="emp-name">巫昭仪 · <span class="badge badge-accent" style="font-size:12px"><span class="badge-dot"></span>编导</span></div>
+    <div class="emp-meta">EMP-2025-001 · 编导组 · 2025-03-01入职 · 在职工龄1年6个月 · <span class="badge badge-teal" style="font-size:10px"><span class="badge-dot"></span>在职</span></div>
+  </div>
+  <div style="text-align:right;font-size:12px;color:var(--text-secondary)">
+    <div>底薪 ¥5,000 + 绩效（HR评定）+ 提成 ¥15/条 · 达标参考 500</div>
+    <div class="muted">薪酬版本 v1 · 生效 2025-03-01</div>
+    <div style="margin-top:4px"><span class="badge badge-teal" style="font-size:10px">✅ 分摊到项目</span> <span class="muted" style="font-size:10px">产出岗 · 系统内置</span></div>
+  </div>
+</div>
+
+<div class="card" id="detail-tabs-card">
+<div class="tabs">
+  <div class="tab active" data-dtab="salary-structure">薪酬结构</div>
+  <div class="tab" data-dtab="monthly-salary">月度薪酬</div>
+  <div class="tab" data-dtab="output-stats">产出统计</div>
+  <div class="tab" data-dtab="transfer-log">异动记录</div>
+  <div class="tab" data-dtab="efficiency">人效分析</div>
+  <div class="tab" data-dtab="op-log">操作记录</div>
+</div>
+<div class="card-body tab-content active" id="dt-salary-structure">
+  <div class="info-grid">
+    <div class="info-row"><span class="info-label">岗位</span><span class="info-value">编导（产出岗）</span></div>
+    <div class="info-row"><span class="info-label">底薪</span><span class="info-value number">¥5,000</span></div>
+    <div class="info-row"><span class="info-label">绩效（HR评定）</span><span class="info-value">HR每月综合评定填写固定金额，不与产出挂钩</span></div>
+    <div class="info-row"><span class="info-label">达标阈值</span><span class="info-value number">500（统计参考线，用于达标率判定）</span></div>
+    <div class="info-row"><span class="info-label">提成单价</span><span class="info-value number">¥15/条（超出阈值部分计件）</span></div>
+    <div class="info-row"><span class="info-label">版本</span><span class="info-value">v1 · 生效 2025-03-01 ~ 至今</span></div>
+  </div>
+  <div style="margin-top:12px"><button class="btn btn-primary btn-sm" onclick="openModal('modal-emp-salary-edit')">编辑薪酬</button></div>
+</div>
+<div class="card-body tab-content" id="dt-monthly-salary">
+  <table><thead><tr><th>月份</th><th>出勤天数</th><th>加权产出</th><th>达标</th><th>底薪</th><th>绩效（HR评定）</th><th>提成（计件）</th><th>调整</th><th>合计</th></tr></thead>
+  <tbody>
+    <tr onclick="navTo('salary')"><td>2026-08</td><td class="number">22/22</td><td class="number">600</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥2,000</td><td class="number">¥1,500</td><td class="number">-</td><td class="number lg">¥8,500</td></tr>
+    <tr><td>2026-07</td><td class="number">22/22</td><td class="number">620</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥2,000</td><td class="number">¥1,800</td><td class="number">-</td><td class="number">¥8,800</td></tr>
+    <tr><td>2026-06</td><td class="number">22/22</td><td class="number">580</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥1,800</td><td class="number">¥1,200</td><td class="number">-</td><td class="number">¥8,000</td></tr>
+    <tr><td>2026-05</td><td class="number">22/22</td><td class="number">490</td><td><span class="badge badge-amber"><span class="badge-dot"></span>未达标</span></td><td class="number">¥5,000</td><td class="number">¥1,500</td><td class="number">¥0</td><td class="number">-</td><td class="number">¥6,500</td></tr>
+  </tbody></table>
+</div>
+<div class="card-body tab-content" id="dt-output-stats">
+  <div class="alert alert-accent" style="margin-bottom:10px">📊 当月(2026-09)累计产出中：当前加权产出 <b>0</b> / 达标还需 <b>500</b></div>
+  <div class="progress" style="height:12px;border-radius:6px;margin-bottom:10px"><div class="progress-fill accent" style="width:0%"></div></div>
+  <table><thead><tr><th>月份</th><th>总加权产出</th><th>达标状态</th><th>项目数</th><th>项目分布</th></tr></thead>
+  <tbody>
+    <tr><td>2026-08</td><td class="number">600</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td>3</td><td>PJ-001:215 / PJ-002:198 / PJ-003:187</td></tr>
+    <tr><td>2026-07</td><td class="number">620</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td>2</td><td>PJ-001:320 / PJ-002:300</td></tr>
+    <tr><td>2026-06</td><td class="number">580</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td>3</td><td>PJ-001:200 / PJ-002:180 / PJ-003:200</td></tr>
+  </tbody></table>
+</div>
+<div class="card-body tab-content" id="dt-transfer-log">
+  <div style="position:relative;padding-left:28px">
+    <div style="position:absolute;left:8px;top:0;bottom:0;width:2px;background:var(--border)"></div>
+
+    <div style="position:relative;margin-bottom:16px">
+      <div style="position:absolute;left:-24px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--accent);border:2px solid #fff;box-shadow:0 0 0 2px var(--accent-light)"></div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:2px">2026-09-01 · 陈HR · 转岗异动 <span class="badge badge-accent" style="font-size:10px;margin-left:6px">最新</span></div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">编导 → PM （编导组 → 项目部）</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+        · 生效日期：2026-09-01<br>
+        · 转岗原因：业务需要（项目PM人手不足）<br>
+        · 薪酬策略：沿用新岗位的入职默认薪酬<br>
+        · 薪酬版本变更：v1（底薪¥5,000/达标参考500/提成¥15）→ <b>v2</b>（底薪¥6,000/无达标/无提成）<br>
+        · 分摊归属：由「项目分摊」变更为「非产出岗-不分摊」
+      </div>
+    </div>
+
+    <div style="position:relative;margin-bottom:16px">
+      <div style="position:absolute;left:-24px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--blue);border:2px solid #fff"></div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:2px">2026-03-15 · 陈HR · 薪酬调整</div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">薪酬结构微调 — 绩效由¥1,800调整为¥2,000</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+        · 版本：v1 → v1.1<br>
+        · 原因：Q1绩效评估，产出稳定达标，适度上浮
+      </div>
+    </div>
+
+    <div style="position:relative">
+      <div style="position:absolute;left:-24px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--teal);border:2px solid #fff"></div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-bottom:2px">2025-03-01 · 陈HR · 入职登记</div>
+      <div style="font-size:13px;font-weight:600;margin-bottom:4px">入职「编导」岗位 · 编导组 · 匹配薪酬结构 v1</div>
+      <div style="font-size:12px;color:var(--text-secondary);line-height:1.6">
+        · 入职日期：2025-03-01<br>
+        · 初始薪酬：底薪¥5,000/达标参考500/提成单价¥15
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card-body tab-content" id="dt-efficiency">
+  <div class="stats-grid" style="margin-bottom:10px">
+    <div class="stat-card accent" style="padding:10px"><div class="stat-label" style="font-size:10px">🏆 人效标签</div><div class="stat-value" style="font-size:18px"><span class="eff-tag high">高产高效</span></div></div>
+    <div class="stat-card" style="padding:10px"><div class="stat-label" style="font-size:10px">📊 薪酬产出比</div><div class="stat-value" style="font-size:18px">¥14.2<span style="font-size:11px;color:var(--text-tertiary)">/点</span></div></div>
+    <div class="stat-card blue" style="padding:10px"><div class="stat-label" style="font-size:10px">📈 12月达标率</div><div class="stat-value" style="font-size:18px">83.3%<span style="font-size:11px;color:var(--text-tertiary)">10/12</span></div></div>
+    <div class="stat-card teal" style="padding:10px"><div class="stat-label" style="font-size:10px">🔄 产出环比</div><div class="stat-value" style="font-size:18px;color:var(--teal)">↑8.3%</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+    <div class="card" style="margin:0"><div class="card-header"><span class="card-title" style="font-size:13px">📈 加权产出趋势（近12月）</span></div>
+    <div class="card-body" style="padding:8px 12px 4px">
+      <div class="eff-bar" style="height:80px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:53px;position:relative"><span class="bar-val">420</span></div><span class="bar-label">09</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:48px;position:relative"><span class="bar-val">380</span></div><span class="bar-label">10</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:57px;position:relative"><span class="bar-val">450</span></div><span class="bar-label">11</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:55px;position:relative"><span class="bar-val">440</span></div><span class="bar-label">12</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:58px;position:relative"><span class="bar-val">460</span></div><span class="bar-label">01</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:52px;position:relative"><span class="bar-val">410</span></div><span class="bar-label">02</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:60px;position:relative"><span class="bar-val">480</span></div><span class="bar-label">03</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:63px;position:relative"><span class="bar-val">510</span></div><span class="bar-label">04</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:62px;position:relative"><span class="bar-val">490</span></div><span class="bar-label">05</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:68px;position:relative"><span class="bar-val">580</span></div><span class="bar-label">06</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:72px;position:relative"><span class="bar-val">620</span></div><span class="bar-label">07</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:20px;background:var(--accent);border-radius:3px 3px 0 0;height:74px;position:relative"><span class="bar-val">600</span></div><span class="bar-label">08</span></div>
+      </div>
+    </div></div>
+
+    <div class="card" style="margin:0"><div class="card-header"><span class="card-title" style="font-size:13px">📊 薪酬 vs 产出 剪刀差</span></div>
+    <div class="card-body" style="padding:8px 12px 4px">
+      <div class="eff-bar" style="height:80px">
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:18px;background:var(--accent);border-radius:3px 3px 0 0;height:62px;position:relative"><span class="bar-val" style="font-size:8px">¥17.5</span></div><div style="width:18px;background:var(--amber);border-radius:3px 3px 0 0;height:30px;margin-top:1px;position:relative"><span class="bar-val" style="font-size:7px">410</span></div><span class="bar-label">Q1</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:18px;background:var(--accent);border-radius:3px 3px 0 0;height:56px;position:relative"><span class="bar-val" style="font-size:8px">¥15.2</span></div><div style="width:18px;background:var(--amber);border-radius:3px 3px 0 0;height:48px;margin-top:1px;position:relative"><span class="bar-val" style="font-size:7px">550</span></div><span class="bar-label">Q2</span></div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:18px;background:var(--accent);border-radius:3px 3px 0 0;height:44px;position:relative"><span class="bar-val" style="font-size:8px">¥14.2</span></div><div style="width:18px;background:var(--amber);border-radius:3px 3px 0 0;height:58px;margin-top:1px;position:relative"><span class="bar-val" style="font-size:7px">610</span></div><span class="bar-label">Q3</span></div>
+      </div>
+      <div style="font-size:10px;color:var(--text-tertiary);text-align:center;margin-top:4px">🟣 产出 ↑ · 🟠 薪酬产出比 ↓ → 人效持续改善</div>
+    </div></div>
+  </div>
+
+  <div class="card"><div class="card-body" style="padding:0">
+  <table><thead><tr><th>月份</th><th>加权产出</th><th>达标</th><th>项目数</th><th>薪酬合计</th><th>薪酬产出比</th><th>对比公司均值</th></tr></thead>
+  <tbody>
+  <tr><td>2026-08</td><td class="number">600</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">3</td><td class="number">¥8,500</td><td class="number" style="color:var(--teal)">¥14.2</td><td><span class="badge badge-teal">↓ 30%</span> 低于均值</td></tr>
+  <tr><td>2026-07</td><td class="number">620</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">2</td><td class="number">¥8,800</td><td class="number" style="color:var(--teal)">¥14.2</td><td><span class="badge badge-teal">↓ 31%</span> 低于均值</td></tr>
+  <tr><td>2026-06</td><td class="number">580</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">3</td><td class="number">¥8,000</td><td class="number" style="color:var(--teal)">¥13.8</td><td><span class="badge badge-teal">↓ 33%</span> 低于均值</td></tr>
+  <tr><td>2026-05</td><td class="number">490</td><td><span class="badge badge-amber"><span class="badge-dot"></span>未达标</span></td><td class="number">2</td><td class="number">¥6,500</td><td class="number" style="color:var(--amber)">¥13.3</td><td><span class="badge badge-teal">↓ 50%</span> 低于均值</td></tr>
+  </tbody></table>
+  </div></div>
+
+  <div class="muted" style="margin-top:4px">📌 人效标签说明：「高产高效」薪酬产出比低于均值20%+且达标率>80% · 「稳定输出」达标率>60% · 「需关注」达标率<60%或连续下滑</div>
+</div>
+<div class="card-body tab-content" id="dt-op-log">
+  <div style="font-size:12px;color:var(--text-secondary)">
+    <div style="padding:4px 0">2026-09-01 · 陈HR · 办理转岗（编导 → PM），生成薪酬 v2</div>
+    <div style="padding:4px 0">2026-08-31 · 系统自动 · 月度薪酬核算完成，10人，总额¥59,563</div>
+    <div style="padding:4px 0">2026-03-15 · 陈HR · 薪酬调整：绩效（HR评定）由¥1,800→¥2,000</div>
+    <div style="padding:4px 0">2025-03-01 · 陈HR · 新员工入职登记</div>
+    <div style="padding:4px 0">2025-03-01 · 系统自动 · 匹配编导薪酬结构 v1</div>
+  </div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ===== PAGE: Attendance Detail (每月考勤录入) ===== -->
+<section class="page" id="pg-attendance-detail">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('attendance')">←</span><span class="topbar-title" style="margin-left:8px" id="att-detail-title">考勤录入 · 2026年09月</span></div><div class="topbar-actions"><button class="btn btn-secondary btn-sm" onclick="showToast('已复制上月数据','ok')">从上月复制</button><button class="btn btn-ghost btn-sm" onclick="openModal('modal-att-setting')">⚙️ 月份设置</button><button class="btn btn-primary btn-sm" onclick="saveAttendance()">保存考勤</button></div></div>
+<div class="content">
+
+  <div class="alert alert-info" style="margin-bottom:8px">📅 <b>当前考勤月份：<span id="att-info-month">2026-09</span></b> · 标准 <span id="att-info-days">22</span> 个工作日 · <a href="#" onclick="openModal('modal-att-setting')" style="color:var(--accent);font-weight:600">修改设置</a></div>
+
+  <div class="card" id="card-att-edit"><div class="card-header"><span class="card-title" id="att-table-title">员工考勤表 · 2026年09月（标准22工作日）</span><span style="font-size:11px;color:var(--text-tertiary)">直接在表格中填入实际出勤天数，折算率自动计算</span></div><div class="card-body" style="padding:0">
+  <table><thead><tr><th style="width:80px">员工</th><th style="width:70px">岗位</th><th style="width:70px">状态</th><th style="width:110px">实际出勤天数</th><th style="width:80px">折算率</th><th>调整原因</th></tr></thead>
+  <tbody id="att-edit-body">
+  <tr><td>巫昭仪</td><td>编导</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><input type="number" class="att-day-input" value="22" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-teal att-rate">100.0%</span></td><td><input type="text" class="form-input att-reason" placeholder="缺勤原因（选填）" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr><td>梁记</td><td>编导</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><input type="number" class="att-day-input" value="20" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-amber att-rate">90.9%</span></td><td><input type="text" class="form-input att-reason" value="请假2天" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr style="background:var(--accent-light)"><td>苏韵婷</td><td>编导</td><td><span class="badge badge-gray"><span class="badge-dot"></span>离职</span></td><td><input type="number" class="att-day-input" value="10" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-accent att-rate">45.5%</span></td><td><input type="text" class="form-input att-reason" value="9.15离职" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr><td>李四</td><td>拍摄</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><input type="number" class="att-day-input" value="22" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-teal att-rate">100.0%</span></td><td><input type="text" class="form-input att-reason" placeholder="缺勤原因（选填）" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr><td>王五</td><td>剪辑</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><input type="number" class="att-day-input" value="22" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-teal att-rate">100.0%</span></td><td><input type="text" class="form-input att-reason" placeholder="缺勤原因（选填）" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr><td>赵六</td><td>编导</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><input type="number" class="att-day-input" value="21.5" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-amber att-rate">97.7%</span></td><td><input type="text" class="form-input att-reason" value="请假0.5天" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr style="background:var(--accent-light)"><td>张三</td><td>编导</td><td><span class="badge badge-blue"><span class="badge-dot"></span>入职</span></td><td><input type="number" class="att-day-input" value="15" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-accent att-rate">68.2%</span></td><td><input type="text" class="form-input att-reason" value="9.10入职" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  <tr><td>王PM</td><td>PM</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><input type="number" class="att-day-input" value="22" step="0.5" min="0" max="31" onchange="recalcRow(this)"></td><td><span class="badge badge-teal att-rate">100.0%</span></td><td><input type="text" class="form-input att-reason" placeholder="缺勤原因（选填）" style="font-size:12px;padding:3px 8px;border:none;background:transparent;width:100%"></td></tr>
+  </tbody></table>
+  </div></div>
+  <div class="alert alert-info">💡 <b>折算公式</b>：折算率 = 实际出勤天数 ÷ 标准工作天数 · 底薪、绩效均按折算率比例调整 · 计件单价不变（提成跟产出走）</div>
+
+</div>
+</section>
+
+<!-- ===== PAGE: Attendance List (按月份浏览考勤) ===== -->
+<section class="page" id="pg-attendance">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title">月度考勤管理</span></div><div class="topbar-actions"><input type="month" class="form-select" value="2026-09" style="width:150px"><span class="muted">每月录入考勤后可参与薪酬计算</span></div></div>
+<div class="content">
+
+<div class="card-title mb-sm" style="font-size:14px">📅 本月考勤</div>
+<div class="card salary-month-card" style="cursor:pointer;border-left:3px solid var(--amber);margin-bottom:16px" onclick="navTo('attendance-detail','2026-09')">
+  <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+    <div>
+      <div style="font-weight:600;font-size:14px;color:var(--text-primary)">2026年09月</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">标准22工作日 · 待录入考勤数据 · 全勤10人</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px">
+      <div style="text-align:right">
+        <div style="font-size:12px;color:var(--text-tertiary)">在岗人数</div>
+        <div style="font-weight:600;font-size:14px;color:var(--text-primary)">10人</div>
+      </div>
+      <span class="badge" style="background:var(--amber);font-size:12px;padding:4px 12px">⚠️ 待录入</span>
+      <span style="font-size:18px;color:var(--text-tertiary)">→</span>
+    </div>
+  </div>
+</div>
+
+<div class="card-title mb-sm" style="font-size:14px;margin-top:20px">📚 历史考勤</div>
+<div class="card" style="margin-bottom:0"><div class="card-body" style="padding:0">
+<table><thead><tr><th>月份</th><th>工作日</th><th>在岗人数</th><th>全勤占比</th><th>状态</th><th>确认时间</th><th></th></tr></thead>
+<tbody>
+<tr style="cursor:pointer" onclick="navTo('attendance-detail','2026-08')">
+  <td style="font-weight:600">2026-08</td><td class="number">22天</td><td class="number">14</td><td class="number" style="color:var(--teal)">85.7%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已录入</span></td><td>08-31 14:30 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+<tr style="cursor:pointer" onclick="navTo('attendance-detail','2026-07')">
+  <td style="font-weight:600">2026-07</td><td class="number">23天</td><td class="number">13</td><td class="number">100%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已录入</span></td><td>07-31 16:10 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+<tr style="cursor:pointer" onclick="navTo('attendance-detail','2026-06')">
+  <td style="font-weight:600">2026-06</td><td class="number">22天</td><td class="number">13</td><td class="number">92.3%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已录入</span></td><td>06-30 15:20 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+<tr style="cursor:pointer" onclick="navTo('attendance-detail','2026-05')">
+  <td style="font-weight:600">2026-05</td><td class="number">21天</td><td class="number">12</td><td class="number">91.7%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已录入</span></td><td>05-30 17:05 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+</tbody></table>
+</div></div>
+
+</div>
+</section>
+
+<!-- ===== PAGE: Salary List (按月份浏览薪酬) ===== -->
+<section class="page" id="pg-salary">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title">薪酬管理</span></div><div class="topbar-actions"><input type="month" class="form-select" value="2026-08" style="width:150px"><span class="muted">自动汇总PM产出 · HR审核确认后推送FM</span></div></div>
+<div class="content">
+
+<div class="card-title mb-sm" style="font-size:14px">📅 本月薪酬</div>
+<div class="card salary-month-card" style="cursor:pointer;border-left:3px solid var(--amber);margin-bottom:16px" onclick="navTo('salary-detail','2026-08')">
+  <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
+    <div>
+      <div style="font-weight:600;font-size:14px;color:var(--text-primary)">2026年08月</div>
+      <div style="font-size:12px;color:var(--text-secondary);margin-top:4px">标准22工作日 · 10人参保 · 考勤已录入</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:20px">
+      <div style="text-align:right">
+        <div style="font-size:12px;color:var(--text-tertiary)">预估总额</div>
+        <div style="font-weight:700;font-size:16px;color:var(--text-primary)">¥59,563</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:12px;color:var(--text-tertiary)">达标率</div>
+        <div style="font-weight:600;font-size:14px;color:var(--text-primary)">78.6%</div>
+      </div>
+      <span class="badge" style="background:var(--amber);font-size:12px;padding:4px 12px">⚠️ 待确认</span>
+      <span style="font-size:18px;color:var(--text-tertiary)">→</span>
+    </div>
+  </div>
+</div>
+
+<div class="card-title mb-sm" style="font-size:14px;margin-top:20px">📚 历史薪酬</div>
+<div class="card" style="margin-bottom:0"><div class="card-body" style="padding:0">
+<table><thead><tr><th>月份</th><th>人数</th><th>薪酬总额</th><th>人均薪酬</th><th>达标率</th><th>状态</th><th>确认时间</th><th></th></tr></thead>
+<tbody>
+<tr style="cursor:pointer" onclick="navTo('salary-detail','2026-07')">
+  <td style="font-weight:600">2026-07</td><td class="number">13</td><td class="number">¥115,600</td><td class="number">¥8,892</td><td class="number">76.9%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已确认</span></td><td>07-31 15:20 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+<tr style="cursor:pointer" onclick="navTo('salary-detail','2026-06')">
+  <td style="font-weight:600">2026-06</td><td class="number">13</td><td class="number">¥112,300</td><td class="number">¥8,638</td><td class="number">84.6%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已确认</span></td><td>06-30 16:45 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+<tr style="cursor:pointer" onclick="navTo('salary-detail','2026-05')">
+  <td style="font-weight:600">2026-05</td><td class="number">12</td><td class="number">¥108,900</td><td class="number">¥9,075</td><td class="number">83.3%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已确认</span></td><td>05-30 17:10 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+<tr style="cursor:pointer" onclick="navTo('salary-detail','2026-04')">
+  <td style="font-weight:600">2026-04</td><td class="number">11</td><td class="number">¥96,200</td><td class="number">¥8,745</td><td class="number">81.8%</td><td><span class="badge badge-teal"><span class="badge-dot"></span>已确认</span></td><td>04-30 14:55 · 陈HR</td><td><span class="muted" style="font-size:12px">查看 →</span></td>
+</tr>
+</tbody></table>
+</div></div>
+
+</div>
+</section>
+
+<!-- ===== PAGE: Salary Detail (每月薪酬计算明细) ===== -->
+<section class="page" id="pg-salary-detail">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('salary')">←</span><span class="topbar-title" style="margin-left:8px" id="salary-detail-title">薪酬明细 · 2026年08月</span></div><div class="topbar-actions"><button class="btn btn-secondary btn-sm">导出薪酬报表</button><button class="btn btn-primary teal btn-sm" onclick="showToast('薪酬已确认，成本已推送FM','ok')">确认薪酬并推送FM</button></div></div>
+<div class="content">
+
+  <div class="alert alert-warn">⚠️ 尚有 <b>3条</b> 产出未完成验收（PJ-001: 2条, PJ-003: 1条），这些产出将不计入本月薪酬。 <a href="#" style="color:var(--amber);font-weight:700">催验收</a> <a href="#" style="color:var(--text-secondary)">忽略并继续计算</a></div>
+
+  <div class="flex items-center gap-md" style="margin-bottom:4px">
+    <div class="form-group"><label class="form-label">计算月份</label><select class="form-select" style="width:150px"><option>2026-08</option><option>2026-07</option></select></div>
+    <div class="form-group" style="padding-top:20px"><span class="muted">考勤数据已录入 · 标准22工作日 · <a href="#" onclick="navTo('attendance')">查看考勤</a></span></div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card accent"><div class="stat-label">👥 总人数</div><div class="stat-value">10</div></div>
+    <div class="stat-card"><div class="stat-label">💰 薪酬总额</div><div class="stat-value">¥59,563</div></div>
+    <div class="stat-card blue"><div class="stat-label">📊 人均薪酬</div><div class="stat-value">¥5,956</div></div>
+    <div class="stat-card teal"><div class="stat-label">🎯 产出岗达标率</div><div class="stat-value">78.6%</div></div>
+  </div>
+
+  <div class="card"><div class="card-header"><span class="card-title">薪酬总览表（确认前 · 可展开+调整）</span><div class="flex gap-sm"><select class="filter-select"><option>全部岗位</option><option>编导</option><option>拍摄</option><option>剪辑</option><option>PM</option></select><select class="filter-select"><option>全部</option><option>达标</option><option>未达标</option></select></div></div><div class="card-body" style="padding:0">
+  <table><thead><tr><th>员工</th><th>岗位</th><th>出勤</th><th>加权产出</th><th>达标</th><th>底薪</th><th>绩效（HR评定）</th><th>提成（计件）</th><th>调整</th><th>合计</th><th>操作</th></tr></thead>
+  <tbody>
+  <tr onclick="toggleExpand('expand-1')" style="cursor:pointer"><td>巫昭仪</td><td>编导</td><td class="number">22/22</td><td class="number">600</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td><input type="number" class="perf-input" value="2000" onclick="event.stopPropagation()"></td><td class="number">¥1,500</td><td class="number">-</td><td class="number lg">¥8,500</td><td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openModal('modal-salary-adjust','巫昭仪')">调整</button></td></tr>
+  <tr class="expand-row" id="expand-1" style="display:none">
+    <td colspan="12" class="expand-cell">
+      <div class="card-title mb-sm">📋 薪酬分摊明细 · 巫昭仪（编导）</div>
+      <table style="margin-bottom:8px"><thead><tr><th>项目</th><th>加权产出</th><th>占比</th><th>底薪分摊</th><th>绩效分摊</th><th>提成归属</th><th>合计</th></tr></thead>
+      <tbody>
+        <tr><td>美的2026年度框架(PJ-001)</td><td class="number">215</td><td class="number">35.8%</td><td class="number">¥1,790</td><td class="number">¥716</td><td class="number">¥537</td><td class="number">¥3,043</td></tr>
+        <tr><td>松下Q1季度包(PJ-002)</td><td class="number">198</td><td class="number">33.0%</td><td class="number">¥1,650</td><td class="number">¥660</td><td class="number">¥495</td><td class="number">¥2,805</td></tr>
+        <tr><td>TCL新春campaign(PJ-003)</td><td class="number">187</td><td class="number">31.2%</td><td class="number">¥1,560</td><td class="number">¥624</td><td class="number">¥468</td><td class="number">¥2,652</td></tr>
+      </tbody></table>
+      <div class="muted">计算说明：底薪分摊 ÷ 绩效分摊 = 金额 × 加权产出占比 · 提成 = 超额100条 × ¥15/条 = ¥1,500，按超额占比归属项目</div>
+    </td>
+  </tr>
+  <tr><td>梁记</td><td>编导</td><td class="number">22/22</td><td class="number">550</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td><input type="number" class="perf-input" value="1800" onclick="event.stopPropagation()"></td><td class="number">¥750</td><td class="number">-</td><td class="number">¥7,550</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','梁记')">调整</button></td></tr>
+  <tr><td>苏韵婷</td><td>编导</td><td class="number">10/22</td><td class="number">250</td><td><span class="badge badge-amber"><span class="badge-dot"></span>未达标</span></td><td class="number">¥2,273</td><td><input type="number" class="perf-input" value="800" onclick="event.stopPropagation()"></td><td class="number">¥0</td><td class="number">-</td><td class="number">¥3,073</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','苏韵婷')">调整</button></td></tr>
+  <tr><td>李四</td><td>拍摄</td><td class="number">22/22</td><td class="number">480</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,500</td><td><input type="number" class="perf-input" value="2000" onclick="event.stopPropagation()"></td><td class="number">¥1,440</td><td class="number">-</td><td class="number">¥8,940</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','李四')">调整</button></td></tr>
+  <tr><td>soso</td><td>编导</td><td class="number">22/22</td><td class="number">350</td><td><span class="badge badge-amber"><span class="badge-dot"></span>未达标</span></td><td class="number">¥5,000</td><td><input type="number" class="perf-input" value="1000" onclick="event.stopPropagation()"></td><td class="number">¥0</td><td class="number">-</td><td class="number">¥6,000</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','soso')">调整</button></td></tr>
+  <tr><td>王PM</td><td>PM</td><td class="number">22/22</td><td>-</td><td>-</td><td class="number">¥6,000</td><td>-</td><td>-</td><td class="number">-</td><td class="number">¥6,000</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','王PM')">调整</button></td></tr>
+  <tr style="background:var(--accent-light)"><td>陈AE</td><td>AE</td><td class="number">22/22</td><td>-</td><td>-</td><td class="number">¥4,500</td><td>-</td><td>-</td><td class="number">-</td><td class="number">¥4,500</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','陈AE')">调整</button></td></tr>
+  <tr style="background:var(--accent-light)"><td>张财务</td><td>财务</td><td class="number">22/22</td><td>-</td><td>-</td><td class="number">¥5,000</td><td>-</td><td>-</td><td class="number">-</td><td class="number">¥5,000</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','张财务')">调整</button></td></tr>
+  <tr style="background:var(--accent-light)"><td>陈HR</td><td>HR</td><td class="number">22/22</td><td>-</td><td>-</td><td class="number">¥5,000</td><td>-</td><td>-</td><td class="number">-</td><td class="number">¥5,000</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','陈HR')">调整</button></td></tr>
+  <tr style="background:var(--accent-light)"><td>李仓务</td><td>仓务</td><td class="number">22/22</td><td>-</td><td>-</td><td class="number">¥5,000</td><td>-</td><td>-</td><td class="number">-</td><td class="number">¥5,000</td><td><button class="btn btn-xs btn-ghost" onclick="openModal('modal-salary-adjust','李仓务')">调整</button></td></tr>
+  <tr style="background:#fafbfc;font-weight:700"><td>合计</td><td></td><td></td><td class="number">4,820</td><td>78.6%</td><td class="number">¥48,273</td><td class="number">¥7,600</td><td class="number">¥3,690</td><td class="number">¥0</td><td class="number lg">¥59,563</td><td></td></tr>
+  <tr style="background:#f5f4ff;font-weight:600"><td colspan="3">非产出岗已计入管理费用</td><td></td><td></td><td class="number">¥25,500</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody></table>
+  </div></div>
+  <div class="row-between"><span class="muted">苏韵婷(9.15离职·折算45.5%) | 张三(9.10入职·折算68.2%) | 非产出岗5人底薪¥25,500 · PM分摊已开启(按项目数均分) · AE/财务/HR/仓务不分摊，归入管理费用(overhead) · 提成仅超出阈值部分计算</span></div>
+
+  <div class="card" style="margin-top:8px"><div class="card-header"><span class="card-title">💼 管理费用（Overhead）· 2026年08月</span><span style="font-size:11px;color:var(--text-tertiary)">非产出岗底薪｜不计入项目利润，归入公司管理费用</span></div><div class="card-body" style="padding:0">
+  <table><thead><tr><th>员工</th><th>岗位</th><th>分摊开关</th><th>底薪</th><th>分摊方式</th><th>FM归属</th></tr></thead>
+  <tbody>
+  <tr><td>王PM</td><td>PM</td><td><div class="toggle on" onclick="this.classList.toggle('on')"></div></td><td class="number">¥6,000</td><td><span class="badge badge-teal">按参与项目数均分</span></td><td>t_cost_item (allocated)</td></tr>
+  <tr><td>陈AE</td><td>AE</td><td><div class="toggle off"></div></td><td class="number">¥4,500</td><td><span class="badge badge-gray">不分摊</span></td><td>t_cost_item (overhead)</td></tr>
+  <tr><td>张财务</td><td>财务</td><td><div class="toggle off"></div></td><td class="number">¥5,000</td><td><span class="badge badge-gray">不分摊</span></td><td>t_cost_item (overhead)</td></tr>
+  <tr><td>陈HR</td><td>HR</td><td><div class="toggle off"></div></td><td class="number">¥5,000</td><td><span class="badge badge-gray">不分摊</span></td><td>t_cost_item (overhead)</td></tr>
+  <tr><td>李仓务</td><td>仓务</td><td><div class="toggle off"></div></td><td class="number">¥5,000</td><td><span class="badge badge-gray">不分摊</span></td><td>t_cost_item (overhead)</td></tr>
+  <tr style="background:#fafbfc;font-weight:600"><td>管理费用合计</td><td></td><td></td><td class="number">¥19,500</td><td></td><td><span class="muted">不计入项目利润</span></td></tr>
+  </tbody></table>
+  </div></div>
+
+</div>
+</section>
+
+<!-- ===== PAGE: Efficiency Dashboard ===== -->
+<section class="page" id="pg-efficiency">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">人效分析</span></div><div class="topbar-actions"><div class="flex items-center gap-sm"><select class="filter-select" onchange="switchEffMonth(this.value)"><option value="2026-08">2026-08</option><option value="2026-07">2026-07</option><option value="2026-06">2026-06</option></select><button class="btn btn-secondary btn-sm">导出报告</button></div></div></div>
+<div class="content">
+
+<div class="stats-grid">
+  <div class="stat-card accent"><div class="stat-label">👥 人均加权产出</div><div class="stat-value">402</div><div class="stat-sub" style="color:var(--teal)">↑ 8.1% 环比</div></div>
+  <div class="stat-card"><div class="stat-label">💰 薪酬产出比</div><div class="stat-value">¥20.4</div><div class="stat-sub" style="color:var(--teal)">每点产出成本，↓ 5.4% 环比</div></div>
+  <div class="stat-card blue"><div class="stat-label">🎯 达标率</div><div class="stat-value">78.6%</div><div class="stat-sub">5/7人达标（产出岗）</div></div>
+  <div class="stat-card teal"><div class="stat-label">🏆 人效天花板</div><div class="stat-value">620</div><div class="stat-sub">巫昭仪 · 编导 · 最高单人产出</div></div>
+  <div class="stat-card amber"><div class="stat-label">⚠️ 闲置人力</div><div class="stat-value">2人</div><div class="stat-sub">soso · 赵六 连续2月未达标</div></div>
+  <div class="stat-card"><div class="stat-label">📊 薪酬收入比</div><div class="stat-value">28.5%</div><div class="stat-sub">人力成本 ÷ 项目总收入</div></div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+<div class="card" style="margin:0"><div class="card-header"><span class="card-title">📈 近6个月人效趋势</span><span style="font-size:10px;color:var(--text-tertiary)">人均加权产出 + 薪酬产出比</span></div>
+<div class="card-body" style="padding:12px 16px 8px">
+  <div style="display:flex;gap:24px;margin-bottom:8px">
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--accent)"></span>人均加权产出</div>
+    <div style="display:flex;align-items:center;gap:6px;font-size:11px"><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(--amber)"></span>薪酬产出比 (¥/点)</div>
+  </div>
+  <div class="eff-bar" style="height:90px">
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:28px;background:var(--accent);border-radius:3px 3px 0 0;height:63px;position:relative"><span class="bar-val">370</span></div><div style="width:28px;background:var(--amber);border-radius:3px 3px 0 0;height:43px;margin-top:2px;position:relative"><span class="bar-val" style="font-size:8px">22.8</span></div><span class="bar-label">03月</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:28px;background:var(--accent);border-radius:3px 3px 0 0;height:60px;position:relative"><span class="bar-val">355</span></div><div style="width:28px;background:var(--amber);border-radius:3px 3px 0 0;height:46px;margin-top:2px;position:relative"><span class="bar-val" style="font-size:8px">22.1</span></div><span class="bar-label">04月</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:28px;background:var(--accent);border-radius:3px 3px 0 0;height:66px;position:relative"><span class="bar-val">380</span></div><div style="width:28px;background:var(--amber);border-radius:3px 3px 0 0;height:40px;margin-top:2px;position:relative"><span class="bar-val" style="font-size:8px">21.5</span></div><span class="bar-label">05月</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:28px;background:var(--accent);border-radius:3px 3px 0 0;height:68px;position:relative"><span class="bar-val">392</span></div><div style="width:28px;background:var(--amber);border-radius:3px 3px 0 0;height:38px;margin-top:2px;position:relative"><span class="bar-val" style="font-size:8px">21.2</span></div><span class="bar-label">06月</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:28px;background:var(--accent);border-radius:3px 3px 0 0;height:72px;position:relative"><span class="bar-val">405</span></div><div style="width:28px;background:var(--amber);border-radius:3px 3px 0 0;height:36px;margin-top:2px;position:relative"><span class="bar-val" style="font-size:8px">21.0</span></div><span class="bar-label">07月</span></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center"><div style="width:28px;background:var(--accent);border-radius:3px 3px 0 0;height:74px;position:relative"><span class="bar-val">418</span></div><div style="width:28px;background:var(--amber);border-radius:3px 3px 0 0;height:33px;margin-top:2px;position:relative"><span class="bar-val" style="font-size:8px">20.4</span></div><span class="bar-label">08月</span></div>
+  </div>
+  <div style="text-align:center;font-size:10px;color:var(--text-tertiary);margin-top:4px">📌 产出持续走高，单位成本稳步下降 → 人效优化趋势良好</div>
+</div></div>
+
+<div class="card" style="margin:0"><div class="card-header"><span class="card-title">🏷️ 岗位人效对比</span><span style="font-size:10px;color:var(--text-tertiary)">本月各岗位人均产出</span></div>
+<div class="card-body" style="padding:12px 16px">
+  <div style="display:flex;flex-direction:column;gap:12px">
+    <div class="eff-compare-row"><span style="width:50px;font-size:12px;font-weight:600">编导</span><div class="eff-compare-bar" style="width:100%;background:var(--accent)">480 <span style="font-size:9px;opacity:.7;margin-left:auto">5人·达标3</span></div></div>
+    <div class="eff-compare-row"><span style="width:50px;font-size:12px;font-weight:600">拍摄</span><div class="eff-compare-bar" style="width:92%;background:var(--blue)">480 <span style="font-size:9px;opacity:.7;margin-left:auto">1人·达标1</span></div></div>
+    <div class="eff-compare-row"><span style="width:50px;font-size:12px;font-weight:600">剪辑</span><div class="eff-compare-bar" style="width:88%;background:var(--teal)">460 <span style="font-size:9px;opacity:.7;margin-left:auto">1人·达标1</span></div></div>
+    <div class="eff-compare-row"><span style="width:50px;font-size:12px;font-weight:600">PM</span><div class="eff-compare-bar" style="width:32%;background:var(--purple)">— <span style="font-size:9px;opacity:.7;margin-left:auto">1人·非产出</span></div></div>
+  </div>
+</div></div>
+</div>
+
+<div class="card" style="margin-top:0"><div class="card-header"><span class="card-title">📋 员工人效排行 · 2026年08月</span><div class="flex gap-sm"><select class="filter-select"><option>全部岗位</option><option>编导</option><option>拍摄</option><option>剪辑</option></select></div></div><div class="card-body" style="padding:0">
+<table><thead><tr><th style="width:36px">#</th><th>员工</th><th>岗位</th><th>加权产出</th><th>达标</th><th>底薪</th><th>薪酬合计</th><th>薪酬产出比</th><th>人效评级</th><th>趋势</th></tr></thead>
+<tbody>
+<tr style="cursor:pointer" onclick="navTo('employee-detail','1')"><td><span class="eff-rank gold">1</span></td><td>巫昭仪</td><td>编导</td><td class="number">600</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥8,500</td><td class="number" style="color:var(--teal)">¥14.2/点</td><td><span class="eff-tag high">高产高效</span></td><td>↑ 8.3%</td></tr>
+<tr style="cursor:pointer" onclick="navTo('employee-detail','1')"><td><span class="eff-rank gold">2</span></td><td>梁记</td><td>编导</td><td class="number">550</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥7,550</td><td class="number" style="color:var(--teal)">¥13.7/点</td><td><span class="eff-tag high">高产高效</span></td><td>↑ 5.2%</td></tr>
+<tr style="cursor:pointer" onclick="navTo('employee-detail','1')"><td><span class="eff-rank gold">3</span></td><td>李四</td><td>拍摄</td><td class="number">480</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,500</td><td class="number">¥8,940</td><td class="number" style="color:var(--accent)">¥18.6/点</td><td><span class="eff-tag steady">稳定输出</span></td><td>→ 0.5%</td></tr>
+<tr style="cursor:pointer" onclick="navTo('employee-detail','1')"><td><span class="eff-rank silver">4</span></td><td>王五</td><td>剪辑</td><td class="number">460</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥6,960</td><td class="number">¥15.1/点</td><td><span class="eff-tag steady">稳定输出</span></td><td>↓ 2.1%</td></tr>
+<tr style="cursor:pointer" onclick="navTo('employee-detail','1')"><td><span class="eff-rank silver">5</span></td><td>张三</td><td>编导</td><td class="number">440</td><td><span class="badge badge-teal"><span class="badge-dot"></span>达标</span></td><td class="number">¥5,000</td><td class="number">¥6,500</td><td class="number">¥14.8/点</td><td><span class="eff-tag steady">稳定输出</span></td><td>↓ 3.5%</td></tr>
+<tr style="cursor:pointer" onclick="navTo('employee-detail','1')"><td><span class="eff-rank silver">6</span></td><td>苏韵婷</td><td>编导</td><td class="number">250</td><td><span class="badge badge-amber"><span class="badge-dot"></span>未达标</span></td><td class="number">¥2,273</td><td class="number">¥3,073</td><td class="number">¥12.3/点</td><td><span class="eff-tag warn">需关注</span></td><td>↓ 15%</td></tr>
+<tr><td><span class="eff-rank bronze">7</span></td><td>soso</td><td>编导</td><td class="number">350</td><td><span class="badge badge-amber"><span class="badge-dot"></span>未达标</span></td><td class="number">¥5,000</td><td class="number">¥6,000</td><td class="number" style="color:var(--amber)">¥17.1/点</td><td><span class="eff-tag warn">需关注</span></td><td>↓ 18%</td></tr>
+</tbody></table>
+</div></div>
+
+<div class="card"><div class="card-header"><span class="card-title">🔍 项目人效归因 · 2026年08月</span><span style="font-size:11px;color:var(--text-tertiary)">人力成本占项目收入比例</span></div><div class="card-body" style="padding:0">
+<table><thead><tr><th>项目</th><th>产出岗投入(人/次)</th><th>人力成本</th><th>项目收入</th><th>人力成本占比</th><th>人均产出</th><th>评级</th></tr></thead>
+<tbody>
+<tr><td>美的2026年度框架 (PJ-001)</td><td class="number">4</td><td class="number">¥32,500</td><td class="number">¥120,000</td><td class="number" style="color:var(--teal)">27.1%</td><td class="number">480</td><td><span class="eff-tag high">高效</span></td></tr>
+<tr><td>松下Q1季度包 (PJ-002)</td><td class="number">3</td><td class="number">¥28,200</td><td class="number">¥85,000</td><td class="number" style="color:var(--accent)">33.2%</td><td class="number">420</td><td><span class="eff-tag steady">正常</span></td></tr>
+<tr><td>TCL新春campaign (PJ-003)</td><td class="number">5</td><td class="number">¥36,800</td><td class="number">¥90,000</td><td class="number" style="color:var(--amber)">40.9%</td><td class="number">310</td><td><span class="eff-tag warn">关注</span></td></tr>
+</tbody></table>
+</div></div>
+
+</div>
+</section>
+
+<!-- ===== PAGE: Dictionary Config ===== -->
+<section class="page" id="pg-dict">
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('dashboard')">←</span><span class="topbar-title" style="margin-left:8px">字典配置</span></div></div>
+<div class="content">
+
+<div class="card"><div class="card-header"><span class="card-title">📏 难度系数字典</span><button class="btn btn-sm btn-ghost" onclick="openModal('modal-difficulty-new')">+ 添加</button></div><div class="card-body" style="padding:0">
+<table><thead><tr><th>系数名称</th><th>系数值</th><th>适用环节</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+<tbody>
+<tr><td>标准难度（15秒内）</td><td class="number">1.0</td><td>脚本/拍摄/剪辑/发布</td><td class="number">1</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>中等难度（15-30秒）</td><td class="number">1.5</td><td>脚本/拍摄/剪辑/发布</td><td class="number">2</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>高难度（30秒以上/特效）</td><td class="number">2.0</td><td>脚本/拍摄/剪辑/发布</td><td class="number">3</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>简单图文（纯图）</td><td class="number">0.8</td><td>脚本</td><td class="number">4</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>复杂图文（含数据图表）</td><td class="number">1.2</td><td>脚本</td><td class="number">5</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>大型直播</td><td class="number">2.0</td><td>拍摄</td><td class="number">6</td><td><span class="badge badge-gray"><span class="badge-dot"></span>停用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+</tbody></table>
+</div></div>
+
+<div class="card"><div class="card-header"><span class="card-title">🏷️ 岗位字典</span><button class="btn btn-sm btn-ghost" onclick="openModal('modal-position-new')">+ 添加</button></div><div class="card-body" style="padding:0">
+<table><thead><tr><th>岗位名称</th><th>岗位类型</th><th>默认分摊到项目</th><th>排序</th><th>状态</th><th>操作</th></tr></thead>
+<tbody>
+<tr><td>编导</td><td><span class="badge badge-accent">产出岗</span></td><td><span class="badge badge-teal">✅ 分摊</span></td><td class="number">1</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>拍摄</td><td><span class="badge badge-accent">产出岗</span></td><td><span class="badge badge-teal">✅ 分摊</span></td><td class="number">2</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>剪辑</td><td><span class="badge badge-accent">产出岗</span></td><td><span class="badge badge-teal">✅ 分摊</span></td><td class="number">3</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>PM</td><td><span class="badge badge-gray">非产出</span></td><td><div class="toggle on"></div></td><td class="number">4</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>AE</td><td><span class="badge badge-gray">非产出</span></td><td><div class="toggle"></div></td><td class="number">5</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>财务</td><td><span class="badge badge-gray">非产出</span></td><td><div class="toggle"></div></td><td class="number">6</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>HR</td><td><span class="badge badge-gray">非产出</span></td><td><div class="toggle"></div></td><td class="number">7</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+<tr><td>仓务</td><td><span class="badge badge-gray">非产出</span></td><td><div class="toggle"></div></td><td class="number">8</td><td><span class="badge badge-teal"><span class="badge-dot"></span>启用</span></td><td><button class="btn btn-xs btn-ghost">编辑</button></td></tr>
+</tbody></table>
+</div></div>
+</div>
+</section>
+
+</div><!-- /main -->
+
+<!-- ===== MODALS ===== -->
+
+<!-- Modal: New Difficulty Coefficient -->
+<div class="modal-overlay" id="modal-difficulty-new">
+<div class="modal">
+<div class="modal-header"><span class="modal-title">新增难度系数</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-difficulty-new')">✕</button></div>
+<div class="modal-body">
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">系数名称 *</label><input type="text" class="form-input" placeholder="如：超长视频（60秒以上）"></div>
+    <div class="form-group"><label class="form-label">系数值 *</label><input type="number" class="form-input" step="0.1" min="0.1" max="5.0" placeholder="如：2.5" style="width:120px"></div>
+  </div>
+  <div class="form-group"><label class="form-label">适用环节 *</label>
+    <div style="display:flex;gap:16px;padding:4px 0;font-size:13px">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" value="script" style="accent-color:var(--accent)" checked> 脚本（script）</label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" value="shooting" style="accent-color:var(--accent)"> 拍摄（shooting）</label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" value="editing" style="accent-color:var(--accent)"> 剪辑（editing）</label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" value="publish" style="accent-color:var(--accent)"> 发布（publish）</label>
+    </div>
+    <span class="muted" style="font-size:11px">可多选。产出登记时仅显示匹配环节的系数。</span>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">排序号</label><input type="number" class="form-input" value="7" style="width:90px"></div>
+    <div class="form-group"><label class="form-label">状态</label>
+      <select class="form-select" style="width:120px"><option>启用</option><option>停用</option></select>
+    </div>
+  </div>
+  <div class="alert alert-accent" style="margin-bottom:0">📐 <b>示例</b>：设「超长视频 60秒+」系数 2.5 → 产出登记时编导/拍摄/剪辑可选此系数 → 2.5 倍加权产出</div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-difficulty-new')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-difficulty-new');showToast('难度系数已保存','ok')">确认添加</button></div>
+</div></div>
+
+<!-- Modal: New Position -->
+<div class="modal-overlay" id="modal-position-new">
+<div class="modal">
+<div class="modal-header"><span class="modal-title">新增岗位</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-position-new')">✕</button></div>
+<div class="modal-body">
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">岗位名称 *</label><input type="text" class="form-input" placeholder="如：前台、财务主管"></div>
+    <div class="form-group"><label class="form-label">岗位类型 *</label>
+      <select class="form-select" id="new-pos-type" onchange="onNewPosTypeChange()">
+        <option value="">请选择</option>
+        <option value="production">产出岗（底薪+绩效+提成）</option>
+        <option value="non_production">非产出岗（固定月薪）</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">排序号</label><input type="number" class="form-input" value="9" style="width:90px"></div>
+    <div class="form-group"><label class="form-label">状态</label>
+      <select class="form-select" style="width:120px"><option>启用</option><option>停用</option></select>
+    </div>
+  </div>
+
+  <div class="card-title mb-sm" style="margin-top:6px">入职默认薪酬 <span style="font-weight:400;font-size:11px;color:var(--text-tertiary)">（新员工入职时表单预填值）</span></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">默认底薪 *</label><input type="number" class="form-input" id="new-pos-base" placeholder="底薪"></div>
+    <div class="form-group" id="new-pos-grp-performance"><label class="form-label">默认绩效 *（HR评定）</label><input type="number" class="form-input" id="new-pos-performance" placeholder="绩效金额"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group" id="new-pos-grp-threshold"><label class="form-label">默认达标阈值</label><input type="number" class="form-input" id="new-pos-threshold" placeholder="达标阈值"></div>
+    <div class="form-group" id="new-pos-grp-piece"><label class="form-label">默认计件单价</label><input type="number" class="form-input" id="new-pos-piece" placeholder="元/条"></div>
+  </div>
+
+  <div class="form-row" style="margin-top:6px">
+    <div class="form-group" id="new-pos-alloc-group" style="display:none"><label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="new-pos-alloc" style="accent-color:var(--accent)"> <span>默认分摊到项目</span></label><span class="muted" style="font-size:11px">非产出岗入职时默认分摊开关，员工入职后可独立修改</span></div>
+  </div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-position-new')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-position-new');showToast('岗位已保存','ok')">确认添加</button></div>
+</div></div>
+
+<!-- Modal: New Employee -->
+<div class="modal-overlay" id="modal-emp-new">
+<div class="modal wide">
+<div class="modal-header"><span class="modal-title">新员工登记</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-emp-new')">✕</button></div>
+<div class="modal-body">
+  <div class="card-title mb-sm" style="margin-top:0">基本信息</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">姓名 *</label><input type="text" class="form-input" placeholder="员工姓名"></div>
+    <div class="form-group"><label class="form-label">岗位 *</label><select class="form-select" onchange="fillSalaryDefaults(this.value)"><option>请选择</option><option>编导</option><option>拍摄</option><option>剪辑</option><option>PM</option><option>AE</option><option>财务</option><option>HR</option><option>仓务</option></select></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">部门</label><select class="form-select"><option>请选择</option><option>编导组</option><option>拍摄组</option><option>剪辑组</option><option>项目部</option><option>财务部</option><option>人资部</option></select></div>
+    <div class="form-group"><label class="form-label">入职日期 *</label><input type="date" class="form-input" value="2026-09-01"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">手机号</label><input type="text" class="form-input" placeholder="手机号"></div>
+    <div class="form-group"><label class="form-label">邮箱</label><input type="email" class="form-input" placeholder="email@example.com"></div>
+  </div>
+  <div class="card-title mb-sm" style="margin-top:6px">薪酬配置
+    <span style="font-weight:400;font-size:11px;color:var(--text-tertiary)">（选择岗位后自动填入默认值，可修改）</span>
+  </div>
+  <div class="alert alert-accent" id="salary-hint" style="margin-bottom:0">📋 请先选择岗位，系统将自动填入该岗位的入职默认薪酬</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">底薪 *</label><input type="number" class="form-input" id="input-base" placeholder="底薪"></div>
+    <div class="form-group"><label class="form-label">绩效 *（HR评定）</label><input type="number" class="form-input" id="input-performance" placeholder="绩效金额"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">达标阈值</label><input type="number" class="form-input" id="input-threshold" placeholder="达标阈值"></div>
+    <div class="form-group"><label class="form-label">计件单价</label><input type="number" class="form-input" id="input-piece" placeholder="元/条"></div>
+  </div>
+  <div class="form-row" style="margin-top:6px">
+    <div class="form-group" id="alloc-toggle-group"><label class="form-label" style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="input-alloc" style="accent-color:var(--accent)"> <span>分摊到项目</span></label><span class="muted" style="font-size:11px" id="alloc-hint">非产出岗默认关闭，入职后可在员工管理中修改</span></div>
+  </div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-emp-new')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-emp-new');showToast('员工已登记，工号 EMP-2026-016 · 薪酬 v1 已写入','ok')">确认登记</button></div>
+</div></div>
+
+<!-- Modal: Employee Transfer -->
+<div class="modal-overlay" id="modal-emp-transfer">
+<div class="modal wide">
+<div class="modal-header"><span class="modal-title" id="modal-transfer-title">办理转岗：巫昭仪</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-emp-transfer')">✕</button></div>
+<div class="modal-body">
+  <div class="card-title mb-sm" style="margin-top:0">岗位异动</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">原岗位</label><input type="text" class="form-input" id="transfer-old-pos" value="编导" readonly></div>
+    <div class="form-group"><label class="form-label">原部门</label><input type="text" class="form-input" id="transfer-old-dept" value="编导组" readonly></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">新岗位 *</label>
+      <select class="form-select" id="transfer-new-pos" onchange="onTransferPosChange()">
+        <option value="">请选择</option>
+        <option value="编导">编导</option>
+        <option value="拍摄">拍摄</option>
+        <option value="剪辑">剪辑</option>
+        <option value="PM">PM</option>
+        <option value="AE">AE</option>
+        <option value="财务">财务</option>
+        <option value="HR">HR</option>
+        <option value="仓务">仓务</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">新部门</label><input type="text" class="form-input" id="transfer-new-dept" placeholder="选择新岗位后自动填充"></div>
+  </div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">生效日期 *</label><input type="date" class="form-input" value="2026-09-01"></div>
+    <div class="form-group"><label class="form-label">转岗原因 *</label>
+      <select class="form-select">
+        <option>组织调整</option><option>业务需要</option><option>个人发展</option><option>其他</option>
+      </select>
+    </div>
+  </div>
+  <div class="card-title mb-sm" style="margin-top:8px">薪酬策略</div>
+  <div class="alert alert-info" style="margin-bottom:8px">💡 请选择本次转岗的薪酬处理方式</div>
+  <div style="display:flex;flex-direction:column;gap:8px">
+    <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer">
+      <input type="radio" name="salary-option" value="default" checked style="margin-top:3px">
+      <div>
+        <div style="font-weight:600;font-size:13px">沿用新岗位的入职默认薪酬</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">系统按新岗位字典自动写入底薪/达标阈值等，HR可在下方微调</div>
+        <div id="transfer-default-preview" style="font-size:12px;color:var(--text-tertiary);margin-top:4px">（选择新岗位后显示默认薪酬预览）</div>
+      </div>
+    </label>
+    <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer">
+      <input type="radio" name="salary-option" value="keep" style="margin-top:3px">
+      <div>
+        <div style="font-weight:600;font-size:13px">保留当前薪酬结构</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">岗位变更但薪酬不变（适用于平调或跨岗但薪酬不变动的场景）</div>
+      </div>
+    </label>
+    <label style="display:flex;align-items:flex-start;gap:8px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer">
+      <input type="radio" name="salary-option" value="custom" style="margin-top:3px">
+      <div>
+        <div style="font-weight:600;font-size:13px">手动填写新薪酬结构</div>
+        <div style="font-size:12px;color:var(--text-secondary);margin-top:2px">HR 手动填写新的底薪/达标阈值/计件单价，完全由HR自定义</div>
+      </div>
+    </label>
+  </div>
+  <div id="transfer-salary-panel" style="margin-top:10px;padding:12px;background:var(--bg-body);border-radius:8px;display:none">
+    <div class="form-row col3">
+      <div class="form-group"><label class="form-label">底薪 *</label><input type="number" class="form-input" id="transfer-base" placeholder="底薪"></div>
+      <div class="form-group"><label class="form-label">达标阈值</label><input type="number" class="form-input" id="transfer-threshold" placeholder="达标阈值"></div>
+      <div class="form-group"><label class="form-label">计件单价</label><input type="number" class="form-input" id="transfer-piece" placeholder="元/条"></div>
+    </div>
+  </div>
+  <div class="form-group" style="margin-top:8px"><label class="form-label">备注</label><textarea class="form-input" rows="2" placeholder="用于审计追溯，记录转岗详情"></textarea></div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-emp-transfer')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-emp-transfer');showToast('转岗已记录，已生成新薪酬版本','ok')">确认转岗并生成新版本</button></div>
+</div></div>
+
+<!-- Modal: Edit Employee Salary -->
+<div class="modal-overlay" id="modal-emp-salary-edit">
+<div class="modal">
+<div class="modal-header"><span class="modal-title">编辑薪酬：巫昭仪（编导）</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-emp-salary-edit')">✕</button></div>
+<div class="modal-body">
+  <div class="alert alert-info">📋 当前版本 v1 · 生效 2025-03-01 ~ 至今 · 底薪¥5,000 · 达标参考500 · 提成¥15/条（计件单价）</div>
+  <div class="card-title mb-sm">新版本 (v2)</div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">生效日期 *</label><input type="date" class="form-input" value="2026-09-01"></div>
+  </div>
+  <div class="form-row col3">
+    <div class="form-group"><label class="form-label">底薪 *</label><input type="number" class="form-input" value="5000"></div>
+    <div class="form-group"><label class="form-label">达标阈值 *</label><input type="number" class="form-input" value="500"></div>
+    <div class="form-group"><label class="form-label">计件单价 *</label><input type="number" class="form-input" value="18"></div>
+  </div>
+  <div class="alert alert-warn">⚠️ 旧版本 v1 将在 2026-08-31 自动失效。9月起薪酬计算使用新版本。历史月份不受影响。</div>
+  <div class="card-title mb-sm" style="margin-top:8px">历史版本</div>
+  <div style="font-size:12px;color:var(--text-secondary)">
+    <div style="padding:4px 0">v1 · 2025-03-01 ~ 至今 · 底薪5000/达标参考500/提成单价15 · 原始（入职时配置）</div>
+  </div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-emp-salary-edit')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-emp-salary-edit');showToast('已生成 v2 版本，9月1日起生效','ok')">确认调整，生成 v2</button></div>
+</div></div>
+
+<!-- Modal: Salary Adjustment -->
+<div class="modal-overlay" id="modal-salary-adjust">
+<div class="modal">
+<div class="modal-header"><span class="modal-title" id="modal-salary-adjust-title">薪酬调整：巫昭仪</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-salary-adjust')">✕</button></div>
+<div class="modal-body">
+  <div class="alert alert-info">📋 当前计算结果：底薪 ¥5,000 + 绩效 ¥3,500 = <b>¥8,500</b></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">调整类型 *</label><select class="form-select"><option>请选择</option><option>bonus（奖励）</option><option>deduction（扣款）</option><option>correction（修正）</option><option>other（其他）</option></select></div>
+    <div class="form-group"><label class="form-label">调整金额 *</label><input type="number" class="form-input" placeholder="正数=增加, 负数=减少"></div>
+  </div>
+  <div class="form-group"><label class="form-label">调整原因 *</label><textarea class="form-input" placeholder="必填，用于审计追溯"></textarea></div>
+  <div class="form-group"><label class="form-label">影响范围</label><select class="form-select"><option>仅影响薪酬总额（不影响分摊）</option><option>影响某个项目的分摊</option></select></div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-salary-adjust')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-salary-adjust');showToast('调整已记录，已写入审计日志','ok')">确认调整</button></div>
+</div></div>
+
+<!-- Modal: Attendance Month Setting -->
+<div class="modal-overlay" id="modal-att-setting">
+<div class="modal">
+<div class="modal-header"><span class="modal-title">考勤月份设置</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-att-setting')">✕</button></div>
+<div class="modal-body">
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">考勤月份</label>
+      <select class="form-select" id="modal-att-month">
+        <option value="2026-09">2026-09</option>
+        <option value="2026-10">2026-10</option>
+        <option value="2026-11">2026-11</option>
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">标准工作天数 *</label><input type="number" class="form-input" id="modal-att-days" value="22" min="1" max="31"></div>
+  </div>
+  <div class="muted">切换考勤月份后，系统将为所有在职员工默认填入标准天数作为全勤值，HR可在表格中修改每人实际出勤。</div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-att-setting')">取消</button><button class="btn btn-primary" onclick="applyAttSetting()">确认设置</button></div>
+</div></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+function navTo(page, param) {
+  document.querySelectorAll('.nav-item.active').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.page.active').forEach(e => e.classList.remove('active'));
+
+  const pgMap = {
+    'dashboard': 'pg-dashboard',
+    'employee': 'pg-employee',
+    'employee-detail': 'pg-employee-detail',
+    'attendance': 'pg-attendance',
+    'attendance-detail': 'pg-attendance-detail',
+    'salary': 'pg-salary',
+    'salary-detail': 'pg-salary-detail',
+    'efficiency': 'pg-efficiency',
+    'dict': 'pg-dict'
+  };
+  const pgId = pgMap[page] || 'pg-' + page;
+  const pg = document.getElementById(pgId);
+  if (pg) pg.classList.add('active');
+
+  const navItem = document.querySelector('.nav-item[data-nav="' + page + '"]');
+  if (navItem) navItem.classList.add('active');
+}
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', function() {
+    const nav = this.getAttribute('data-nav');
+    if (nav) navTo(nav);
+  });
+});
+
+function openModal(id, param) {
+  const m = document.getElementById(id);
+  if (m) m.classList.add('open');
+  if (id === 'modal-salary-adjust' && param) {
+    document.getElementById('modal-salary-adjust-title').textContent = '薪酬调整：' + param;
+  }
+  if (id === 'modal-att-setting') {
+    document.getElementById('modal-att-month').value = getAttMonth() || '2026-09';
+    document.getElementById('modal-att-days').value = getStdDays();
+  }
+  if (id === 'modal-position-new') {
+    // Reset form
+    document.querySelector('#modal-position-new input[type="text"]').value = '';
+    document.getElementById('new-pos-type').value = '';
+    document.getElementById('new-pos-base').value = '';
+    document.getElementById('new-pos-threshold').value = '';
+    document.getElementById('new-pos-perf').value = '';
+    document.getElementById('new-pos-piece').value = '';
+    document.getElementById('new-pos-alloc').checked = false;
+    document.getElementById('new-pos-alloc-group').style.display = 'none';
+    document.getElementById('new-pos-grp-threshold').style.display = '';
+    document.getElementById('new-pos-grp-piece').style.display = '';
+  }
+}
+
+function onNewPosTypeChange() {
+  var type = document.getElementById('new-pos-type').value;
+  var allocGroup = document.getElementById('new-pos-alloc-group');
+  var grpPerformance = document.getElementById('new-pos-grp-performance');
+  var grpThreshold = document.getElementById('new-pos-grp-threshold');
+  var grpPiece = document.getElementById('new-pos-grp-piece');
+  if (type === 'non_production') {
+    grpPerformance.style.display = 'none'; document.getElementById('new-pos-performance').value = '';
+    grpThreshold.style.display = 'none'; document.getElementById('new-pos-threshold').value = '';
+    grpPiece.style.display = 'none'; document.getElementById('new-pos-piece').value = '';
+    allocGroup.style.display = '';
+  } else if (type === 'production') {
+    grpPerformance.style.display = '';
+    grpThreshold.style.display = '';
+    grpPiece.style.display = '';
+    allocGroup.style.display = 'none'; document.getElementById('new-pos-alloc').checked = false;
+  }
+}
+
+function closeModal(id) {
+  const m = document.getElementById(id);
+  if (m) m.classList.remove('open');
+}
+
+document.querySelectorAll('.modal-overlay').forEach(ov => {
+  ov.addEventListener('click', function(e) {
+    if (e.target === ov) closeModal(ov.id);
+  });
+});
+
+function toggleExpand(expId) {
+  const row = document.getElementById(expId);
+  if (row) row.style.display = row.style.display === 'none' ? 'table-row' : 'none';
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast ' + (type || '') + ' show';
+  setTimeout(() => { t.classList.remove('show'); }, 2500);
+}
+
+// Employee detail tabs
+document.querySelectorAll('#detail-tabs-card .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#detail-tabs-card .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#detail-tabs-card .tab-content').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    const dtab = this.getAttribute('data-dtab');
+    const content = document.getElementById('dt-' + dtab);
+    if (content) content.classList.add('active');
+  });
+});
+
+// Salary management tabs
+document.querySelectorAll('#salary-tabs-card .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#salary-tabs-card .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#salary-tabs-card .tab-content').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    const stab = this.getAttribute('data-stab');
+    const content = document.getElementById('st-' + stab);
+    if (content) content.classList.add('active');
+  });
+});
+
+// Attendance tabs
+document.querySelectorAll('#att-tabs-card .tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('#att-tabs-card .tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('#att-tabs-card .tab-content').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    const attab = this.getAttribute('data-attab');
+    const content = document.getElementById('at-' + attab);
+    if (content) content.classList.add('active');
+  });
+});
+
+// Toggle switches in dict page
+document.querySelectorAll('.toggle').forEach(tg => {
+  tg.addEventListener('click', function() { this.classList.toggle('on'); });
+});
+
+// Salary defaults map - positions provide default values, HR can override
+const salaryDefaults = {
+  '编导': {base:5000, performance:2000, threshold:500, piece:15, type:'产出岗', allocByDefault:true},
+  '拍摄': {base:5500, performance:2000, threshold:400, piece:18, type:'产出岗', allocByDefault:true},
+  '剪辑': {base:5000, performance:1800, threshold:450, piece:16, type:'产出岗', allocByDefault:true},
+  'PM':   {base:6000, performance:null, threshold:null, piece:null, type:'非产出岗', allocByDefault:true},
+  'AE':   {base:4500, performance:null, threshold:null, piece:null, type:'非产出岗', allocByDefault:false},
+  '财务': {base:5000, performance:null, threshold:null, piece:null, type:'非产出岗', allocByDefault:false},
+  'HR':   {base:5000, performance:null, threshold:null, piece:null, type:'非产出岗', allocByDefault:false},
+  '仓务': {base:5000, performance:null, threshold:null, piece:null, type:'非产出岗', allocByDefault:false}
+};
+function fillSalaryDefaults(pos) {
+  var base = document.getElementById('input-base');
+  var performance = document.getElementById('input-performance');
+  var threshold = document.getElementById('input-threshold');
+  var piece = document.getElementById('input-piece');
+  var hint = document.getElementById('salary-hint');
+  var alloc = document.getElementById('input-alloc');
+  var allocHint = document.getElementById('alloc-hint');
+  var d = salaryDefaults[pos];
+  if (d) {
+    base.value = d.base;
+    performance.value = d.performance !== null ? d.performance : '';
+    performance.placeholder = d.performance !== null ? '绩效金额' : '（非产出岗，无需配置）';
+    performance.disabled = d.performance === null;
+    threshold.value = d.threshold !== null ? d.threshold : '';
+    threshold.placeholder = d.threshold !== null ? '达标阈值' : '（非产出岗，无需配置）';
+    threshold.disabled = d.threshold === null;
+    piece.value = d.piece !== null ? d.piece : '';
+    piece.placeholder = d.piece !== null ? '元/条' : '（非产出岗，无需配置）';
+    piece.disabled = d.piece === null;
+    hint.innerHTML = '📋 <b>' + pos + '</b>（' + d.type + '）· 薪酬已自动填入岗位默认值，可修改后确认';
+    hint.className = 'alert alert-accent';
+    // Allocate to projects toggle
+    if (alloc) {
+      alloc.checked = d.allocByDefault;
+      if (d.type === '产出岗') {
+        alloc.disabled = true; alloc.checked = true;
+        allocHint.textContent = '产出岗系统内置强制分摊，不可关闭';
+      } else {
+        alloc.disabled = false;
+        allocHint.textContent = d.allocByDefault ? '当前岗位默认开启分摊，入职后可独立修改' : '当前岗位默认关闭分摊，入职后可在员工管理中修改';
+      }
+    }
+  } else {
+    base.value = ''; performance.value = ''; threshold.value = ''; piece.value = '';
+    performance.disabled = false; threshold.disabled = false; piece.disabled = false;
+    hint.innerHTML = '📋 请先选择岗位，系统将自动填入该岗位的入职默认薪酬';
+    hint.className = 'alert alert-accent';
+    if (alloc) { alloc.checked = false; alloc.disabled = false; allocHint.textContent = '非产出岗默认关闭，入职后可在员工管理中修改'; }
+  }
+}
+
+const positionToDept = { '编导':'编导组','拍摄':'拍摄组','剪辑':'剪辑组','PM':'项目部','AE':'项目部','财务':'财务部','HR':'人资部','仓务':'仓务部' };
+
+function openTransfer(name, pos, dept) {
+  document.getElementById('modal-transfer-title').textContent = '办理转岗：' + name;
+  document.getElementById('transfer-old-pos').value = pos;
+  document.getElementById('transfer-old-dept').value = dept;
+  document.getElementById('transfer-new-pos').value = '';
+  document.getElementById('transfer-new-dept').value = '';
+  document.getElementById('transfer-default-preview').textContent = '（选择新岗位后显示默认薪酬预览）';
+  document.getElementById('transfer-salary-panel').style.display = 'none';
+  document.querySelectorAll('input[name="salary-option"]').forEach(r => r.checked = r.value === 'default');
+  openModal('modal-emp-transfer');
+}
+
+function onTransferPosChange() {
+  var pos = document.getElementById('transfer-new-pos').value;
+  var dept = document.getElementById('transfer-new-dept');
+  var preview = document.getElementById('transfer-default-preview');
+  if (pos && positionToDept[pos]) dept.value = positionToDept[pos];
+  var d = salaryDefaults[pos];
+  if (d) {
+    var parts = [];
+    parts.push('底薪¥' + d.base);
+    if (d.threshold !== null) parts.push('达标参考' + d.threshold); else parts.push('达标-');
+    if (d.piece !== null) parts.push('计件¥' + d.piece + '/条'); else parts.push('计件-');
+    preview.textContent = '默认薪酬预览：' + parts.join(' · ') + '（' + d.type + '）';
+    // auto fill custom panel inputs as well
+    var tb = document.getElementById('transfer-base'); tb.value = d.base;
+    var tt = document.getElementById('transfer-threshold'); tt.value = d.threshold !== null ? d.threshold : ''; tt.disabled = d.threshold === null;
+    var tpc = document.getElementById('transfer-piece'); tpc.value = d.piece !== null ? d.piece : ''; tpc.disabled = d.piece === null;
+  } else {
+    preview.textContent = '（选择新岗位后显示默认薪酬预览）';
+  }
+}
+
+document.querySelectorAll('input[name="salary-option"]').forEach(r => {
+  r.addEventListener('change', function() {
+    var panel = document.getElementById('transfer-salary-panel');
+    if (r.value === 'keep') panel.style.display = 'none';
+    else panel.style.display = 'block';
+  });
+});
+
+function getStdDays() {
+  return parseFloat(document.getElementById('att-info-days').textContent) || 22;
+}
+
+function getAttMonth() {
+  return document.getElementById('att-info-month').textContent.trim();
+}
+
+function recalcRow(input) {
+  var row = input.closest('tr');
+  var rateEl = row.querySelector('.att-rate');
+  var days = parseFloat(input.value) || 0;
+  var stdDays = getStdDays();
+  var rate = Math.min(days / stdDays, 1);
+  var pct = (rate * 100).toFixed(1) + '%';
+  rateEl.textContent = pct;
+  rateEl.className = 'badge att-rate';
+  if (rate >= 1) rateEl.classList.add('badge-teal');
+  else if (rate >= 0.8) rateEl.classList.add('badge-amber');
+  else rateEl.classList.add('badge-accent');
+}
+
+function recalcAll() {
+  document.querySelectorAll('.att-day-input').forEach(function(inp) { recalcRow(inp); });
+  var stdDays = getStdDays();
+  var month = getAttMonth();
+  document.getElementById('att-table-title').textContent = '员工考勤表 · ' + month + '月（标准' + stdDays + '工作日）';
+  document.getElementById('att-tab-month').textContent = month + ' · ' + stdDays + '天';
+}
+
+function saveAttendance() {
+  var rows = document.querySelectorAll('#att-edit-body tr');
+  var total = rows.length;
+  var count = 0;
+  var stdDays = getStdDays();
+  rows.forEach(function(row) {
+    var inp = row.querySelector('.att-day-input');
+    if (inp && parseFloat(inp.value) < stdDays) count++;
+  });
+  showToast('已保存 ' + total + ' 名员工考勤，' + count + ' 名非全勤', 'ok');
+}
+
+function switchEffMonth(month) {
+  showToast('已切换至人效数据 ' + month, 'ok');
+}
+
+function applyAttSetting() {
+  var month = document.getElementById('modal-att-month').value;
+  var days = document.getElementById('modal-att-days').value;
+  document.getElementById('att-info-month').textContent = month;
+  document.getElementById('att-info-days').textContent = days;
+  recalcAll();
+  closeModal('modal-att-setting');
+  showToast('考勤月份已切换至 ' + month + '，标准 ' + days + ' 工作日', 'ok');
+}
+
+function showHistAtt(month, el) {
+  document.querySelectorAll('.att-hist-chip').forEach(function(c) { c.classList.remove('active'); });
+  if (el) el.classList.add('active');
+  var body = document.getElementById('att-hist-body');
+  var data = {
+    '2026-08': [
+      ['巫昭仪','编导','在职','22/22','100%','08-31 14:30'],
+      ['梁记','编导','在职','21/22','95.5%','08-31 14:30'],
+      ['苏韵婷','编导','在职','22/22','100%','08-31 14:30'],
+      ['李四','拍摄','在职','22/22','100%','08-31 14:30'],
+      ['王五','剪辑','在职','22/22','100%','08-31 14:30'],
+      ['赵六','剪辑','8.15离职','11/22','50.0%','08-31 14:30'],
+      ['王PM','PM','在职','22/22','100%','08-31 14:30']
+    ],
+    '2026-07': [
+      ['巫昭仪','编导','在职','23/23','100%','07-31 14:00'],
+      ['梁记','编导','在职','22/23','95.7%','07-31 14:00'],
+      ['苏韵婷','编导','在职','23/23','100%','07-31 14:00'],
+      ['李四','拍摄','在职','23/23','100%','07-31 14:00'],
+      ['王五','剪辑','在职','23/23','100%','07-31 14:00'],
+      ['赵六','剪辑','在职','23/23','100%','07-31 14:00'],
+      ['王PM','PM','在职','23/23','100%','07-31 14:00']
+    ],
+    '2026-06': [
+      ['巫昭仪','编导','在职','22/22','100%','06-30 14:00'],
+      ['梁记','编导','在职','21.5/22','97.7%','06-30 14:00'],
+      ['苏韵婷','编导','在职','22/22','100%','06-30 14:00'],
+      ['李四','拍摄','在职','20/22','90.9%','06-30 14:00'],
+      ['王五','剪辑','在职','22/22','100%','06-30 14:00'],
+      ['赵六','剪辑','在职','22/22','100%','06-30 14:00'],
+      ['王PM','PM','在职','22/22','100%','06-30 14:00']
+    ],
+    '2026-05': [
+      ['巫昭仪','编导','在职','21/21','100%','05-31 14:00'],
+      ['梁记','编导','在职','21/21','100%','05-31 14:00'],
+      ['苏韵婷','编导','在职','21/21','100%','05-31 14:00'],
+      ['李四','拍摄','在职','20/21','95.2%','05-31 14:00'],
+      ['王五','剪辑','在职','21/21','100%','05-31 14:00'],
+      ['赵六','剪辑','在职','21/21','100%','05-31 14:00'],
+      ['王PM','PM','在职','21/21','100%','05-31 14:00']
+    ],
+    '2026-04': [
+      ['巫昭仪','编导','在职','22/22','100%','04-30 14:00'],
+      ['梁记','编导','在职','22/22','100%','04-30 14:00'],
+      ['苏韵婷','编导','在职','22/22','100%','04-30 14:00'],
+      ['李四','拍摄','在职','22/22','100%','04-30 14:00'],
+      ['王五','剪辑','在职','22/22','100%','04-30 14:00'],
+      ['赵六','剪辑','在职','22/22','100%','04-30 14:00'],
+      ['王PM','PM','在职','22/22','100%','04-30 14:00']
+    ]
+  };
+  var rows = data[month] || [];
+  var html = '';
+  rows.forEach(function(r) {
+    var rate = parseFloat(r[4]);
+    var rateCls = 'badge badge-teal';
+    if (rate < 80) rateCls = 'badge badge-accent';
+    else if (rate < 100) rateCls = 'badge badge-amber';
+    var statusCls = r[2].indexOf('离职') >= 0 ? 'badge badge-gray' : 'badge badge-teal';
+    html += '<tr' + (r[2].indexOf('离职') >= 0 ? ' style="background:var(--accent-light)"' : '') + '>';
+    html += '<td>' + r[0] + '</td><td>' + r[1] + '</td>';
+    html += '<td><span class="' + statusCls + '"><span class="badge-dot"></span>' + r[2] + '</span></td>';
+    html += '<td class="number">' + r[3] + '</td>';
+    html += '<td><span class="' + rateCls + '">' + r[4] + '</span></td>';
+    html += '<td>' + r[5] + '</td><td>陈HR</td></tr>';
+  });
+  body.innerHTML = html;
+}
+</script>
+</body>
+</html>
