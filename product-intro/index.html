@@ -1,10 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>内容运营业财PMS-AI解决方案 | 产品介绍</title>
   <style>
+
     :root {
       --ink: #0f172a;
       --body: #334155;
@@ -57,24 +58,6 @@
       text-decoration: none;
     }
 
-    .back-home {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 6px 14px;
-      border-radius: 20px;
-      background: rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.85);
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.02em;
-      transition: all 0.2s;
-      flex-shrink: 0;
-    }
-    .back-home:hover {
-      background: rgba(255,255,255,0.2);
-      color: #fff;
-    }
     .topbar {
       position: fixed;
       z-index: 50;
@@ -3388,43 +3371,106 @@
         display: none;
       }
     }
+  
+.solution-nav[hidden],
+.version-page[hidden] {
+  display: none !important;
+}
+
+.version-page {
+  display: none;
+}
+
+.version-page.is-active {
+  display: block;
+  animation: solutionReveal 0.32s ease both;
+}
+
+@keyframes solutionReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.version-menu button {
+  width: 100%;
+  display: grid;
+  gap: 3px;
+  padding: 12px 13px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 900;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+}
+
+.version-menu button small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.version-menu button:hover,
+.version-menu button.is-active {
+  background: var(--sjr-ice);
+  color: var(--sjr-blue);
+}
+
+.version-menu button:focus-visible {
+  outline: 3px solid rgba(64, 118, 225, 0.28);
+  outline-offset: 2px;
+}
+
   </style>
 </head>
 <body>
-  <header class="topbar">
-    <a href="../" class="back-home" title="返回首页">← 首页</a>
-    <details class="version-switch">
-      <summary class="brand" aria-label="切换解决方案版本">
-        <span class="brand-mark">业</span>
-        <span class="brand-text">内容运营业财PMS-AI解决方案</span>
-        <span class="brand-caret">⌄</span>
-      </summary>
-      <div class="version-menu" role="menu" aria-label="解决方案版本切换">
-        <a href="业财一体化管理平台-产品介绍网页-原始版.html#top" role="menuitem">
-          内容运营业财PMS解决方案
-          <small>标准业财一体化管理版本</small>
-        </a>
-        <a class="is-active" href="业财一体化管理平台-产品介绍网页.html#top" role="menuitem">
-          内容运营业财PMS-AI解决方案
-          <small>融合AI问数与经营助理版本</small>
-        </a>
-      </div>
-    </details>
-    <nav class="nav" aria-label="页面导航">
-      <a href="#pain">经营挑战</a>
-      <a href="#flow">业务闭环</a>
-      <a href="#value-stream">主价值流</a>
-      <a href="#ai-flow">AI问数</a>
-      <a href="#diagrams">流程图谱</a>
-      <a href="#delights">应用价值</a>
-      <a href="#modules">四大模块</a>
-      <a href="#linkage">联动价值</a>
-      <a href="#dashboard">驾驶舱</a>
-      <a href="#launch">落地路径</a>
-    </nav>
-  </header>
+<header class="topbar">
+  <details class="version-switch">
+    <summary class="brand" aria-label="切换解决方案版本">
+      <span class="brand-mark">业</span>
+      <span class="brand-text" data-version-label>内容运营业财PMS-AI解决方案</span>
+      <span class="brand-caret">⌄</span>
+    </summary>
+    <div class="version-menu" role="menu" aria-label="解决方案版本切换">
+      <button type="button" data-version-target="standard" role="menuitem">
+        内容运营业财PMS解决方案
+        <small>标准业财一体化管理版本</small>
+      </button>
+      <button class="is-active" type="button" data-version-target="ai" role="menuitem">
+        内容运营业财PMS-AI解决方案
+        <small>融合AI问数与经营助理版本</small>
+      </button>
+    </div>
+  </details>
+  <nav class="nav solution-nav is-active" data-version-nav="ai" aria-label="PMS-AI页面导航">
+    <a href="#ai-pain">经营挑战</a>
+    <a href="#ai-flow">业务闭环</a>
+    <a href="#ai-value-stream">主价值流</a>
+    <a href="#ai-ai-flow">AI问数</a>
+    <a href="#ai-diagrams">流程图谱</a>
+    <a href="#ai-delights">应用价值</a>
+    <a href="#ai-modules">四大模块</a>
+    <a href="#ai-linkage">联动价值</a>
+    <a href="#ai-dashboard">驾驶舱</a>
+    <a href="#ai-launch">落地路径</a>
+  </nav>
+  <nav class="nav solution-nav" data-version-nav="standard" aria-label="PMS页面导航" hidden>
+    <a href="#std-pain">经营挑战</a>
+    <a href="#std-flow">业务闭环</a>
+    <a href="#std-value-stream">主价值流</a>
+    <a href="#std-diagrams">流程图谱</a>
+    <a href="#std-delights">应用价值</a>
+    <a href="#std-modules">四大模块</a>
+    <a href="#std-linkage">联动价值</a>
+    <a href="#std-dashboard">驾驶舱</a>
+    <a href="#std-launch">落地路径</a>
+  </nav>
+</header>
 
-  <main id="top">
+<main id="ai-top" class="version-page is-active" data-version="ai">
     <section class="hero">
       <div class="hero-visual" aria-hidden="true">
         <svg class="hero-orbits" viewBox="0 0 560 460" role="img" aria-label="客户、合同、项目、产出汇入经营驾驶舱的数据流">
@@ -3461,8 +3507,8 @@
         </h1>
         <p class="hero-copy">专为电商内容运营公司打造，打通客户、合同、项目、产出、薪酬、成本、对账、应收和利润，再通过AI问数经营助理，让经营结果从月底汇总变为过程可见、随问随答、可追问原因。</p>
         <div class="hero-actions">
-          <a class="btn primary" href="#modules">查看四大模块</a>
-          <a class="btn secondary" href="#ai-flow">查看AI问数流程</a>
+          <a class="btn primary" href="#ai-modules">查看四大模块</a>
+          <a class="btn secondary" href="#ai-ai-flow">查看AI问数流程</a>
         </div>
       </div>
       <div class="hero-strip" aria-label="核心指标">
@@ -3473,7 +3519,7 @@
       </div>
     </section>
 
-    <section id="pain">
+    <section id="ai-pain">
       <p class="section-kicker">经营管理现状</p>
       <h2 class="section-title">
         <span class="title-line">现有问题并非缺少数据</span>
@@ -3499,7 +3545,7 @@
       </div>
     </section>
 
-    <div class="flow-band" id="flow">
+    <div class="flow-band" id="ai-flow">
       <section>
         <p class="section-kicker">核心业务闭环</p>
         <h2 class="section-title">
@@ -3521,7 +3567,7 @@
       </section>
     </div>
 
-    <div class="value-stream" id="value-stream">
+    <div class="value-stream" id="ai-value-stream">
       <section>
         <p class="section-kicker">重要实践</p>
         <h2 class="section-title">
@@ -3601,7 +3647,7 @@
       </section>
     </div>
 
-    <div class="ai-flow" id="ai-flow">
+    <div class="ai-flow" id="ai-ai-flow">
       <section>
         <p class="section-kicker">AI经营问数</p>
         <h2 class="section-title">
@@ -3864,7 +3910,7 @@
       </section>
     </div>
 
-    <section id="diagrams">
+    <section id="ai-diagrams">
       <p class="section-kicker">经营流程蓝图</p>
       <h2 class="section-title">
         <span class="title-line">关键业务流程全景展开</span>
@@ -3872,17 +3918,17 @@
       </h2>
       <p class="section-lead">围绕业务断点、系统运转、模块联动和经营结果，将客户、合同、项目、产出、薪酬、成本、对账、回款串成一套可追踪的经营闭环。</p>
       <div class="diagram-index">
-        <a href="#diagram-current">现状全景</a>
-        <a href="#diagram-before-after">上线前后</a>
-        <a href="#diagram-nine">9步闭环</a>
-        <a href="#diagram-crm">CRM流程</a>
-        <a href="#diagram-pm">PM泳道</a>
-        <a href="#diagram-fm">FM财务</a>
-        <a href="#diagram-hr">HR薪酬</a>
-        <a href="#diagram-arch">经营架构</a>
+        <a href="#ai-diagram-current">现状全景</a>
+        <a href="#ai-diagram-before-after">上线前后</a>
+        <a href="#ai-diagram-nine">9步闭环</a>
+        <a href="#ai-diagram-crm">CRM流程</a>
+        <a href="#ai-diagram-pm">PM泳道</a>
+        <a href="#ai-diagram-fm">FM财务</a>
+        <a href="#ai-diagram-hr">HR薪酬</a>
+        <a href="#ai-diagram-arch">经营架构</a>
       </div>
 
-      <article class="diagram-block" id="diagram-current" style="--accent: var(--coral); --weak: var(--coral-weak)">
+      <article class="diagram-block" id="ai-diagram-current" style="--accent: var(--coral); --weak: var(--coral-weak)">
         <div class="diagram-head">
           <div>
             <h3>现状全景：手工运转的“表格帝国”</h3>
@@ -3905,7 +3951,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-before-after" style="--accent: var(--teal); --weak: var(--teal-weak)">
+      <article class="diagram-block" id="ai-diagram-before-after" style="--accent: var(--teal); --weak: var(--teal-weak)">
         <div class="diagram-head">
           <div>
             <h3>从“表格记录”升级为“系统闭环”</h3>
@@ -3942,7 +3988,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-nine" style="--accent: var(--amber); --weak: var(--amber-weak)">
+      <article class="diagram-block" id="ai-diagram-nine" style="--accent: var(--amber); --weak: var(--amber-weak)">
         <div class="diagram-head">
           <div>
             <h3>项目全生命周期：9步业务闭环</h3>
@@ -3972,7 +4018,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+      <article class="diagram-block" id="ai-diagram-crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
         <div class="diagram-head">
           <div>
             <h3>CRM流程：客户层级、合同生命周期、结算规则</h3>
@@ -4018,7 +4064,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+      <article class="diagram-block" id="ai-diagram-pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
         <div class="diagram-head">
           <div>
             <h3>PM流程：多角色协同泳道 + 任务状态流转 + 强制卡点</h3>
@@ -4061,7 +4107,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-fm" style="--accent: var(--green); --weak: var(--green-weak)">
+      <article class="diagram-block" id="ai-diagram-fm" style="--accent: var(--green); --weak: var(--green-weak)">
         <div class="diagram-head">
           <div>
             <h3>FM流程：成本自动归集、月度对账、应收回款</h3>
@@ -4108,7 +4154,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+      <article class="diagram-block" id="ai-diagram-hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
         <div class="diagram-head">
           <div>
             <h3>HR流程：薪酬自动计算 + 成本精准分摊</h3>
@@ -4143,7 +4189,7 @@
         </div>
       </article>
 
-      <article class="diagram-block" id="diagram-arch" style="--accent: var(--teal); --weak: var(--teal-weak)">
+      <article class="diagram-block" id="ai-diagram-arch" style="--accent: var(--teal); --weak: var(--teal-weak)">
         <div class="diagram-head">
           <div>
             <h3>经营架构：四大核心模块 + 事件总线 + BI驾驶舱</h3>
@@ -4165,7 +4211,7 @@
       </article>
     </section>
 
-    <section id="delights">
+    <section id="ai-delights">
       <p class="section-kicker">应用价值场景</p>
       <h2 class="section-title">
         <span class="title-line">上线前后变化一眼看清</span>
@@ -4224,7 +4270,7 @@
       </div>
     </section>
 
-    <section id="modules">
+    <section id="ai-modules">
       <p class="section-kicker">四大模块</p>
       <h2 class="section-title">
         <span class="title-line">不是功能堆叠</span>
@@ -4262,7 +4308,7 @@
         </div>
 
         <div>
-          <article class="module-panel is-active" id="panel-crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <article class="module-panel is-active" id="ai-panel-crm" data-module-panel="crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
             <div class="module-header">
               <div>
                 <h3>CRM不是客户名录，而是经营底账的入口</h3>
@@ -4283,7 +4329,7 @@
             </div>
           </article>
 
-          <article class="module-panel" id="panel-pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <article class="module-panel" id="ai-panel-pm" data-module-panel="pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
             <div class="module-header">
               <div>
                 <h3>PM不是任务列表，而是多角色协同的执行中枢</h3>
@@ -4304,7 +4350,7 @@
             </div>
           </article>
 
-          <article class="module-panel" id="panel-fm" style="--accent: var(--green); --weak: var(--green-weak)">
+          <article class="module-panel" id="ai-panel-fm" data-module-panel="fm" style="--accent: var(--green); --weak: var(--green-weak)">
             <div class="module-header">
               <div>
                 <h3>FM不再月底拼账，而是在过程中看收入、成本和利润</h3>
@@ -4325,7 +4371,7 @@
             </div>
           </article>
 
-          <article class="module-panel" id="panel-hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+          <article class="module-panel" id="ai-panel-hr" data-module-panel="hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
             <div class="module-header">
               <div>
                 <h3>HR不只是算工资，而是沉淀真实人力成本和团队人效</h3>
@@ -4349,7 +4395,7 @@
       </div>
     </section>
 
-    <section id="linkage">
+    <section id="ai-linkage">
       <p class="section-kicker">四模块联动价值</p>
       <h2 class="section-title">
         <span class="title-line">核心价值在于</span>
@@ -4396,7 +4442,7 @@
       </div>
     </section>
 
-    <section class="proof" id="dashboard">
+    <section class="proof" id="ai-dashboard">
       <div class="proof-copy">
         <p class="section-kicker">经营驾驶舱</p>
         <h2 class="section-title">
@@ -4424,7 +4470,7 @@
       </div>
     </section>
 
-    <section id="launch">
+    <section id="ai-launch">
       <p class="section-kicker">落地路径</p>
       <h2 class="section-title">
         <span class="title-line">先跑通一个年框客户闭环</span>
@@ -4453,23 +4499,846 @@
     </div>
   </main>
 
-  <script>
-    const tabs = Array.from(document.querySelectorAll(".module-tab"));
-    const panels = Array.from(document.querySelectorAll(".module-panel"));
+  
+<main id="std-top" class="version-page" data-version="standard" hidden>
+    <section class="hero">
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="hero-orbits" viewBox="0 0 560 460" role="img" aria-label="客户、合同、项目、产出汇入经营驾驶舱的数据流">
+          <path d="M34 298 C156 220 282 238 464 122" />
+          <path class="path-soft" d="M70 350 C198 306 338 318 514 244" />
+          <path class="path-soft" d="M104 170 C230 120 338 126 500 168" />
+          <circle cx="104" cy="260" r="5" />
+          <circle cx="204" cy="194" r="5" />
+          <circle cx="304" cy="264" r="5" />
+          <circle cx="420" cy="312" r="5" />
+        </svg>
+        <div class="hero-cockpit">
+          <div class="cockpit-title">经营驾驶舱</div>
+          <div class="cockpit-grid">
+            <span>收入</span>
+            <span>成本</span>
+            <span>利润</span>
+            <span>人效</span>
+          </div>
+        </div>
+        <div class="orbit-node orbit-client"><i></i><span>客户</span></div>
+        <div class="orbit-node orbit-contract"><i></i><span>合同</span></div>
+        <div class="orbit-node orbit-project"><i></i><span>项目</span></div>
+        <div class="orbit-node orbit-output"><i></i><span>产出</span></div>
+        <div class="metric-bubble primary"><strong>+18.5%</strong><span>收入趋势</span></div>
+        <div class="metric-bubble secondary"><strong>41%</strong><span>项目毛利</span></div>
+        <div class="metric-bubble tertiary">利润驾驶舱</div>
+      </div>
+      <div class="hero-inner">
+        <h1>
+          <span class="hero-title-line">把业务过程变成</span>
+          <span class="hero-title-line">管理层实时掌握的</span>
+          <span class="hero-title-line">经营数据</span>
+        </h1>
+        <p class="hero-copy">专为电商内容运营公司打造，打通客户、合同、项目、产出、薪酬、成本、对账、应收和利润，让经营结果从月底汇总变为过程可见。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#std-modules">查看四大模块</a>
+          <a class="btn secondary" href="#std-diagrams">查看业务流程图</a>
+        </div>
+      </div>
+      <div class="hero-strip" aria-label="核心指标">
+        <div class="hero-stat"><strong>30秒</strong><span>掌握项目进度与风险</span></div>
+        <div class="hero-stat"><strong>30分钟</strong><span>生成月度对账单</span></div>
+        <div class="hero-stat"><strong>15分钟</strong><span>完成月度薪酬核算</span></div>
+        <div class="hero-stat"><strong>实时</strong><span>查看收入、成本、利润、人效</span></div>
+      </div>
+    </section>
 
+    <section id="std-pain">
+      <p class="section-kicker">经营管理现状</p>
+      <h2 class="section-title">
+        <span class="title-line">现有问题并非缺少数据</span>
+        <span class="title-line">而是数据散在表格、微信群、Excel和合同附件里</span>
+      </h2>
+      <p class="section-lead">管理层重点关注的是：收入从哪里来，项目卡在哪里，成本花到哪里，团队效率高不高，利润到底剩多少。</p>
+      <div class="pain-grid">
+        <article class="pain-card" style="--accent: var(--teal)">
+          <b>利润不可见</b>
+          <p>20多个项目同时跑，哪个客户赚钱、哪个项目亏损，要等月底财务核算才知道。</p>
+          <p class="after">系统价值：项目、品牌、客户、公司多维利润实时可查。</p>
+        </article>
+        <article class="pain-card" style="--accent: var(--amber)">
+          <b>预算不可控</b>
+          <p>年框签了1000万，执行到一半已消耗多少、还剩多少，全靠人工算。</p>
+          <p class="after">系统价值：合同金额、已对账、已消耗、剩余额度自动更新。</p>
+        </article>
+        <article class="pain-card" style="--accent: var(--coral)">
+          <b>人效不可知</b>
+          <p>员工忙不忙、外包划不划算、哪个岗位产能紧张，管理层只能凭感觉判断。</p>
+          <p class="after">系统价值：人均产出、薪酬产出比、人力成本占比一屏呈现。</p>
+        </article>
+      </div>
+    </section>
+
+    <div class="flow-band" id="std-flow">
+      <section>
+        <p class="section-kicker">核心业务闭环</p>
+        <h2 class="section-title">
+          <span class="title-line">从客户合同到利润驾驶舱</span>
+          <span class="title-line">一条链路跑到底</span>
+        </h2>
+        <p class="section-lead">产出登记是中间枢纽：它不是简单填数量，而是同时驱动HR薪酬、FM成本、项目对账和经营利润视图。</p>
+        <div class="flow-map">
+          <div class="flow-node"><strong>客户</strong><span>客户360、集团层级、历史合作</span></div>
+          <div class="flow-node"><strong>合同</strong><span>金额、单价、KPI、补充协议</span></div>
+          <div class="flow-node"><strong>项目</strong><span>立项、预算池、里程碑</span></div>
+          <div class="flow-node"><strong>任务</strong><span>AE下单、脚本、拍摄、剪辑</span></div>
+          <div class="flow-node"><strong>产出</strong><span>数量、系数、人员、交付物</span></div>
+          <div class="flow-node"><strong>成本</strong><span>薪酬、外包、费用自动归集</span></div>
+          <div class="flow-node"><strong>对账</strong><span>匹配合同单价，生成对账单</span></div>
+          <div class="flow-node"><strong>利润</strong><span>回款、人效、毛利率、预警</span></div>
+        </div>
+        <div class="hinge">一句话：从月底汇总经营结果，升级为在业务过程中看风险、看利润、看现金流。</div>
+      </section>
+    </div>
+
+    <div class="value-stream" id="std-value-stream">
+      <section>
+        <p class="section-kicker">重要实践</p>
+        <h2 class="section-title">
+          <span class="title-line">主价值流与核心管理抓手</span>
+          <span class="title-line">是业财一体化落地的关键载体</span>
+        </h2>
+        <p class="section-lead">以客户合同为源头，以项目交付为过程，以产出登记为数据中枢，把CRM、PM、HR、FM和经营驾驶舱串成一条可管控、可追踪、可复盘的经营主线。</p>
+
+        <div class="stream-board">
+          <div class="stream-board-head">
+            <div>
+              <h3>业财一体化主价值流蓝图</h3>
+              <p>系统以客户经营、项目执行、产出核算、财务回款为主线，形成从业务发生到经营结果的全过程闭环。</p>
+            </div>
+            <div class="stream-badge">全链路经营管控</div>
+          </div>
+
+          <div class="stream-grid">
+            <article class="stream-stage">
+              <div class="stage-cap"><span>客户档案</span><span>商机跟进</span><span>集团层级</span><span>历史合作</span></div>
+              <div class="stage-core"><div><strong>客户经营链</strong><small>客户资产、合作历史、未来订单储备统一沉淀</small></div></div>
+              <div class="stage-foot"><span>客户价值</span><span>合作风险</span><span>回款表现</span><span>续签机会</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>合同录入</span><span>单价规则</span><span>KPI模板</span><span>补充协议</span></div>
+              <div class="stage-core"><div><strong>合同预算链</strong><small>合同金额、预算边界、计价口径进入系统底账</small></div></div>
+              <div class="stage-foot"><span>预算池</span><span>执行周期</span><span>付款条件</span><span>结算规则</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>项目立项</span><span>AE下单</span><span>任务看板</span><span>脚本审核</span></div>
+              <div class="stage-core"><div><strong>项目交付链</strong><small>需求、任务、责任人、截止时间、交付物全过程在线</small></div></div>
+              <div class="stage-foot"><span>进度风险</span><span>返工记录</span><span>逾期预警</span><span>验收状态</span></div>
+            </article>
+
+            <article class="stream-stage center">
+              <div class="stage-cap"><span>人员</span><span>项目</span><span>数量</span><span>系数</span></div>
+              <div class="stage-core"><div><strong>产出登记中台</strong><small>一次登记，同时驱动薪酬、成本、对账和利润</small></div></div>
+              <div class="stage-foot"><span>薪酬计算</span><span>成本归集</span><span>对账依据</span><span>经营看板</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>内部薪酬</span><span>外包成本</span><span>费用报销</span><span>供应商月结</span></div>
+              <div class="stage-core"><div><strong>业财核算链</strong><small>人力、外包、费用进入项目成本，形成真实毛利</small></div></div>
+              <div class="stage-foot"><span>成本结构</span><span>项目毛利</span><span>预算消耗</span><span>人效分析</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>月度对账</span><span>开票管理</span><span>应收账龄</span><span>回款核销</span></div>
+              <div class="stage-core"><div><strong>经营结果链</strong><small>收入、回款、利润、人效、风险最终汇总到驾驶舱</small></div></div>
+              <div class="stage-foot"><span>现金流</span><span>客户贡献</span><span>利润排行</span><span>风险预警</span></div>
+            </article>
+          </div>
+
+          <div class="stream-control">业财一体化经营主线：合同全生命周期管理 + 项目全过程交付 + 产出驱动核算 + 经营风险实时预警</div>
+
+          <div class="stream-steps" aria-label="全过程经营路径">
+            <div class="stream-step"><small>01</small>市场研判</div>
+            <div class="stream-step"><small>02</small>商机跟进</div>
+            <div class="stream-step"><small>03</small>合同签订</div>
+            <div class="stream-step"><small>04</small>项目立项</div>
+            <div class="stream-step"><small>05</small>内容生产</div>
+            <div class="stream-step"><small>06</small>产出验收</div>
+            <div class="stream-step"><small>07</small>月度对账</div>
+            <div class="stream-step"><small>08</small>应收回款</div>
+            <div class="stream-step"><small>09</small>经营复盘</div>
+          </div>
+
+          <div class="stream-grips">
+            <article class="stream-grip"><b>合同预算抓手</b><p>从合同金额、单价、KPI、补充协议开始，把预算边界提前固化，避免执行到一半才发现口径不一致。</p></article>
+            <article class="stream-grip"><b>产出核算抓手</b><p>每条交付物都带上人员、项目、数量、系数，自动进入HR薪酬与FM成本，减少月底人工拼表。</p></article>
+            <article class="stream-grip"><b>对账回款抓手</b><p>已验收交付物自动进入对账池，对账确认后生成应收、开票、回款和账龄预警。</p></article>
+            <article class="stream-grip"><b>经营决策抓手</b><p>按客户、品牌、项目、人员汇总收入、成本、利润、人效和现金流，支撑管理层快速判断经营质量。</p></article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="std-diagrams">
+      <p class="section-kicker">经营流程蓝图</p>
+      <h2 class="section-title">
+        <span class="title-line">关键业务流程全景展开</span>
+        <span class="title-line">从执行链路沉淀经营结果</span>
+      </h2>
+      <p class="section-lead">围绕业务断点、系统运转、模块联动和经营结果，将客户、合同、项目、产出、薪酬、成本、对账、回款串成一套可追踪的经营闭环。</p>
+      <div class="diagram-index">
+        <a href="#std-diagram-current">现状全景</a>
+        <a href="#std-diagram-before-after">上线前后</a>
+        <a href="#std-diagram-nine">9步闭环</a>
+        <a href="#std-diagram-crm">CRM流程</a>
+        <a href="#std-diagram-pm">PM泳道</a>
+        <a href="#std-diagram-fm">FM财务</a>
+        <a href="#std-diagram-hr">HR薪酬</a>
+        <a href="#std-diagram-arch">经营架构</a>
+      </div>
+
+      <article class="diagram-block" id="std-diagram-current" style="--accent: var(--coral); --weak: var(--coral-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>现状全景：手工运转的“表格帝国”</h3>
+            <p>每个部门都有表格，但管理层看到的是滞后的经营结果，而不是实时业务事实。</p>
+          </div>
+          <div class="diagram-tag">现状诊断图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="boss-node">
+            <strong>管理层</strong>
+            <span>这月利润多少？哪个品牌最赚钱？为什么月底才知道？</span>
+          </div>
+          <div class="role-grid">
+            <div class="role-card" style="--accent: var(--amber)"><b>PM</b><p>微信群派活，腾讯文档翻进度。</p><small>任务逾期靠喊，脚本审核靠群。</small></div>
+            <div class="role-card" style="--accent: var(--green)"><b>财务</b><p>手工对账，记忆追应收。</p><small>月结对账2-3天，逾期靠人发现。</small></div>
+            <div class="role-card" style="--accent: var(--coral)"><b>HR</b><p>手工算薪，交叉翻表。</p><small>月薪计算2-3天，出错率5%-8%。</small></div>
+            <div class="role-card" style="--accent: var(--teal)"><b>仓务</b><p>口头领用，人脑记位。</p><small>样机盘点靠人，库位全凭记忆。</small></div>
+          </div>
+          <div class="mini-note">经营挑战：公司不是没有数据，而是数据没有连成经营链路，结果只能月底拼出来。</div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-before-after" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>从“表格记录”升级为“系统闭环”</h3>
+            <p>同一条业务数据，同时服务项目管理、薪酬计算、成本归集、对账回款和经营驾驶舱。</p>
+          </div>
+          <div class="diagram-tag">价值对比图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="before-after">
+            <div class="ba-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
+              <h4>上线前</h4>
+              <ul class="ba-list">
+                <li><b>客户信息</b><span>散落在多个腾讯文档表格中</span></li>
+                <li><b>合同单价</b><span>锁在PDF里，对账时财务手动翻查</span></li>
+                <li><b>项目进度</b><span>微信群问 + 表格一行行翻</span></li>
+                <li><b>脚本审核</b><span>群里说“改一下”，版本混乱</span></li>
+                <li><b>薪酬计算</b><span>HR月底翻5-6张表手工算</span></li>
+                <li><b>应收管理</b><span>全靠财务记忆追踪</span></li>
+              </ul>
+            </div>
+            <div class="ba-arrow">系统上线</div>
+            <div class="ba-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+              <h4>上线后</h4>
+              <ul class="ba-list">
+                <li><b>客户信息</b><span>客户360，一屏展示合同与项目</span></li>
+                <li><b>合同单价</b><span>结构化存储，对账自动匹配</span></li>
+                <li><b>项目进度</b><span>甘特图+看板，30秒掌握全貌</span></li>
+                <li><b>脚本审核</b><span>系统强制卡点，全程可追溯</span></li>
+                <li><b>薪酬计算</b><span>一键生成，目标15分钟完成</span></li>
+                <li><b>应收管理</b><span>三级预警，到期自动通知</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-nine" style="--accent: var(--amber); --weak: var(--amber-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>项目全生命周期：9步业务闭环</h3>
+            <p>产出登记是中间枢纽，向下驱动HR薪酬和FM成本，向后驱动对账、应收和利润。</p>
+          </div>
+          <div class="diagram-tag">核心流程图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="node-row arrow-grid" style="--cols: 6">
+            <div class="d-node" style="--accent: var(--teal)"><strong>1. 立项</strong><span>PM关联合同、预算、里程碑</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>2. AE下单</strong><span>接收需求，指派执行人</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>3. 制脚本</strong><span>编导/外包提交脚本</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>4. 审脚本</strong><span>AE审核，通过才可拍摄</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>5. 拍摄</strong><span>场景预订、样机申领</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>6. 剪辑</strong><span>剪辑交付，形成交付物</span></div>
+          </div>
+          <div class="pivot-box">
+            <strong>产出登记：产出量 × 难度系数 = 加权产出</strong>
+            <div>一次登记，同时驱动薪酬、成本、对账和利润。</div>
+          </div>
+          <div class="node-row arrow-grid" style="--cols: 4">
+            <div class="d-node" style="--accent: var(--green)"><strong>7. 月度对账</strong><span>拉取交付物，匹配合同单价</span></div>
+            <div class="d-node" style="--accent: var(--green)"><strong>8. 决算</strong><span>收入 - 成本 = 项目利润</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>9. 关项</strong><span>归档复盘，沉淀数据</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>BI看板</strong><span>管理层查看利润、人效、回款、预算</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>CRM流程：客户层级、合同生命周期、结算规则</h3>
+            <p>CRM不是客户名录，而是后续PM立项和FM对账的经营底账。</p>
+          </div>
+          <div class="diagram-tag">CRM业务图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="split-grid">
+            <div class="split-card" style="--accent: var(--teal)">
+              <h4>客户层级架构</h4>
+              <div class="tree-grid">
+                <div class="d-node center" style="--accent: var(--teal)"><strong>集团客户：TCL集团</strong><span>集团汇总，子公司独立签约</span></div>
+                <div class="tree-branch">
+                  <div class="d-node" style="--accent: var(--teal)"><strong>TCL空调事业部</strong><span>年框合同800万/年 → 项目执行</span></div>
+                  <div class="d-node" style="--accent: var(--teal)"><strong>TCL电视事业部</strong><span>年框合同500万/年 → 项目执行</span></div>
+                  <div class="d-node" style="--accent: var(--teal)"><strong>酷友科技</strong><span>补充协议追加50万 → 临时项目</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="split-card" style="--accent: var(--amber)">
+              <h4>合同生命周期</h4>
+              <div class="node-row lifecycle" style="--cols: 5">
+                <div class="d-node" style="--accent: var(--amber)"><strong>草稿</strong><span>录入合同单价体系</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已签约</strong><span>正式签章，上传附件</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>执行中</strong><span>项目启动，月度预算</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已完成</strong><span>对账完毕，回款完毕</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已归档</strong><span>历史归档，规则留痕</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--amber); --weak: var(--amber-weak)">补充协议：追加预算、调整单价、延长合作期，自动同步到执行链路。</div>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 16px">
+            <div class="split-card" style="--accent: var(--green)">
+              <h4>标准模式 simple</h4>
+              <div class="d-node" style="--accent: var(--green)"><strong>对账金额 = Σ(产出量 × 单价 × 阶梯折扣)</strong><span>适用于大多数按条、按场、按项计价客户。</span></div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>双重考核 double_eval</h4>
+              <div class="d-node" style="--accent: var(--coral)"><strong>基本服务费50% + 考核服务费50% × KPI达成率</strong><span>适用于TCL等考核制客户，系统自动按KPI阶梯计算。</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>PM流程：多角色协同泳道 + 任务状态流转 + 强制卡点</h3>
+            <p>把“微信群派活”变成角色、状态、产出、成本全程可追踪。</p>
+          </div>
+          <div class="diagram-tag">PM执行图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="swimlane">
+            <div class="swimlane-grid">
+              <div class="lane"><div class="lane-title">仓务+场景</div><div class="d-node" style="--accent: var(--teal)"><strong>场景预订</strong><span>拍摄前锁定场景排期</span></div><div class="d-node" style="--accent: var(--teal)"><strong>样机申领</strong><span>申领、归还、盘点留痕</span></div></div>
+              <div class="lane"><div class="lane-title">项目部 PM+AE</div><div class="d-node" style="--accent: var(--amber)"><strong>PM立项</strong><span>关联合同、预算、里程碑、WBS</span></div><div class="d-node" style="--accent: var(--amber)"><strong>AE接单下单</strong><span>接收需求，选择内部或外包</span></div></div>
+              <div class="lane"><div class="lane-title">编导组/外包</div><div class="d-node" style="--accent: var(--coral)"><strong>制作脚本</strong><span>产出量×难度系数，提交审核</span></div><div class="d-node" style="--accent: var(--coral)"><strong>退回修改</strong><span>审核意见和版本记录留痕</span></div></div>
+              <div class="lane"><div class="lane-title">拍摄/剪辑/外包</div><div class="d-node" style="--accent: var(--green)"><strong>拍摄执行</strong><span>依赖脚本审核通过</span></div><div class="d-node" style="--accent: var(--green)"><strong>剪辑交付</strong><span>交付物进入验收和对账池</span></div></div>
+              <div class="lane"><div class="lane-title">人资/财务</div><div class="d-node" style="--accent: var(--teal)"><strong>薪酬计算</strong><span>产出自动进入HR规则</span></div><div class="d-node" style="--accent: var(--green)"><strong>财务对账</strong><span>交付物匹配合同单价</span></div></div>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card">
+              <h4>任务状态流转</h4>
+              <div class="status-fork">
+                <div class="d-node center" style="--accent: var(--teal)"><strong>待分配 → 进行中 → 审核中</strong><span>AE下单后自动进入任务流转</span></div>
+                <div class="fork-children">
+                  <div class="d-node" style="--accent: var(--green)"><strong>审核通过</strong><span>进入已完成</span></div>
+                  <div class="d-node" style="--accent: var(--amber)"><strong>需修改</strong><span>回到进行中</span></div>
+                  <div class="d-node" style="--accent: var(--coral)"><strong>已驳回</strong><span>回到待分配</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="split-card">
+              <h4>强制卡点机制</h4>
+              <div class="node-row arrow-grid" style="--cols: 3">
+                <div class="d-node" style="--accent: var(--amber)"><strong>脚本任务</strong><span>提交AE审核</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>AE审核</strong><span>未通过，拍摄无法开始</span></div>
+                <div class="d-node" style="--accent: var(--green)"><strong>拍摄任务</strong><span>通过后自动解锁</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--coral); --weak: var(--coral-weak)">管理价值：减少错拍、返工和责任不清。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-fm" style="--accent: var(--green); --weak: var(--green-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>FM流程：成本自动归集、月度对账、应收回款</h3>
+            <p>财务从月底拼账，变成过程核对和经营预警。</p>
+          </div>
+          <div class="diagram-tag">FM财务图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="cost-sources">
+            <div class="d-node" style="--accent: var(--teal)"><strong>内部员工产出</strong><span>编导/拍摄/剪辑产出进入HR薪酬计算</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>外包供应商产出</strong><span>按品类单价计件，进入供应商月结</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>费用报销</strong><span>差旅、设备、场地、模特、投放费用</span></div>
+          </div>
+          <div class="cost-target">
+            <strong>FM成本归集：项目总成本 = 四类成本之和</strong>
+            <div class="cost-items">
+              <span>内部计件成本</span>
+              <span>内部分摊成本</span>
+              <span>外包成本</span>
+              <span>费用成本</span>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card" style="--accent: var(--green)">
+              <h4>月度对账自动化</h4>
+              <div class="timeline-vertical">
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 1</b><p>系统自动拉取当月可对账交付物，按项目和品类汇总。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 2</b><p>自动匹配CRM合同单价，应用阶梯折扣。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 3</b><p>双重考核客户自动计算KPI服务费。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 4</b><p>一键生成对账单，提交甲方确认。</p></div>
+              </div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>应收账款生命周期</h4>
+              <div class="node-row arrow-grid" style="--cols: 4">
+                <div class="d-node" style="--accent: var(--teal)"><strong>对账确认</strong><span>应收生成</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>待开票</strong><span>科目来自对账单</span></div>
+                <div class="d-node" style="--accent: var(--green)"><strong>已开票</strong><span>待回款</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>已逾期</strong><span>三级预警升级</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--coral); --weak: var(--coral-weak)">到期前3天提醒，到期当天重点预警，逾期3天升级管理层。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>HR流程：薪酬自动计算 + 成本精准分摊</h3>
+            <p>HR算的是员工工资，FM拿到的是项目成本，两套口径不再打架。</p>
+          </div>
+          <div class="diagram-tag">HR薪酬图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="timeline-vertical">
+            <div class="timeline-step" style="--accent: var(--teal)"><b>启动</b><p>月度薪酬计算启动，系统汇总当月所有产出。</p></div>
+            <div class="timeline-step" style="--accent: var(--teal)"><b>汇总</b><p>Σ(产出量 × 难度系数)，计算员工总加权产出。</p></div>
+            <div class="timeline-step" style="--accent: var(--amber)"><b>判断</b><p>区分内部员工和外包供应商，判断是否达到保底阈值。</p></div>
+            <div class="timeline-step" style="--accent: var(--coral)"><b>计算</b><p>达标：底薪分摊 + 绩效分摊 + 计件提成；未达标：绩效为0或按规则折算。</p></div>
+            <div class="timeline-step" style="--accent: var(--green)"><b>写入</b><p>底薪、绩效、计件、外包月结全部写入FM成本归集。</p></div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card" style="--accent: var(--teal)">
+              <h4>成本分摊示例</h4>
+              <div class="d-node" style="--accent: var(--teal)"><strong>项目A：240加权产出，占40%</strong><span>底薪5000、绩效2000按40%分摊，提成按具体产出归属。</span></div>
+              <div class="d-node" style="--accent: var(--teal); margin-top: 10px"><strong>项目B：360加权产出，占60%</strong><span>底薪5000、绩效2000按60%分摊，形成真实人力成本。</span></div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>经营层可获得的信息</h4>
+              <div class="node-row" style="--cols: 2">
+                <div class="d-node" style="--accent: var(--coral)"><strong>员工人效</strong><span>人均加权产出、薪酬产出比</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>项目人力成本</strong><span>每个项目真实承担多少工资</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>岗位产能</strong><span>哪个岗位紧张，哪个岗位闲置</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>外包对比</strong><span>内部做还是外包划算</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-arch" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>经营架构：四大核心模块 + 事件总线 + BI驾驶舱</h3>
+            <p>模块关系清晰后，业务动作、财务口径和经营指标可以在同一条数据链上闭环。</p>
+          </div>
+          <div class="diagram-tag">系统架构图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="architecture-map">
+            <div class="arch-top">BI经营驾驶舱：项目利润 / 品牌盈利 / 人效分析 / 预算消耗 / 现金流预测</div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>CRM</strong><span>客户、合同、商机、单价、KPI模板</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>PM</strong><span>项目立项、AE需求、任务WBS、脚本审核、交付验收</span></div>
+            <div class="d-node" style="--accent: var(--green)"><strong>FM</strong><span>预算、成本、对账、应收、开票、回款、利润</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>HR</strong><span>员工、薪酬结构、产出登记、薪酬计算、成本分摊</span></div>
+            <div class="event-bus">事件总线：产出登记 → 薪酬计算 + 成本归集；对账确认 → 应收生成 + 预算扣减；逾期事件 → 多级预警</div>
+          </div>
+          <div class="mini-note">管理价值：所有部门不再各算各的，最终都沉淀成一套可实时查看的经营数据。</div>
+        </div>
+      </article>
+    </section>
+
+    <section id="std-delights">
+      <p class="section-kicker">应用价值场景</p>
+      <h2 class="section-title">
+        <span class="title-line">上线前后变化一眼看清</span>
+        <span class="title-line">经营管理改善可量化呈现</span>
+      </h2>
+      <p class="section-lead">围绕项目利润、预算消耗、进度风险、应收回款、成本结构与客户价值，展示从分散协作到一体化经营的升级结果。</p>
+      <div class="delight-grid">
+        <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <div class="num">场景 01</div>
+          <h3>无需等到月底，项目盈利情况过程可见</h3>
+          <div class="compare-mini">
+            <p>传统方式：经营管理者只能等财务月底汇总，发现亏损时项目已经接近结束。</p>
+            <p>系统价值：收入、内部人力、外包、费用持续归集，项目执行中即可看到预估毛利。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <div class="num">场景 02</div>
+          <h3>年框预算不再靠人算，剩余额度实时清楚</h3>
+          <div class="compare-mini">
+            <p>传统方式：合同在PDF里，执行在项目表里，预算消耗需要财务手工核对。</p>
+            <p>系统价值：对账确认自动扣减预算，已消耗、已回款、剩余额度一屏可见。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
+          <div class="num">场景 03</div>
+          <h3>项目卡点不靠问，责任人和逾期自动浮出来</h3>
+          <div class="compare-mini">
+            <p>传统方式：项目进度靠口头同步，难以及时判断卡在脚本、拍摄、剪辑还是客户确认。</p>
+            <p>系统价值：任务状态、责任人、截止时间、审核意见全留痕，风险自动暴露。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--green); --weak: var(--green-weak)">
+          <div class="num">场景 04</div>
+          <h3>钱什么时候回来，不再靠财务记忆</h3>
+          <div class="compare-mini">
+            <p>传统方式：对账确认后还要手工建立应收，逾期往往晚几天才发现。</p>
+            <p>系统价值：对账确认自动生成应收，开票、回款、逾期预警全生命周期追踪。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <div class="num">场景 05</div>
+          <h3>内部团队和外包哪个划算，有统一口径比较</h3>
+          <div class="compare-mini">
+            <p>传统方式：内部工资和外包月结各算各的，很难比较真实项目毛利。</p>
+            <p>系统价值：内部薪酬分摊和外包计件都进入项目成本，可按项目统一对比。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <div class="num">场景 06</div>
+          <h3>客户值不值得继续做，不再只看合同额</h3>
+          <div class="compare-mini">
+            <p>传统方式：大客户合同额高，但可能回款慢、返工多、毛利低。</p>
+            <p>系统价值：按客户集团看收入、成本、回款、毛利和人效，判断客户真实价值。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="std-modules">
+      <p class="section-kicker">四大模块</p>
+      <h2 class="section-title">
+        <span class="title-line">不是功能堆叠</span>
+        <span class="title-line">而是围绕经营管理视角重构业务协同</span>
+      </h2>
+      <p class="section-lead">点击左侧模块，可以快速查看每个模块解决的管理挑战与系统价值。</p>
+      <div class="module-shell">
+        <div class="module-sidebar">
+          <div class="module-tabs" role="tablist" aria-label="四大模块">
+            <button class="module-tab is-active" role="tab" aria-selected="true" data-module="crm" style="--accent: var(--teal)">
+              <b>CRM 客户与合同</b><span>客户资产与合同底账</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="pm" style="--accent: var(--amber)">
+              <b>PM 项目管理</b><span>项目进度与交付风险</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="fm" style="--accent: var(--green)">
+              <b>FM 财务管理</b><span>收入成本利润回款</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="hr" style="--accent: var(--coral)">
+              <b>HR 人力资源</b><span>薪酬成本与团队人效</span>
+            </button>
+          </div>
+          <div class="module-sidebar-card" aria-label="四大模块联动结果">
+            <div>
+              <small>联动结果</small>
+              <b>一条经营数据链跑到底</b>
+              <span>客户合同 → 项目交付 → 产出登记 → 薪酬成本 → 对账回款 → 利润驾驶舱</span>
+            </div>
+            <ul class="module-sidebar-list">
+              <li>业务动作一次录入</li>
+              <li>成本收入自动联动</li>
+              <li>经营结果实时呈现</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <article class="module-panel is-active" id="std-panel-crm" data-module-panel="crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+            <div class="module-header">
+              <div>
+                <h3>CRM不是客户名录，而是经营底账的入口</h3>
+                <p>让管理层看清客户资产、合同金额、预算余额和未来订单储备。</p>
+              </div>
+              <div class="module-badge">客户与合同底座</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>客户360视图</h4><dl><div><dt>管理挑战</dt><dd>客户信息散在AE、PM、财务各自表格和微信里。</dd></div><div><dt>系统价值</dt><dd>一个客户下的对接人、合同、项目、商机、历史合作集中展示。</dd></div></dl></div>
+              <div class="module-card"><h4>合同单价结构化</h4><dl><div><dt>管理挑战</dt><dd>财务月底翻PDF找单价，容易漏算、错算、争议多。</dd></div><div><dt>系统价值</dt><dd>视频、图文、直播等单价录入系统，立项、预算、对账自动调用。</dd></div></dl></div>
+              <div class="module-card"><h4>补充协议管理</h4><dl><div><dt>管理挑战</dt><dd>追加预算、调价、续签停留在聊天记录里，执行端不知道。</dd></div><div><dt>系统价值</dt><dd>变更留痕并同步到预算池、单价规则和项目执行链路。</dd></div></dl></div>
+              <div class="module-card"><h4>商机漏斗</h4><dl><div><dt>管理挑战</dt><dd>只能看已签合同，看不到未来订单储备。</dd></div><div><dt>系统价值</dt><dd>线索、沟通、报价、赢单、输单可视化，提前判断未来收入。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个客户合同额高，但回款慢、毛利低</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪个集团客户预算快用完，需要提前续签或追加</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>销售优先跟进哪些商机，避免下月收入断档</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="std-panel-pm" data-module-panel="pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+            <div class="module-header">
+              <div>
+                <h3>PM不是任务列表，而是多角色协同的执行中枢</h3>
+                <p>让管理层看清项目卡在哪里、谁负责、是否延期、是否影响收入。</p>
+              </div>
+              <div class="module-badge">进度与交付风险</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>合同一键立项</h4><dl><div><dt>管理挑战</dt><dd>项目和合同脱节，预算和单价靠PM手工填。</dd></div><div><dt>系统价值</dt><dd>项目自动继承合同金额、单价、KPI规则和预算口径。</dd></div></dl></div>
+              <div class="module-card"><h4>AE批量下单</h4><dl><div><dt>管理挑战</dt><dd>微信群派活容易漏人、漏数量、漏截止时间。</dd></div><div><dt>系统价值</dt><dd>按型号、内容类型、数量批量生成任务，自动进入执行人待办。</dd></div></dl></div>
+              <div class="module-card"><h4>脚本审核强制卡点</h4><dl><div><dt>管理挑战</dt><dd>脚本没定稿就拍摄，后面返工，责任还说不清。</dd></div><div><dt>系统价值</dt><dd>脚本未通过不能进入拍摄，审核意见、版本、责任人全留痕。</dd></div></dl></div>
+              <div class="module-card"><h4>产出登记</h4><dl><div><dt>管理挑战</dt><dd>产出只是表格数字，和薪酬、成本、对账没有自动关系。</dd></div><div><dt>系统价值</dt><dd>每条产出记录人员、项目、数量、系数，自动驱动薪酬和成本。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个项目逾期会影响收入确认和客户满意度</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>返工是卡在脚本审核、拍摄执行还是交付验收</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>把空闲人员调到高风险项目，避免月底集中处理</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="std-panel-fm" data-module-panel="fm" style="--accent: var(--green); --weak: var(--green-weak)">
+            <div class="module-header">
+              <div>
+                <h3>FM不再月底拼账，而是在过程中看收入、成本和利润</h3>
+                <p>让管理层无需等到月底，就能掌握项目盈利情况和回款进度。</p>
+              </div>
+              <div class="module-badge">利润与现金流</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>项目对账</h4><dl><div><dt>管理挑战</dt><dd>财务月底汇总产出、翻合同、拼Excel，慢且容易出错。</dd></div><div><dt>系统价值</dt><dd>自动拉取已验收交付物，按合同单价生成对账金额。</dd></div></dl></div>
+              <div class="module-card"><h4>成本自动归集</h4><dl><div><dt>管理挑战</dt><dd>项目过程中看不到是否超预算或亏损。</dd></div><div><dt>系统价值</dt><dd>内部人力、外包、场地、模特、投放、费用自动进入项目成本。</dd></div></dl></div>
+              <div class="module-card"><h4>应收管理</h4><dl><div><dt>管理挑战</dt><dd>钱什么时候该收、谁逾期了，靠财务记忆。</dd></div><div><dt>系统价值</dt><dd>对账确认后自动生成应收，按客户、项目、账龄查看并预警。</dd></div></dl></div>
+              <div class="module-card"><h4>利润核算</h4><dl><div><dt>管理挑战</dt><dd>最怕月底才发现项目其实亏了。</dd></div><div><dt>系统价值</dt><dd>项目、品牌、客户、公司三级利润实时计算。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪些项目毛利过低，要调整报价或执行方式</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪笔应收快逾期，责任人是谁，客户卡在哪里</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>优先催收高金额逾期款，缓解现金流压力</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="std-panel-hr" data-module-panel="hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+            <div class="module-header">
+              <div>
+                <h3>HR不只是算工资，而是沉淀真实人力成本和团队人效</h3>
+                <p>让管理层看清谁产出高、谁成本高、内部做还是外包更划算。</p>
+              </div>
+              <div class="module-badge">薪酬与人效</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>岗位与薪酬配置</h4><dl><div><dt>管理挑战</dt><dd>不同员工薪酬规则不一样，靠HR记忆容易错。</dd></div><div><dt>系统价值</dt><dd>底薪、绩效、提成、达标线、计件单价结构化配置。</dd></div></dl></div>
+              <div class="module-card"><h4>月度薪酬计算</h4><dl><div><dt>管理挑战</dt><dd>HR月底翻多张表，手工算2-3天，出错率高。</dd></div><div><dt>系统价值</dt><dd>自动读取PM产出，计算加权产出和薪酬，目标15分钟完成。</dd></div></dl></div>
+              <div class="module-card"><h4>薪酬分摊明细</h4><dl><div><dt>管理挑战</dt><dd>只知道工资总额，不知道具体落在哪些项目成本里。</dd></div><div><dt>系统价值</dt><dd>员工薪酬按项目产出比例分摊，形成真实项目人力成本。</dd></div></dl></div>
+              <div class="module-card"><h4>人效分析</h4><dl><div><dt>管理挑战</dt><dd>哪个员工高产、哪个岗位低效，只能凭感觉。</dd></div><div><dt>系统价值</dt><dd>人均加权产出、薪酬产出比、闲置人力、人力成本占比可视化。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个岗位产能不足，需要招聘或外包补位</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪个员工薪酬高但产出低，是否需要调岗或辅导</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>内部和外包按项目毛利对比，选择更划算的交付方式</b></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="std-linkage">
+      <p class="section-kicker">四模块联动价值</p>
+      <h2 class="section-title">
+        <span class="title-line">核心价值在于</span>
+        <span class="title-line">业务动作发生一次</span>
+        <span class="title-line">后续经营数据自动联动</span>
+      </h2>
+      <p class="section-lead">四大模块围绕同一套合同、项目、产出和财务数据联动，形成从合同到利润的自动经营链路。</p>
+      <div class="linkage-grid">
+        <article class="linkage-card" style="--accent: var(--teal)">
+          <b>CRM合同 → PM立项</b>
+          <p>项目不再靠PM手填口径，自动继承合同金额、单价、预算、KPI规则。管理层可在项目启动时明确合同来源与预算边界。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--amber)">
+          <b>PM产出 → HR薪酬</b>
+          <p>每条产出登记后，员工、项目、任务、数量、系数都进入薪酬计算。HR不用月底翻表，管理层也能看到产出和薪酬是否匹配。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--coral)">
+          <b>HR薪酬 → FM成本</b>
+          <p>薪酬确认后自动按项目分摊，工资不再只是公司总成本，而是能精确落到每个项目的真实人力成本里。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--green)">
+          <b>PM交付 → FM对账</b>
+          <p>已验收交付物自动进入对账池，财务不用手工汇总产出，系统按合同单价和折扣规则生成对账金额。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--green)">
+          <b>FM对账 → 应收回款</b>
+          <p>对账确认后自动生成应收、开票、回款、核销状态。管理层能看到钱在哪里、谁该催、哪笔已经逾期。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--teal)">
+          <b>全部数据 → 经营驾驶舱</b>
+          <p>客户、项目、财务、人效统一汇总，管理层可按客户、品牌、项目、人员多维查看经营表现，不再等月底听汇报。</p>
+        </article>
+      </div>
+      <div class="impact-panel">
+        <div class="impact-lead">
+          <h3>从“谁来统计”变成“系统自动沉淀”</h3>
+          <p>这才是业财一体化的核心体验：不是把表格搬到网页，而是让业务动作天然生成经营结果。</p>
+        </div>
+        <div class="impact-list">
+          <div><b>管理层无需多头追问</b><span>项目、财务、人力数据都在同一个经营视图里。</span></div>
+          <div><b>部门不用再重复录入</b><span>同一条产出驱动薪酬、成本、对账和利润。</span></div>
+          <div><b>风险不用等月底发现</b><span>逾期、超预算、低毛利、低人效都会在过程中浮现。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" id="std-dashboard">
+      <div class="proof-copy">
+        <p class="section-kicker">经营驾驶舱</p>
+        <h2 class="section-title">
+          <span class="title-line">所有流程最终汇总到</span>
+          <span class="title-line">管理层可直接理解的经营面板</span>
+        </h2>
+        <p class="section-lead">管理层打开系统，不是看一堆操作菜单，而是直接看到在途合同、已回款与应收、预估毛利率、收入趋势、客户贡献、团队人效和风险预警。</p>
+      </div>
+      <figure class="screen-frame">
+        <img src="../07-脚本工具/outputs/manual-20260611-ppt/presentations/yecai-platform/preview/slide-13.png" alt="业财一体化经营驾驶舱预览" />
+      </figure>
+    </section>
+
+    <section>
+      <p class="section-kicker">核心应用价值</p>
+      <h2 class="section-title">
+        <span class="title-line">从事后汇总</span>
+        <span class="title-line">升级为过程化经营管理</span>
+      </h2>
+      <div class="value-grid">
+        <article class="value-card" style="--accent: var(--teal)"><strong>过程实时看见</strong><span></span><p>项目进度、收入、成本、利润、回款、人效不再等月底统计。</p></article>
+        <article class="value-card" style="--accent: var(--amber)"><strong>系统自动提醒</strong><span></span><p>预算超支、任务逾期、脚本未审、应收逾期自动预警。</p></article>
+        <article class="value-card" style="--accent: var(--green)"><strong>财务变经营</strong><span></span><p>系统不仅算对账单，还支持管理层判断客户价值和项目毛利。</p></article>
+        <article class="value-card" style="--accent: var(--coral)"><strong>公司级管理</strong><span></span><p>按客户、品牌、项目、月份、人员、岗位多维度查看经营表现。</p></article>
+      </div>
+    </section>
+
+    <section id="std-launch">
+      <p class="section-kicker">落地路径</p>
+      <h2 class="section-title">
+        <span class="title-line">先跑通一个年框客户闭环</span>
+        <span class="title-line">再扩展经营驾驶舱</span>
+      </h2>
+      <p class="section-lead">建议以一个典型年框客户项目试点，验证“立项 → 下单 → 产出 → 对账 → 应收”的完整链路。</p>
+      <div class="steps">
+        <div class="step-card"><small>Phase 01</small><b>数据准备</b><p>客户、合同、单价、项目成员、薪酬规则和历史产出样例。</p></div>
+        <div class="step-card"><small>Phase 02</small><b>核心MVP</b><p>CRM合同、PM立项、AE下单、产出登记先跑起来。</p></div>
+        <div class="step-card"><small>Phase 03</small><b>业财闭环</b><p>打通HR薪酬、FM成本、月度对账、应收回款。</p></div>
+        <div class="step-card"><small>Phase 04</small><b>经营驾驶舱</b><p>汇总收入、成本、利润、回款、人效和风险预警。</p></div>
+      </div>
+    </section>
+
+    <div class="closing">
+      <section>
+        <div>
+          <h2>
+            <span class="title-line">这不是少填几张表</span>
+            <span class="title-line">而是形成实时经营仪表盘</span>
+          </h2>
+          <p>过去业务、财务、人力各算各的；上系统后，同一条业务数据贯穿客户、项目、产出、薪酬、成本、对账、回款和利润。</p>
+        </div>
+        <div class="quote-box">把“月底算账”变成“实时管理”，把“业务过程”变成“经营数据”。</div>
+      </section>
+    </div>
+  </main>
+
+  
+
+<script>
+  const solutionState = {
+    ai: {
+      label: '内容运营业财PMS-AI解决方案',
+      title: '内容运营业财PMS-AI解决方案 | 产品介绍',
+      top: 'ai-top'
+    },
+    standard: {
+      label: '内容运营业财PMS解决方案',
+      title: '内容运营业财PMS解决方案 | 产品介绍',
+      top: 'std-top'
+    }
+  };
+
+  const versionPages = Array.from(document.querySelectorAll('.version-page'));
+  const versionNavs = Array.from(document.querySelectorAll('[data-version-nav]'));
+  const versionButtons = Array.from(document.querySelectorAll('[data-version-target]'));
+  const versionLabel = document.querySelector('[data-version-label]');
+  const versionSwitch = document.querySelector('.version-switch');
+
+  function setSolutionVersion(version, shouldScroll = true) {
+    const state = solutionState[version] || solutionState.ai;
+    versionPages.forEach((page) => {
+      const active = page.dataset.version === version;
+      page.classList.toggle('is-active', active);
+      page.hidden = !active;
+    });
+    versionNavs.forEach((nav) => {
+      const active = nav.dataset.versionNav === version;
+      nav.classList.toggle('is-active', active);
+      nav.hidden = !active;
+    });
+    versionButtons.forEach((button) => {
+      const active = button.dataset.versionTarget === version;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+    versionLabel.textContent = state.label;
+    document.title = state.title;
+    versionSwitch.open = false;
+    if (shouldScroll) {
+      history.replaceState(null, '', `#${state.top}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  versionButtons.forEach((button) => {
+    button.addEventListener('click', () => setSolutionVersion(button.dataset.versionTarget));
+  });
+
+  document.querySelectorAll('.version-page').forEach((page) => {
+    const tabs = Array.from(page.querySelectorAll('.module-tab'));
+    const panels = Array.from(page.querySelectorAll('.module-panel'));
     tabs.forEach((tab) => {
-      tab.addEventListener("click", () => {
+      tab.addEventListener('click', () => {
         const target = tab.dataset.module;
         tabs.forEach((item) => {
           const active = item === tab;
-          item.classList.toggle("is-active", active);
-          item.setAttribute("aria-selected", String(active));
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-selected', String(active));
         });
         panels.forEach((panel) => {
-          panel.classList.toggle("is-active", panel.id === `panel-${target}`);
+          panel.classList.toggle('is-active', panel.dataset.modulePanel === target);
         });
       });
     });
-  </script>
+  });
+
+  const initialVersion = window.location.hash.startsWith('#std-') ? 'standard' : 'ai';
+  setSolutionVersion(initialVersion, false);
+</script>
+
 </body>
 </html>
