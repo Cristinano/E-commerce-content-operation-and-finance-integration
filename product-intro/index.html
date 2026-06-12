@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>业财一体化管理平台 | 产品介绍</title>
+  <title>内容运营业财PMS-AI解决方案 | 产品介绍</title>
   <style>
     :root {
       --ink: #0f172a;
@@ -82,6 +82,83 @@
       font-weight: 800;
       letter-spacing: 0;
       white-space: nowrap;
+    }
+
+    .version-switch {
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .version-switch summary {
+      list-style: none;
+    }
+
+    .version-switch summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .brand {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .brand-text {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-caret {
+      display: inline-grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 11px;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .version-switch[open] .brand-caret {
+      transform: rotate(180deg);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .version-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      z-index: 80;
+      width: 330px;
+      padding: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
+      backdrop-filter: blur(16px);
+    }
+
+    .version-menu a {
+      display: grid;
+      gap: 3px;
+      padding: 12px 13px;
+      border-radius: 8px;
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .version-menu a small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .version-menu a:hover,
+    .version-menu a.is-active {
+      background: var(--sjr-ice);
+      color: var(--sjr-blue);
     }
 
     .brand-mark {
@@ -814,6 +891,708 @@
       line-height: 1.6;
     }
 
+    .ai-flow {
+      width: 100%;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(64, 118, 225, 0.14), transparent 30%),
+        linear-gradient(180deg, #ffffff 0%, #edf5ff 48%, #ffffff 100%);
+    }
+
+    .ai-flow section {
+      width: min(1200px, calc(100% - 40px));
+    }
+
+    .ai-board,
+    .ai-answer-board,
+    .ai-scenario,
+    .ai-launch-map {
+      margin-top: 42px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+      box-shadow: 0 30px 92px rgba(25, 65, 165, 0.12);
+      overflow: hidden;
+    }
+
+    .ai-board {
+      padding: 28px;
+      position: relative;
+    }
+
+    .ai-board::before,
+    .ai-answer-board::before,
+    .ai-scenario::before,
+    .ai-launch-map::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(25, 65, 165, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(25, 65, 165, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 74%);
+    }
+
+    .ai-board,
+    .ai-answer-board,
+    .ai-scenario,
+    .ai-launch-map {
+      position: relative;
+    }
+
+    .ai-board > *,
+    .ai-answer-board > *,
+    .ai-scenario > *,
+    .ai-launch-map > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ai-board-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.12);
+    }
+
+    .ai-board-head h3,
+    .ai-answer-head h3,
+    .ai-scenario-head h3,
+    .ai-launch-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+
+    .ai-board-head p,
+    .ai-answer-head p,
+    .ai-scenario-head p,
+    .ai-launch-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--sjr-blue);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      box-shadow: 0 14px 34px rgba(25, 65, 165, 0.2);
+    }
+
+    .ai-architecture {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr 1.1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 26px;
+    }
+
+    .ai-source-grid,
+    .ai-output-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .ai-source-card,
+    .ai-output-card,
+    .ai-step,
+    .ai-scene-card,
+    .ai-launch-step,
+    .ai-question-chip {
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 16px 42px rgba(25, 65, 165, 0.07);
+    }
+
+    .ai-source-card,
+    .ai-output-card {
+      min-height: 118px;
+      padding: 18px;
+    }
+
+    .ai-source-card small,
+    .ai-output-card small,
+    .ai-step small,
+    .ai-scene-card small,
+    .ai-launch-step small {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ai-source-card b,
+    .ai-output-card b,
+    .ai-step b,
+    .ai-scene-card b,
+    .ai-launch-step b {
+      display: block;
+      margin-top: 6px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .ai-source-card span,
+    .ai-output-card span,
+    .ai-step span,
+    .ai-scene-card span,
+    .ai-launch-step span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ai-core {
+      display: grid;
+      align-content: center;
+      gap: 14px;
+      padding: 20px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--sjr-blue-3), var(--sjr-blue));
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 24px 72px rgba(25, 65, 165, 0.24);
+    }
+
+    .ai-core small {
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 900;
+    }
+
+    .ai-core strong {
+      color: var(--white);
+      font-size: 29px;
+      line-height: 1.15;
+    }
+
+    .ai-core p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .ai-core-flow {
+      display: grid;
+      gap: 8px;
+    }
+
+    .ai-core-flow span {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .ai-answer-board {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: stretch;
+      padding: 28px;
+    }
+
+    .ai-answer-head {
+      align-self: center;
+    }
+
+    .ai-question {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--sjr-blue), var(--sjr-blue-2));
+      color: var(--white);
+      box-shadow: 0 20px 56px rgba(25, 65, 165, 0.18);
+    }
+
+    .ai-question small {
+      display: block;
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .ai-question b {
+      display: block;
+      margin-top: 8px;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .ai-step-chain {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ai-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      align-items: center;
+      min-height: 76px;
+      padding: 14px;
+    }
+
+    .ai-step em {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: var(--sjr-blue);
+      font-style: normal;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 1px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 35px;
+      bottom: -10px;
+      width: 2px;
+      height: 10px;
+      background: rgba(25, 65, 165, 0.18);
+    }
+
+    .ai-scenario {
+      padding: 28px;
+    }
+
+    .ai-scenario-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.12);
+    }
+
+    .ai-scene-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .ai-scene-card {
+      min-height: 250px;
+      padding: 20px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .ai-scene-flow {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .ai-scene-flow span {
+      min-height: 34px;
+      display: grid;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: #23436b;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ai-cockpit-link {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .ai-mini-dashboard,
+    .ai-chat-panel {
+      min-height: 330px;
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-mini-dashboard h4,
+    .ai-chat-panel h4 {
+      margin: 0 0 16px;
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .ai-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .ai-metric {
+      min-height: 86px;
+      padding: 14px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--sjr-ice), #ffffff);
+      border: 1px solid rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-metric b {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .ai-metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ai-question-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ai-question-chip {
+      padding: 12px 14px;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .ai-question-chip b {
+      color: var(--sjr-blue);
+    }
+
+    .ai-mode-board,
+    .ai-briefing-board,
+    .ai-knowledge-board {
+      margin-top: 28px;
+      padding: 28px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+      box-shadow: 0 24px 78px rgba(25, 65, 165, 0.1);
+    }
+
+    .ai-mode-head,
+    .ai-briefing-head,
+    .ai-knowledge-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.12);
+    }
+
+    .ai-mode-head h3,
+    .ai-briefing-head h3,
+    .ai-knowledge-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+
+    .ai-mode-head p,
+    .ai-briefing-head p,
+    .ai-knowledge-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .ai-mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .ai-mode-card {
+      min-height: 250px;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-mode-card h4 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .ai-mode-card p {
+      margin: 12px 0 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .ai-mode-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ai-mode-list li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: #23436b;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .ai-briefing-flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .ai-brief-step {
+      position: relative;
+      min-height: 150px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-brief-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 42px;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: rgba(25, 65, 165, 0.22);
+    }
+
+    .ai-brief-step small,
+    .ai-knowledge-item small {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ai-brief-step b,
+    .ai-knowledge-item b {
+      display: block;
+      margin-top: 7px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .ai-brief-step span,
+    .ai-knowledge-item span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ai-brief-output {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .ai-report-preview,
+    .ai-action-preview {
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-report-preview h4,
+    .ai-action-preview h4 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .ai-report-lines,
+    .ai-action-lines {
+      display: grid;
+      gap: 9px;
+    }
+
+    .ai-report-lines span,
+    .ai-action-lines span {
+      min-height: 34px;
+      display: grid;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: #23436b;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .ai-knowledge-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr 1.08fr;
+      gap: 14px;
+      margin-top: 24px;
+      align-items: stretch;
+    }
+
+    .ai-knowledge-sources,
+    .ai-knowledge-results {
+      display: grid;
+      gap: 10px;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+    }
+
+    .ai-knowledge-item {
+      min-height: 108px;
+      padding: 14px 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 14px 42px rgba(25, 65, 165, 0.07);
+    }
+
+    .ai-knowledge-center {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      padding: 22px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--sjr-blue-3), var(--sjr-blue));
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 24px 72px rgba(25, 65, 165, 0.22);
+    }
+
+    .ai-knowledge-center small {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ai-knowledge-center strong {
+      color: var(--white);
+      font-size: 27px;
+      line-height: 1.16;
+    }
+
+    .ai-knowledge-center p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ai-knowledge-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .ai-knowledge-strip span {
+      min-height: 62px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(236, 244, 255, 0.84);
+      color: #1b3761;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ai-knowledge-strip b {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 15px;
+    }
+
+    .ai-launch-map {
+      padding: 28px;
+    }
+
+    .ai-launch-head {
+      text-align: center;
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    .ai-launch-steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .ai-launch-step {
+      position: relative;
+      min-height: 160px;
+      padding: 18px;
+    }
+
+    .ai-launch-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 48px;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: rgba(25, 65, 165, 0.22);
+    }
+
     .diagram-index {
       display: flex;
       flex-wrap: wrap;
@@ -1260,14 +2039,22 @@
       grid-template-columns: 260px 1fr;
       gap: 32px;
       margin-top: 42px;
-      align-items: start;
+      align-items: stretch;
+    }
+
+    .module-sidebar {
+      position: sticky;
+      top: 86px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-self: start;
+      min-height: 620px;
     }
 
     .module-tabs {
       display: grid;
       gap: 10px;
-      position: sticky;
-      top: 86px;
     }
 
     .module-tab {
@@ -1306,6 +2093,62 @@
 
     .module-tab.is-active span {
       color: rgba(255, 255, 255, 0.68);
+    }
+
+    .module-sidebar-card {
+      flex: 1;
+      min-height: 264px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.12);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(236, 244, 255, 0.9));
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .module-sidebar-card small {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .module-sidebar-card b {
+      display: block;
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .module-sidebar-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--body);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .module-sidebar-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .module-sidebar-list li {
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #23436b;
+      font-size: 12px;
+      font-weight: 900;
     }
 
     .module-panel {
@@ -2342,15 +3185,28 @@
       .stream-grips,
       .delight-grid,
       .decision-strip,
-      .linkage-grid {
+      .linkage-grid,
+      .ai-source-grid,
+      .ai-output-grid,
+      .ai-scene-grid,
+      .ai-mode-grid,
+      .ai-brief-output,
+      .ai-knowledge-grid {
         grid-template-columns: repeat(2, 1fr);
       }
 
-      .stream-board-head {
+      .stream-board-head,
+      .ai-board-head,
+      .ai-scenario-head,
+      .ai-mode-head,
+      .ai-briefing-head,
+      .ai-knowledge-head {
         grid-template-columns: 1fr;
       }
 
-      .stream-steps {
+      .stream-steps,
+      .ai-launch-steps,
+      .ai-briefing-flow {
         grid-template-columns: repeat(3, 1fr);
       }
 
@@ -2367,8 +3223,18 @@
       .closing section,
       .before-after,
       .split-grid,
-      .impact-panel {
+      .impact-panel,
+      .ai-architecture,
+      .ai-answer-board,
+      .ai-cockpit-link,
+      .ai-mode-grid,
+      .ai-brief-output,
+      .ai-knowledge-grid {
         grid-template-columns: 1fr;
+      }
+
+      .ai-brief-step:not(:last-child)::after {
+        display: none;
       }
 
       .ba-arrow {
@@ -2379,6 +3245,15 @@
       .module-tabs {
         position: static;
         grid-template-columns: repeat(2, 1fr);
+      }
+
+      .module-sidebar {
+        position: static;
+        min-height: 0;
+      }
+
+      .module-sidebar-card {
+        min-height: 0;
       }
 
       .quote-box {
@@ -2393,6 +3268,14 @@
 
       .brand {
         font-size: 14px;
+      }
+
+      .brand-text {
+        max-width: min(230px, calc(100vw - 112px));
+      }
+
+      .version-menu {
+        width: min(330px, calc(100vw - 36px));
       }
 
       .hero {
@@ -2432,7 +3315,17 @@
       .architecture-map,
       .stream-grid,
       .stream-grips,
-      .stream-steps {
+      .stream-steps,
+      .ai-source-grid,
+      .ai-output-grid,
+      .ai-scene-grid,
+      .ai-metric-grid,
+      .ai-launch-steps,
+      .ai-mode-grid,
+      .ai-briefing-flow,
+      .ai-brief-output,
+      .ai-knowledge-grid,
+      .ai-knowledge-strip {
         grid-template-columns: 1fr;
       }
 
@@ -2461,22 +3354,48 @@
       }
 
       .ba-list li,
-      .timeline-step {
+      .timeline-step,
+      .ai-step {
         grid-template-columns: 1fr;
+      }
+
+      .ai-step em {
+        width: 38px;
+        height: 38px;
+      }
+
+      .ai-step:not(:last-child)::after,
+      .ai-launch-step:not(:last-child)::after,
+      .ai-brief-step:not(:last-child)::after {
+        display: none;
       }
     }
   </style>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="#top" aria-label="回到顶部">
-      <span class="brand-mark">业</span>
-      <span>业财一体化管理平台</span>
-    </a>
+    <details class="version-switch">
+      <summary class="brand" aria-label="切换解决方案版本">
+        <span class="brand-mark">业</span>
+        <span class="brand-text">内容运营业财PMS-AI解决方案</span>
+        <span class="brand-caret">⌄</span>
+      </summary>
+      <div class="version-menu" role="menu" aria-label="解决方案版本切换">
+        <a href="业财一体化管理平台-产品介绍网页-原始版.html#top" role="menuitem">
+          内容运营业财PMS解决方案
+          <small>标准业财一体化管理版本</small>
+        </a>
+        <a class="is-active" href="业财一体化管理平台-产品介绍网页.html#top" role="menuitem">
+          内容运营业财PMS-AI解决方案
+          <small>融合AI问数与经营助理版本</small>
+        </a>
+      </div>
+    </details>
     <nav class="nav" aria-label="页面导航">
       <a href="#pain">经营挑战</a>
       <a href="#flow">业务闭环</a>
       <a href="#value-stream">主价值流</a>
+      <a href="#ai-flow">AI问数</a>
       <a href="#diagrams">流程图谱</a>
       <a href="#delights">应用价值</a>
       <a href="#modules">四大模块</a>
@@ -2518,20 +3437,20 @@
       <div class="hero-inner">
         <h1>
           <span class="hero-title-line">把业务过程变成</span>
-          <span class="hero-title-line">管理层实时掌握的</span>
-          <span class="hero-title-line">经营数据</span>
+          <span class="hero-title-line">管理层随时可问的</span>
+          <span class="hero-title-line">经营答案</span>
         </h1>
-        <p class="hero-copy">专为电商内容运营公司打造，打通客户、合同、项目、产出、薪酬、成本、对账、应收和利润，让经营结果从月底汇总变为过程可见。</p>
+        <p class="hero-copy">专为电商内容运营公司打造，打通客户、合同、项目、产出、薪酬、成本、对账、应收和利润，再通过AI问数经营助理，让经营结果从月底汇总变为过程可见、随问随答、可追问原因。</p>
         <div class="hero-actions">
           <a class="btn primary" href="#modules">查看四大模块</a>
-          <a class="btn secondary" href="#diagrams">查看业务流程图</a>
+          <a class="btn secondary" href="#ai-flow">查看AI问数流程</a>
         </div>
       </div>
       <div class="hero-strip" aria-label="核心指标">
         <div class="hero-stat"><strong>30秒</strong><span>掌握项目进度与风险</span></div>
-        <div class="hero-stat"><strong>30分钟</strong><span>生成月度对账单</span></div>
+        <div class="hero-stat"><strong>3分钟</strong><span>生成经营分析报告</span></div>
         <div class="hero-stat"><strong>15分钟</strong><span>完成月度薪酬核算</span></div>
-        <div class="hero-stat"><strong>实时</strong><span>查看收入、成本、利润、人效</span></div>
+        <div class="hero-stat"><strong>随时问</strong><span>查询收入、成本、利润、人效</span></div>
       </div>
     </section>
 
@@ -2596,7 +3515,7 @@
           <div class="stream-board-head">
             <div>
               <h3>业财一体化主价值流蓝图</h3>
-              <p>这张图用于向客户说明：系统不是单点工具，而是从客户经营、项目执行、产出核算到财务回款的全过程经营闭环。</p>
+              <p>系统以客户经营、项目执行、产出核算、财务回款为主线，形成从业务发生到经营结果的全过程闭环。</p>
             </div>
             <div class="stream-badge">全链路经营管控</div>
           </div>
@@ -2663,13 +3582,276 @@
       </section>
     </div>
 
+    <div class="ai-flow" id="ai-flow">
+      <section>
+        <p class="section-kicker">AI经营问数</p>
+        <h2 class="section-title">
+          <span class="title-line">AI经营问数如何接入业财闭环</span>
+          <span class="title-line">从业务数据到经营答案</span>
+        </h2>
+        <p class="section-lead">AI不是单独聊天工具，而是建立在CRM、PM、HR、FM数据闭环之上。前端业务动作沉淀为可信数据，AI再把数据转化为可追问、可解释、可行动的管理答案。</p>
+
+        <div class="ai-board">
+          <div class="ai-board-head">
+            <div>
+              <h3>AI能力融合总架构图</h3>
+              <p>业财系统负责把数据做真、做全、做连续，AI问数经营助理负责把数据转成图表、归因、预警和行动建议。</p>
+            </div>
+            <div class="ai-badge">经营智能层</div>
+          </div>
+
+          <div class="ai-architecture" aria-label="AI能力融合总架构">
+            <div class="ai-source-grid">
+              <article class="ai-source-card"><small>CRM</small><b>客户与合同</b><span>客户档案、合同单价、年框预算、补充协议、商机漏斗。</span></article>
+              <article class="ai-source-card"><small>PM</small><b>项目与产出</b><span>立项、AE下单、任务状态、脚本审核、交付验收。</span></article>
+              <article class="ai-source-card"><small>HR</small><b>薪酬与人效</b><span>员工产出、薪酬规则、成本分摊、岗位产能。</span></article>
+              <article class="ai-source-card"><small>FM</small><b>财务与回款</b><span>对账、应收、开票、回款、成本归集、利润核算。</span></article>
+            </div>
+
+            <div class="ai-core">
+              <small>统一经营数据层</small>
+              <strong>AI问数经营助理</strong>
+              <p>连接系统底账，用中文提问即可获得经营答案、图表报告、异常归因和建议动作。</p>
+              <div class="ai-core-flow">
+                <span>中文问数</span>
+                <span>图表报告</span>
+                <span>异常归因</span>
+                <span>行动建议</span>
+              </div>
+            </div>
+
+            <div class="ai-output-grid">
+              <article class="ai-output-card"><small>驾驶舱</small><b>一屏看全局</b><span>收入、成本、利润、回款、人效和风险集中呈现。</span></article>
+              <article class="ai-output-card"><small>预警中心</small><b>风险主动提醒</b><span>低毛利、预算接近阈值、应收逾期、产能不足自动浮现。</span></article>
+              <article class="ai-output-card"><small>简报中心</small><b>周报月报生成</b><span>自动整理经营复盘底稿，减少会前人工统计。</span></article>
+              <article class="ai-output-card"><small>知识库</small><b>业务口径解释</b><span>结合合同规则、SOP、薪酬制度和财务口径回答问题。</span></article>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-answer-board">
+          <div class="ai-answer-head">
+            <h3>AI问数完整链路图</h3>
+            <p>客户问一句话之后，系统会先理解业务意图，再匹配数据口径，最终输出图表、原因和建议。</p>
+            <div class="ai-question">
+              <small>示例问题</small>
+              <b>本月哪些项目毛利低于30%，主要原因是什么？</b>
+            </div>
+          </div>
+          <div class="ai-step-chain" aria-label="AI问数完整链路">
+            <div class="ai-step"><em>01</em><div><small>提问</small><b>管理层用中文提问</b><span>不需要找报表，也不需要写SQL。</span></div></div>
+            <div class="ai-step"><em>02</em><div><small>理解</small><b>识别业务意图与指标口径</b><span>判断问题对应收入、成本、利润、回款还是人效。</span></div></div>
+            <div class="ai-step"><em>03</em><div><small>查询</small><b>调用CRM、PM、HR、FM底账</b><span>从合同、产出、薪酬、成本和应收中取数。</span></div></div>
+            <div class="ai-step"><em>04</em><div><small>分析</small><b>生成图表并定位异常原因</b><span>拆解项目、客户、人员、月份和成本结构。</span></div></div>
+            <div class="ai-step"><em>05</em><div><small>行动</small><b>输出建议动作并支持继续追问</b><span>给出报价、排期、催收或成本控制建议。</span></div></div>
+          </div>
+        </div>
+
+        <div class="ai-scenario">
+          <div class="ai-scenario-head">
+            <div>
+              <h3>AI适配四个高频经营场景</h3>
+              <p>选择客户最容易理解的经营问题来展示AI价值，让AI从概念变成业务动作。</p>
+            </div>
+            <div class="ai-badge">业务场景图</div>
+          </div>
+
+          <div class="ai-scene-grid">
+            <article class="ai-scene-card">
+              <small>场景 01</small>
+              <b>项目毛利AI归因</b>
+              <span>当项目毛利偏低，AI自动拆解收入、内部薪酬、外包成本、费用和返工记录。</span>
+              <div class="ai-scene-flow">
+                <span>毛利偏低</span>
+                <span>拆收入与成本</span>
+                <span>查返工和逾期</span>
+                <span>输出报价与排期建议</span>
+              </div>
+            </article>
+            <article class="ai-scene-card">
+              <small>场景 02</small>
+              <b>年框预算AI监控</b>
+              <span>围绕年框客户，AI实时判断预算消耗、剩余额度和是否需要追加预算。</span>
+              <div class="ai-scene-flow">
+                <span>合同年框预算</span>
+                <span>项目占用预算</span>
+                <span>对账扣减预算</span>
+                <span>提醒续签或补充协议</span>
+              </div>
+            </article>
+            <article class="ai-scene-card">
+              <small>场景 03</small>
+              <b>应收回款AI预警</b>
+              <span>AI结合账龄、开票状态、客户历史回款表现，识别临期、逾期和高风险款项。</span>
+              <div class="ai-scene-flow">
+                <span>对账确认</span>
+                <span>生成应收</span>
+                <span>计算账龄风险</span>
+                <span>推送跟进建议</span>
+              </div>
+            </article>
+            <article class="ai-scene-card">
+              <small>场景 04</small>
+              <b>团队人效AI分析</b>
+              <span>AI把PM产出、HR薪酬和FM成本联动起来，判断内部团队与外包哪个更划算。</span>
+              <div class="ai-scene-flow">
+                <span>产出登记</span>
+                <span>薪酬成本</span>
+                <span>项目毛利</span>
+                <span>人员配置建议</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="ai-cockpit-link">
+            <div class="ai-mini-dashboard">
+              <h4>经营驾驶舱看到什么</h4>
+              <div class="ai-metric-grid">
+                <div class="ai-metric"><b>+18.5%</b><span>收入趋势</span></div>
+                <div class="ai-metric"><b>41%</b><span>项目毛利</span></div>
+                <div class="ai-metric"><b>86万</b><span>待回款金额</span></div>
+                <div class="ai-metric"><b>1.8</b><span>薪酬产出比</span></div>
+              </div>
+            </div>
+            <div class="ai-chat-panel">
+              <h4>AI继续回答原因</h4>
+              <div class="ai-question-list">
+                <div class="ai-question-chip"><b>收入为什么下降？</b><br />按客户、项目和交付延迟拆解影响因素。</div>
+                <div class="ai-question-chip"><b>哪些项目拉低毛利？</b><br />定位单价、薪酬、外包、费用和返工原因。</div>
+                <div class="ai-question-chip"><b>哪些客户回款风险高？</b><br />结合账龄、开票状态和历史回款表现排序。</div>
+                <div class="ai-question-chip"><b>哪个岗位产能不足？</b><br />按岗位产出、任务积压和薪酬产出比判断。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-mode-board">
+          <div class="ai-mode-head">
+            <div>
+              <h3>双模式AI入口</h3>
+              <p>一个入口既能问经营数据，也能问业务知识。经营问题交给AI问数，日常材料和制度查询交给业务助手。</p>
+            </div>
+            <div class="ai-badge">双模式对话</div>
+          </div>
+          <div class="ai-mode-grid">
+            <article class="ai-mode-card">
+              <h4>经营问数模式</h4>
+              <p>连接CRM、PM、HR、FM和经营驾驶舱，围绕收入、成本、利润、回款、人效和风险生成可视化分析。</p>
+              <ul class="ai-mode-list">
+                <li>本月哪些项目毛利低于30%</li>
+                <li>TCL年框预算还剩多少</li>
+                <li>未来30天哪些应收需要跟进</li>
+                <li>内部团队和外包哪个更划算</li>
+              </ul>
+            </article>
+            <article class="ai-mode-card">
+              <h4>业务助手模式</h4>
+              <p>连接企业知识库，辅助项目周报、客户邮件、会议纪要、合同摘要、SOP查询和制度问答。</p>
+              <ul class="ai-mode-list">
+                <li>整理本周项目进展摘要</li>
+                <li>根据对账结果生成客户沟通稿</li>
+                <li>查询某客户结算口径和交付SOP</li>
+                <li>给新人解释薪酬和产出规则</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="ai-briefing-board">
+          <div class="ai-briefing-head">
+            <div>
+              <h3>AI经营简报自动生成流程图</h3>
+              <p>系统按周或按月自动拉取经营数据，形成可直接开会使用的经营复盘材料。</p>
+            </div>
+            <div class="ai-badge">自动化工作流</div>
+          </div>
+          <div class="ai-briefing-flow" aria-label="AI经营简报自动生成流程">
+            <article class="ai-brief-step"><small>01</small><b>设定周期</b><span>按周、按月或项目节点自动触发。</span></article>
+            <article class="ai-brief-step"><small>02</small><b>拉取数据</b><span>自动读取收入、成本、利润、回款和人效。</span></article>
+            <article class="ai-brief-step"><small>03</small><b>分析风险</b><span>识别低毛利、逾期任务、预算超阈值和应收风险。</span></article>
+            <article class="ai-brief-step"><small>04</small><b>生成图表</b><span>输出趋势、排行、结构拆解和异常对比。</span></article>
+            <article class="ai-brief-step"><small>05</small><b>总结异常</b><span>解释指标变化背后的客户、项目和成本原因。</span></article>
+            <article class="ai-brief-step"><small>06</small><b>推送简报</b><span>形成经营简报，推送管理层和部门负责人。</span></article>
+          </div>
+          <div class="ai-brief-output">
+            <div class="ai-report-preview">
+              <h4>简报自动包含</h4>
+              <div class="ai-report-lines">
+                <span>收入与利润趋势</span>
+                <span>项目风险与交付卡点</span>
+                <span>应收账龄与回款风险</span>
+                <span>团队人效与岗位产能</span>
+              </div>
+            </div>
+            <div class="ai-action-preview">
+              <h4>自动给出动作建议</h4>
+              <div class="ai-action-lines">
+                <span>优先复盘低毛利项目报价口径</span>
+                <span>提醒客户经理跟进临期应收</span>
+                <span>建议调整下月拍摄与剪辑排期</span>
+                <span>识别需要追加预算或补充协议的客户</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-knowledge-board">
+          <div class="ai-knowledge-head">
+            <div>
+              <h3>企业知识库与AI问数协同图</h3>
+              <p>AI不仅能查数字，还能结合合同规则、客户结算口径、项目SOP和财务口径解释数据为什么这样算。</p>
+            </div>
+            <div class="ai-badge">知识库协同</div>
+          </div>
+          <div class="ai-knowledge-grid" aria-label="企业知识库与AI问数协同">
+            <div class="ai-knowledge-sources">
+              <article class="ai-knowledge-item"><small>合同规则</small><b>单价与KPI口径</b><span>视频、图文、直播、双重考核等结算规则。</span></article>
+              <article class="ai-knowledge-item"><small>客户口径</small><b>年框与补充协议</b><span>不同客户的预算、折扣、付款和验收要求。</span></article>
+              <article class="ai-knowledge-item"><small>项目SOP</small><b>交付流程与审核标准</b><span>脚本、拍摄、剪辑、发布、验收的执行规则。</span></article>
+              <article class="ai-knowledge-item"><small>薪酬制度</small><b>产出与分摊规则</b><span>岗位薪酬、计件系数、达标线和成本分摊口径。</span></article>
+            </div>
+            <div class="ai-knowledge-center">
+              <small>业务知识 + 经营数据</small>
+              <strong>AI回答更懂业务语境</strong>
+              <p>同样是“项目毛利下降”，AI可以结合合同单价、返工记录、外包成本和客户结算口径解释原因，而不是只返回一个数字。</p>
+            </div>
+            <div class="ai-knowledge-results">
+              <article class="ai-knowledge-item"><small>指标解释</small><b>解释为什么这样算</b><span>回答毛利率、预算消耗、人效、账龄等指标口径。</span></article>
+              <article class="ai-knowledge-item"><small>材料生成</small><b>生成周报和客户沟通稿</b><span>结合真实项目数据和客户规则生成可用文本。</span></article>
+              <article class="ai-knowledge-item"><small>新人培训</small><b>辅助理解业务规则</b><span>快速查询合同、项目、薪酬、对账的标准流程。</span></article>
+              <article class="ai-knowledge-item"><small>制度问答</small><b>减少反复询问</b><span>把常见制度、SOP和财务口径变成随问随答。</span></article>
+            </div>
+          </div>
+          <div class="ai-knowledge-strip" aria-label="知识库协同价值">
+            <span><b>口径统一</b>合同、项目、薪酬、财务规则进入同一套解释体系。</span>
+            <span><b>解释可追溯</b>每个经营答案都能关联数据来源和业务规则。</span>
+            <span><b>输出可复用</b>问数结果可继续生成周报、复盘材料和沟通文案。</span>
+          </div>
+        </div>
+
+        <div class="ai-launch-map">
+          <div class="ai-launch-head">
+            <h3>AI分阶段落地路径</h3>
+            <p>先让数据真实，再让流程闭环，再让指标可见，最后让AI可问、可解释、可预警。</p>
+          </div>
+          <div class="ai-launch-steps" aria-label="AI分阶段落地路径">
+            <article class="ai-launch-step"><small>Phase 01</small><b>数据底账</b><span>梳理客户、合同、单价、人员、项目和历史产出。</span></article>
+            <article class="ai-launch-step"><small>Phase 02</small><b>业务闭环</b><span>跑通立项、下单、产出、对账、应收和回款。</span></article>
+            <article class="ai-launch-step"><small>Phase 03</small><b>经营驾驶舱</b><span>沉淀收入、成本、利润、回款、人效和风险指标。</span></article>
+            <article class="ai-launch-step"><small>Phase 04</small><b>AI问数</b><span>配置月度复盘、项目毛利、预算和回款高频问题。</span></article>
+            <article class="ai-launch-step"><small>Phase 05</small><b>自动化工作流</b><span>自动生成经营简报、预算预警和应收跟进提醒。</span></article>
+          </div>
+        </div>
+      </section>
+    </div>
+
     <section id="diagrams">
-      <p class="section-kicker">业务流程图谱</p>
+      <p class="section-kicker">经营流程蓝图</p>
       <h2 class="section-title">
-        <span class="title-line">把原PRD里的关键流程图</span>
-        <span class="title-line">重构成客户能看懂的网页图谱</span>
+        <span class="title-line">关键业务流程全景展开</span>
+        <span class="title-line">从执行链路沉淀经营结果</span>
       </h2>
-      <p class="section-lead">这一段专门回答客户最常问的问题：当前业务断点在哪里、系统如何运转、每个模块如何联动、最终呈现哪些经营结果。</p>
+      <p class="section-lead">围绕业务断点、系统运转、模块联动和经营结果，将客户、合同、项目、产出、薪酬、成本、对账、回款串成一套可追踪的经营闭环。</p>
       <div class="diagram-index">
         <a href="#diagram-current">现状全景</a>
         <a href="#diagram-before-after">上线前后</a>
@@ -2946,7 +4128,7 @@
         <div class="diagram-head">
           <div>
             <h3>经营架构：四大核心模块 + 事件总线 + BI驾驶舱</h3>
-            <p>客户不一定需要看技术细节，但需要理解模块之间的数据关系。</p>
+            <p>模块关系清晰后，业务动作、财务口径和经营指标可以在同一条数据链上闭环。</p>
           </div>
           <div class="diagram-tag">系统架构图</div>
         </div>
@@ -2967,57 +4149,57 @@
     <section id="delights">
       <p class="section-kicker">应用价值场景</p>
       <h2 class="section-title">
-        <span class="title-line">面向客户展示时</span>
-        <span class="title-line">突出系统上线后的可感知管理改善</span>
+        <span class="title-line">上线前后变化一眼看清</span>
+        <span class="title-line">经营管理改善可量化呈现</span>
       </h2>
-      <p class="section-lead">以下场景用于说明系统上线前后的管理变化：先呈现原有协作方式，再呈现系统上线后的经营改善。</p>
+      <p class="section-lead">围绕项目利润、预算消耗、进度风险、应收回款、成本结构与客户价值，展示从分散协作到一体化经营的升级结果。</p>
       <div class="delight-grid">
         <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
           <div class="num">场景 01</div>
           <h3>无需等到月底，项目盈利情况过程可见</h3>
           <div class="compare-mini">
-            <p>原模式：管理层只能等财务月底汇总，发现亏损时项目已经接近结束。</p>
-            <p>系统上线后：收入、内部人力、外包、费用持续归集，项目执行中即可看到预估毛利。</p>
+            <p>传统方式：经营管理者只能等财务月底汇总，发现亏损时项目已经接近结束。</p>
+            <p>系统价值：收入、内部人力、外包、费用持续归集，项目执行中即可看到预估毛利。</p>
           </div>
         </article>
         <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
           <div class="num">场景 02</div>
           <h3>年框预算不再靠人算，剩余额度实时清楚</h3>
           <div class="compare-mini">
-            <p>原模式：合同在PDF里，执行在项目表里，预算消耗需要财务手工核对。</p>
-            <p>系统上线后：对账确认自动扣减预算，已消耗、已回款、剩余额度一屏可见。</p>
+            <p>传统方式：合同在PDF里，执行在项目表里，预算消耗需要财务手工核对。</p>
+            <p>系统价值：对账确认自动扣减预算，已消耗、已回款、剩余额度一屏可见。</p>
           </div>
         </article>
         <article class="delight-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
           <div class="num">场景 03</div>
           <h3>项目卡点不靠问，责任人和逾期自动浮出来</h3>
           <div class="compare-mini">
-            <p>原模式：项目进度靠口头同步，管理层难以及时判断卡在脚本、拍摄、剪辑还是客户确认。</p>
-            <p>系统上线后：任务状态、责任人、截止时间、审核意见全留痕，风险自动暴露。</p>
+            <p>传统方式：项目进度靠口头同步，难以及时判断卡在脚本、拍摄、剪辑还是客户确认。</p>
+            <p>系统价值：任务状态、责任人、截止时间、审核意见全留痕，风险自动暴露。</p>
           </div>
         </article>
         <article class="delight-card" style="--accent: var(--green); --weak: var(--green-weak)">
           <div class="num">场景 04</div>
           <h3>钱什么时候回来，不再靠财务记忆</h3>
           <div class="compare-mini">
-            <p>原模式：对账确认后还要手工建立应收，逾期往往晚几天才发现。</p>
-            <p>系统上线后：对账确认自动生成应收，开票、回款、逾期预警全生命周期追踪。</p>
+            <p>传统方式：对账确认后还要手工建立应收，逾期往往晚几天才发现。</p>
+            <p>系统价值：对账确认自动生成应收，开票、回款、逾期预警全生命周期追踪。</p>
           </div>
         </article>
         <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
           <div class="num">场景 05</div>
           <h3>内部团队和外包哪个划算，有统一口径比较</h3>
           <div class="compare-mini">
-            <p>原模式：内部工资和外包月结各算各的，很难比较真实项目毛利。</p>
-            <p>系统上线后：内部薪酬分摊和外包计件都进入项目成本，管理层可按项目对比。</p>
+            <p>传统方式：内部工资和外包月结各算各的，很难比较真实项目毛利。</p>
+            <p>系统价值：内部薪酬分摊和外包计件都进入项目成本，可按项目统一对比。</p>
           </div>
         </article>
         <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
           <div class="num">场景 06</div>
           <h3>客户值不值得继续做，不再只看合同额</h3>
           <div class="compare-mini">
-            <p>原模式：大客户合同额高，但可能回款慢、返工多、毛利低。</p>
-            <p>系统上线后：按客户集团看收入、成本、回款、毛利和人效，判断客户真实价值。</p>
+            <p>传统方式：大客户合同额高，但可能回款慢、返工多、毛利低。</p>
+            <p>系统价值：按客户集团看收入、成本、回款、毛利和人效，判断客户真实价值。</p>
           </div>
         </article>
       </div>
@@ -3031,19 +4213,33 @@
       </h2>
       <p class="section-lead">点击左侧模块，可以快速查看每个模块解决的管理挑战与系统价值。</p>
       <div class="module-shell">
-        <div class="module-tabs" role="tablist" aria-label="四大模块">
-          <button class="module-tab is-active" role="tab" aria-selected="true" data-module="crm" style="--accent: var(--teal)">
-            <b>CRM 客户与合同</b><span>客户资产与合同底账</span>
-          </button>
-          <button class="module-tab" role="tab" aria-selected="false" data-module="pm" style="--accent: var(--amber)">
-            <b>PM 项目管理</b><span>项目进度与交付风险</span>
-          </button>
-          <button class="module-tab" role="tab" aria-selected="false" data-module="fm" style="--accent: var(--green)">
-            <b>FM 财务管理</b><span>收入成本利润回款</span>
-          </button>
-          <button class="module-tab" role="tab" aria-selected="false" data-module="hr" style="--accent: var(--coral)">
-            <b>HR 人力资源</b><span>薪酬成本与团队人效</span>
-          </button>
+        <div class="module-sidebar">
+          <div class="module-tabs" role="tablist" aria-label="四大模块">
+            <button class="module-tab is-active" role="tab" aria-selected="true" data-module="crm" style="--accent: var(--teal)">
+              <b>CRM 客户与合同</b><span>客户资产与合同底账</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="pm" style="--accent: var(--amber)">
+              <b>PM 项目管理</b><span>项目进度与交付风险</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="fm" style="--accent: var(--green)">
+              <b>FM 财务管理</b><span>收入成本利润回款</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="hr" style="--accent: var(--coral)">
+              <b>HR 人力资源</b><span>薪酬成本与团队人效</span>
+            </button>
+          </div>
+          <div class="module-sidebar-card" aria-label="四大模块联动结果">
+            <div>
+              <small>联动结果</small>
+              <b>一条经营数据链跑到底</b>
+              <span>客户合同 → 项目交付 → 产出登记 → 薪酬成本 → 对账回款 → 利润驾驶舱</span>
+            </div>
+            <ul class="module-sidebar-list">
+              <li>业务动作一次录入</li>
+              <li>成本收入自动联动</li>
+              <li>经营结果实时呈现</li>
+            </ul>
+          </div>
         </div>
 
         <div>
@@ -3141,7 +4337,7 @@
         <span class="title-line">业务动作发生一次</span>
         <span class="title-line">后续经营数据自动联动</span>
       </h2>
-      <p class="section-lead">这一部分用于说明：系统不是四个孤立工具，而是一条从合同到利润的自动联动链。</p>
+      <p class="section-lead">四大模块围绕同一套合同、项目、产出和财务数据联动，形成从合同到利润的自动经营链路。</p>
       <div class="linkage-grid">
         <article class="linkage-card" style="--accent: var(--teal)">
           <b>CRM合同 → PM立项</b>
