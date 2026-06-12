@@ -1,0 +1,5364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内容运营业财PMS-AI解决方案 | 产品介绍</title>
+  <style>
+
+    :root {
+      --ink: #0f172a;
+      --body: #334155;
+      --muted: #64748b;
+      --paper: #f8fafc;
+      --white: #ffffff;
+      --surface: #ffffff;
+      --surface-soft: #f4f8fa;
+      --line: #dbe5e8;
+      --teal: #1941a5;
+      --teal-weak: #eff5ff;
+      --blue: #0369a1;
+      --blue-weak: #eaf5fb;
+      --sjr-blue: #1941a5;
+      --sjr-blue-2: #4076e1;
+      --sjr-blue-3: #2b74ee;
+      --sjr-ice: #eff5ff;
+      --sjr-sky: #dff0ff;
+      --amber: #1941a5;
+      --amber-weak: #eff5ff;
+      --coral: #1941a5;
+      --coral-weak: #eff5ff;
+      --green: #1941a5;
+      --green-weak: #eff5ff;
+      --slate: #172033;
+      --shadow: 0 24px 72px rgba(15, 23, 42, 0.12);
+      --shadow-soft: 0 14px 44px rgba(15, 23, 42, 0.08);
+      --radius: 8px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      color: var(--body);
+      background:
+        linear-gradient(180deg, #f8fafc 0%, #f3f8f8 34%, #f8fafc 100%);
+      font-family: "Plus Jakarta Sans", "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.65;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .back-home:hover {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
+    .topbar {
+      position: fixed;
+      z-index: 50;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 16px clamp(20px, 4vw, 56px);
+      color: var(--white);
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.6));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.2);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+      white-space: nowrap;
+    }
+
+    .version-switch {
+      position: relative;
+      flex: 0 0 auto;
+    }
+
+    .version-switch summary {
+      list-style: none;
+    }
+
+    .version-switch summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .brand {
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .brand-text {
+      max-width: 300px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .brand-caret {
+      display: inline-grid;
+      place-items: center;
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 11px;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .version-switch[open] .brand-caret {
+      transform: rotate(180deg);
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .version-menu {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 0;
+      z-index: 80;
+      width: 330px;
+      padding: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 24px 70px rgba(15, 23, 42, 0.18);
+      backdrop-filter: blur(16px);
+    }
+
+    .version-menu a {
+      display: grid;
+      gap: 3px;
+      padding: 12px 13px;
+      border-radius: 8px;
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.25;
+    }
+
+    .version-menu a small {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .version-menu a:hover,
+    .version-menu a.is-active {
+      background: var(--sjr-ice);
+      color: var(--sjr-blue);
+    }
+
+    .brand-mark {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      color: var(--white);
+      background: var(--teal);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius);
+      font-size: 16px;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.84);
+      white-space: nowrap;
+    }
+
+    .nav a {
+      padding: 8px 10px;
+      border-radius: var(--radius);
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav a:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--white);
+    }
+
+    .nav a:focus-visible,
+    .btn:focus-visible,
+    .module-tab:focus-visible {
+      outline: 3px solid rgba(204, 251, 241, 0.62);
+      outline-offset: 3px;
+    }
+
+    .hero {
+      width: 100%;
+      min-height: 92vh;
+      margin: 0;
+      padding: 0;
+      position: relative;
+      display: grid;
+      align-items: end;
+      overflow: hidden;
+      color: var(--white);
+      background:
+        linear-gradient(120deg, rgba(8, 16, 34, 0.98) 0%, rgba(15, 55, 91, 0.95) 54%, rgba(13, 92, 104, 0.92) 100%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 88px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 88px);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(105deg, transparent 0 50%, rgba(204, 251, 241, 0.12) 50% 50.7%, transparent 50.7%),
+        linear-gradient(155deg, transparent 0 62%, rgba(255, 255, 255, 0.1) 62% 62.5%, transparent 62.5%);
+      opacity: 0.9;
+    }
+
+    .hero-inner {
+      position: relative;
+      z-index: 2;
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 150px 0 92px;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0;
+      color: var(--white);
+      font-size: clamp(46px, 7vw, 86px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 660px;
+      margin: 28px 0 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: clamp(17px, 2vw, 23px);
+      line-height: 1.7;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 44px;
+      padding: 12px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: var(--radius);
+      font-weight: 800;
+      font-size: 14px;
+      transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn.primary {
+      background: #d8fbff;
+      color: var(--ink);
+      border-color: #d8fbff;
+      box-shadow: 0 14px 34px rgba(204, 251, 241, 0.18);
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--white);
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .hero-visual {
+      position: absolute;
+      z-index: 1;
+      top: 116px;
+      right: max(20px, calc((100vw - 1180px) / 2));
+      width: min(560px, 43vw);
+      min-height: 460px;
+      pointer-events: none;
+    }
+
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: 44px 8px 82px 92px;
+      border: 1px solid rgba(204, 251, 241, 0.18);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.07), rgba(204, 251, 241, 0.035));
+      clip-path: polygon(12% 0, 100% 10%, 88% 100%, 0 88%);
+    }
+
+    .hero-orbits {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .hero-orbits path {
+      fill: none;
+      stroke: rgba(204, 251, 241, 0.42);
+      stroke-width: 1.6;
+    }
+
+    .hero-orbits .path-soft {
+      stroke: rgba(255, 255, 255, 0.16);
+      stroke-width: 1.2;
+    }
+
+    .hero-orbits circle {
+      fill: rgba(204, 251, 241, 0.94);
+      stroke: rgba(255, 255, 255, 0.5);
+      stroke-width: 1.4;
+    }
+
+    .hero-cockpit {
+      position: absolute;
+      top: 86px;
+      right: 22px;
+      width: 238px;
+      min-height: 174px;
+      padding: 18px;
+      border: 1px solid rgba(204, 251, 241, 0.2);
+      border-radius: 8px;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.58), rgba(15, 55, 91, 0.35));
+      box-shadow: 0 28px 70px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(12px);
+    }
+
+    .cockpit-title {
+      color: #ccfbf1;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .cockpit-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .cockpit-grid span {
+      min-height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .orbit-node {
+      position: absolute;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255, 255, 255, 0.86);
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .orbit-node i {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: #ccfbf1;
+      box-shadow: 0 0 0 6px rgba(204, 251, 241, 0.12);
+    }
+
+    .orbit-client { top: 224px; right: 390px; }
+    .orbit-contract { top: 170px; right: 300px; }
+    .orbit-project { top: 238px; right: 216px; }
+    .orbit-output { top: 286px; right: 120px; color: #ccfbf1; }
+
+    .metric-bubble {
+      position: absolute;
+      display: grid;
+      gap: 4px;
+      min-width: 126px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.38);
+      box-shadow: 0 20px 58px rgba(0, 0, 0, 0.16);
+      backdrop-filter: blur(12px);
+    }
+
+    .metric-bubble strong {
+      color: #ccfbf1;
+      font-size: 26px;
+      line-height: 1;
+    }
+
+    .metric-bubble span {
+      color: rgba(255, 255, 255, 0.66);
+      font-size: 12px;
+    }
+
+    .metric-bubble.primary {
+      top: 34px;
+      right: 82px;
+    }
+
+    .metric-bubble.secondary {
+      top: 316px;
+      right: 318px;
+    }
+
+    .metric-bubble.tertiary {
+      position: absolute;
+      top: 18px;
+      right: 354px;
+      min-width: auto;
+      padding: 10px 13px;
+      border-radius: 8px;
+      background: rgba(204, 251, 241, 0.12);
+      color: #ccfbf1;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .hero-strip {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto;
+      border-top: 1px solid rgba(255, 255, 255, 0.2);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+      backdrop-filter: blur(6px);
+    }
+
+    .hero-stat {
+      padding: 22px 26px 28px 0;
+    }
+
+    .hero-stat strong {
+      display: block;
+      color: var(--white);
+      font-size: 30px;
+      line-height: 1;
+    }
+
+    .hero-stat span {
+      display: block;
+      margin-top: 8px;
+      color: rgba(255, 255, 255, 0.68);
+      font-size: 13px;
+    }
+
+    main {
+      overflow: hidden;
+    }
+
+    section {
+      width: min(1200px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 96px 0;
+    }
+
+    .section-kicker {
+      margin: 0 0 14px;
+      color: var(--teal);
+      font-weight: 900;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+    }
+
+    .section-title {
+      max-width: 900px;
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.16;
+      letter-spacing: 0;
+    }
+
+    .section-lead {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 40px;
+    }
+
+    .pain-card,
+    .module-card,
+    .value-card,
+    .step-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .pain-card {
+      padding: 24px;
+      min-height: 210px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, var(--surface), #fbfdfd);
+    }
+
+    .pain-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--accent);
+    }
+
+    .pain-card b {
+      display: block;
+      color: var(--ink);
+      font-size: 23px;
+      margin-bottom: 14px;
+    }
+
+    .pain-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .pain-card .after {
+      margin-top: 18px;
+      color: var(--body);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .flow-band {
+      width: 100%;
+      background:
+        linear-gradient(135deg, #101827 0%, #172033 62%, #0f4f5c 100%);
+      color: var(--white);
+    }
+
+    .flow-band section {
+      width: min(1200px, calc(100% - 40px));
+    }
+
+    .flow-band .section-kicker {
+      color: #ccfbf1;
+    }
+
+    .flow-band .section-title,
+    .flow-band .section-lead {
+      color: var(--white);
+    }
+
+    .flow-map {
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 8px;
+      margin-top: 42px;
+      align-items: stretch;
+    }
+
+    .flow-node {
+      position: relative;
+      min-height: 116px;
+      padding: 18px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(8px);
+    }
+
+    .flow-node:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -8px;
+      width: 8px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.28);
+    }
+
+    .flow-node strong {
+      display: block;
+      color: #ccfbf1;
+      font-size: 15px;
+    }
+
+    .flow-node span {
+      display: block;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .hinge {
+      margin-top: 26px;
+      padding: 22px 24px;
+      border-radius: var(--radius);
+      border: 1px solid rgba(204, 251, 241, 0.24);
+      background: rgba(204, 251, 241, 0.1);
+      color: #e8fffb;
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    .value-stream {
+      width: 100%;
+      background: linear-gradient(180deg, #f7faf9 0%, #eef8f6 54%, #f7faf9 100%);
+    }
+
+    .value-stream section {
+      width: min(1200px, calc(100% - 40px));
+    }
+
+    .stream-board {
+      position: relative;
+      margin-top: 46px;
+      padding: 28px;
+      border: 0;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(239, 250, 252, 0.76)),
+        linear-gradient(135deg, rgba(25, 65, 165, 0.08), rgba(64, 118, 225, 0.06));
+      box-shadow: 0 28px 90px rgba(20, 33, 61, 0.12);
+      overflow: hidden;
+    }
+
+    .stream-board::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      box-shadow:
+        inset 0 0 0 1px rgba(25, 65, 165, 0.16),
+        inset 0 3px 0 rgba(64, 118, 225, 0.45);
+    }
+
+    .stream-board::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(25, 65, 165, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(25, 65, 165, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 72%);
+    }
+
+    .stream-board-head,
+    .stream-grid,
+    .stream-control,
+    .stream-steps,
+    .stream-grips {
+      position: relative;
+      z-index: 1;
+    }
+
+    .stream-board-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 28px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.16);
+    }
+
+    .stream-board-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 28px;
+      line-height: 1.2;
+    }
+
+    .stream-board-head p {
+      margin: 10px 0 0;
+      max-width: 860px;
+      color: var(--body);
+      font-size: 15px;
+    }
+
+    .stream-badge {
+      padding: 10px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.18);
+      background: rgba(25, 65, 165, 0.08);
+      color: var(--teal);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .stream-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .stream-stage {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      min-height: 320px;
+      border: 0;
+      background: transparent;
+    }
+
+    .stream-stage:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      z-index: 2;
+      top: 45%;
+      right: -13px;
+      width: 18px;
+      height: 18px;
+      border-top: 4px solid rgba(17, 24, 39, 0.5);
+      border-right: 4px solid rgba(17, 24, 39, 0.5);
+      transform: rotate(45deg);
+    }
+
+    .stage-cap,
+    .stage-foot {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      padding: 0;
+      background: transparent;
+    }
+
+    .stage-cap span,
+    .stage-foot span {
+      min-height: 28px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.88);
+      color: #315163;
+      font-size: 11px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.25;
+    }
+
+    .stage-core {
+      display: grid;
+      place-items: center;
+      margin: 10px 0;
+      padding: 24px 14px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, #0b87f5 0%, #0067db 100%);
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 20px 54px rgba(0, 103, 219, 0.22);
+    }
+
+    .stage-core strong {
+      display: block;
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .stage-core small {
+      display: block;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.78);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .stream-stage.center {
+      box-shadow: none;
+    }
+
+    .stream-stage.center .stage-core {
+      background: linear-gradient(180deg, #4076e1 0%, #1941a5 100%);
+      box-shadow: 0 20px 54px rgba(25, 65, 165, 0.24);
+    }
+
+    .stream-control {
+      margin-top: 16px;
+      padding: 14px 18px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #1941a5, #4076e1);
+      color: var(--white);
+      text-align: center;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .stream-steps {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .stream-step {
+      min-height: 74px;
+      display: grid;
+      align-content: center;
+      justify-items: center;
+      gap: 6px;
+      padding: 12px 8px;
+      border-radius: 8px;
+      background: #0b6fe8;
+      color: var(--white);
+      text-align: center;
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .stream-step small {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .stream-grips {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(25, 65, 165, 0.16);
+    }
+
+    .stream-grip {
+      position: relative;
+      padding: 0 18px 0 16px;
+      border: 0;
+      background: rgba(255, 255, 255, 0.38);
+    }
+
+    .stream-grip::before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 0;
+      width: 3px;
+      height: 44px;
+      border-radius: 999px;
+      background: var(--teal);
+    }
+
+    .stream-grip b {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .stream-grip p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .ai-flow {
+      width: 100%;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(64, 118, 225, 0.14), transparent 30%),
+        linear-gradient(180deg, #ffffff 0%, #edf5ff 48%, #ffffff 100%);
+    }
+
+    .ai-flow section {
+      width: min(1200px, calc(100% - 40px));
+    }
+
+    .ai-board,
+    .ai-answer-board,
+    .ai-scenario,
+    .ai-launch-map {
+      margin-top: 42px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+      box-shadow: 0 30px 92px rgba(25, 65, 165, 0.12);
+      overflow: hidden;
+    }
+
+    .ai-board {
+      padding: 28px;
+      position: relative;
+    }
+
+    .ai-board::before,
+    .ai-answer-board::before,
+    .ai-scenario::before,
+    .ai-launch-map::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(25, 65, 165, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(25, 65, 165, 0.035) 1px, transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(180deg, #000 0%, transparent 74%);
+    }
+
+    .ai-board,
+    .ai-answer-board,
+    .ai-scenario,
+    .ai-launch-map {
+      position: relative;
+    }
+
+    .ai-board > *,
+    .ai-answer-board > *,
+    .ai-scenario > *,
+    .ai-launch-map > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ai-board-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.12);
+    }
+
+    .ai-board-head h3,
+    .ai-answer-head h3,
+    .ai-scenario-head h3,
+    .ai-launch-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+
+    .ai-board-head p,
+    .ai-answer-head p,
+    .ai-scenario-head p,
+    .ai-launch-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .ai-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--sjr-blue);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      box-shadow: 0 14px 34px rgba(25, 65, 165, 0.2);
+    }
+
+    .ai-architecture {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr 1.1fr;
+      gap: 20px;
+      align-items: stretch;
+      margin-top: 26px;
+    }
+
+    .ai-source-grid,
+    .ai-output-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .ai-source-card,
+    .ai-output-card,
+    .ai-step,
+    .ai-scene-card,
+    .ai-launch-step,
+    .ai-question-chip {
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 16px 42px rgba(25, 65, 165, 0.07);
+    }
+
+    .ai-source-card,
+    .ai-output-card {
+      min-height: 118px;
+      padding: 18px;
+    }
+
+    .ai-source-card small,
+    .ai-output-card small,
+    .ai-step small,
+    .ai-scene-card small,
+    .ai-launch-step small {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ai-source-card b,
+    .ai-output-card b,
+    .ai-step b,
+    .ai-scene-card b,
+    .ai-launch-step b {
+      display: block;
+      margin-top: 6px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .ai-source-card span,
+    .ai-output-card span,
+    .ai-step span,
+    .ai-scene-card span,
+    .ai-launch-step span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ai-core {
+      display: grid;
+      align-content: center;
+      gap: 14px;
+      padding: 20px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--sjr-blue-3), var(--sjr-blue));
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 24px 72px rgba(25, 65, 165, 0.24);
+    }
+
+    .ai-core small {
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 900;
+    }
+
+    .ai-core strong {
+      color: var(--white);
+      font-size: 29px;
+      line-height: 1.15;
+    }
+
+    .ai-core p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .ai-core-flow {
+      display: grid;
+      gap: 8px;
+    }
+
+    .ai-core-flow span {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .ai-answer-board {
+      display: grid;
+      grid-template-columns: 0.95fr 1.05fr;
+      gap: 28px;
+      align-items: stretch;
+      padding: 28px;
+    }
+
+    .ai-answer-head {
+      align-self: center;
+    }
+
+    .ai-question {
+      margin-top: 24px;
+      padding: 18px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--sjr-blue), var(--sjr-blue-2));
+      color: var(--white);
+      box-shadow: 0 20px 56px rgba(25, 65, 165, 0.18);
+    }
+
+    .ai-question small {
+      display: block;
+      color: rgba(255, 255, 255, 0.72);
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .ai-question b {
+      display: block;
+      margin-top: 8px;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+
+    .ai-step-chain {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ai-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 14px;
+      align-items: center;
+      min-height: 76px;
+      padding: 14px;
+    }
+
+    .ai-step em {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: var(--sjr-blue);
+      font-style: normal;
+      font-weight: 900;
+      box-shadow: inset 0 0 0 1px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      left: 35px;
+      bottom: -10px;
+      width: 2px;
+      height: 10px;
+      background: rgba(25, 65, 165, 0.18);
+    }
+
+    .ai-scenario {
+      padding: 28px;
+    }
+
+    .ai-scenario-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.12);
+    }
+
+    .ai-scene-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .ai-scene-card {
+      min-height: 250px;
+      padding: 20px;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+    }
+
+    .ai-scene-flow {
+      display: grid;
+      gap: 8px;
+      margin-top: 2px;
+    }
+
+    .ai-scene-flow span {
+      min-height: 34px;
+      display: grid;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: #23436b;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ai-cockpit-link {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 28px;
+    }
+
+    .ai-mini-dashboard,
+    .ai-chat-panel {
+      min-height: 330px;
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-mini-dashboard h4,
+    .ai-chat-panel h4 {
+      margin: 0 0 16px;
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .ai-metric-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .ai-metric {
+      min-height: 86px;
+      padding: 14px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--sjr-ice), #ffffff);
+      border: 1px solid rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-metric b {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    .ai-metric span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .ai-question-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ai-question-chip {
+      padding: 12px 14px;
+      color: var(--body);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .ai-question-chip b {
+      color: var(--sjr-blue);
+    }
+
+    .ai-mode-board,
+    .ai-briefing-board,
+    .ai-knowledge-board {
+      margin-top: 28px;
+      padding: 28px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 251, 255, 0.92));
+      box-shadow: 0 24px 78px rgba(25, 65, 165, 0.1);
+    }
+
+    .ai-mode-head,
+    .ai-briefing-head,
+    .ai-knowledge-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 18px;
+      align-items: center;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(25, 65, 165, 0.12);
+    }
+
+    .ai-mode-head h3,
+    .ai-briefing-head h3,
+    .ai-knowledge-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+
+    .ai-mode-head p,
+    .ai-briefing-head p,
+    .ai-knowledge-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .ai-mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .ai-mode-card {
+      min-height: 250px;
+      padding: 24px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-mode-card h4 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.2;
+    }
+
+    .ai-mode-card p {
+      margin: 12px 0 18px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .ai-mode-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .ai-mode-list li {
+      padding: 10px 12px;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: #23436b;
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .ai-briefing-flow {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .ai-brief-step {
+      position: relative;
+      min-height: 150px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-brief-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 42px;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: rgba(25, 65, 165, 0.22);
+    }
+
+    .ai-brief-step small,
+    .ai-knowledge-item small {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ai-brief-step b,
+    .ai-knowledge-item b {
+      display: block;
+      margin-top: 7px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .ai-brief-step span,
+    .ai-knowledge-item span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ai-brief-output {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .ai-report-preview,
+    .ai-action-preview {
+      padding: 22px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .ai-report-preview h4,
+    .ai-action-preview h4 {
+      margin: 0 0 14px;
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .ai-report-lines,
+    .ai-action-lines {
+      display: grid;
+      gap: 9px;
+    }
+
+    .ai-report-lines span,
+    .ai-action-lines span {
+      min-height: 34px;
+      display: grid;
+      align-items: center;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--sjr-ice);
+      color: #23436b;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .ai-knowledge-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr 1.08fr;
+      gap: 14px;
+      margin-top: 24px;
+      align-items: stretch;
+    }
+
+    .ai-knowledge-sources,
+    .ai-knowledge-results {
+      display: grid;
+      gap: 10px;
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+    }
+
+    .ai-knowledge-item {
+      min-height: 108px;
+      padding: 14px 15px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 14px 42px rgba(25, 65, 165, 0.07);
+    }
+
+    .ai-knowledge-center {
+      display: grid;
+      align-content: center;
+      gap: 12px;
+      padding: 22px;
+      border-radius: 8px;
+      background: linear-gradient(180deg, var(--sjr-blue-3), var(--sjr-blue));
+      color: var(--white);
+      text-align: center;
+      box-shadow: 0 24px 72px rgba(25, 65, 165, 0.22);
+    }
+
+    .ai-knowledge-center small {
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .ai-knowledge-center strong {
+      color: var(--white);
+      font-size: 27px;
+      line-height: 1.16;
+    }
+
+    .ai-knowledge-center p {
+      margin: 0;
+      color: rgba(255, 255, 255, 0.82);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .ai-knowledge-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .ai-knowledge-strip span {
+      min-height: 62px;
+      display: grid;
+      align-content: center;
+      gap: 4px;
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.1);
+      background: rgba(236, 244, 255, 0.84);
+      color: #1b3761;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .ai-knowledge-strip b {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 15px;
+    }
+
+    .ai-launch-map {
+      padding: 28px;
+    }
+
+    .ai-launch-head {
+      text-align: center;
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    .ai-launch-steps {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 28px;
+    }
+
+    .ai-launch-step {
+      position: relative;
+      min-height: 160px;
+      padding: 18px;
+    }
+
+    .ai-launch-step:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 48px;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: rgba(25, 65, 165, 0.22);
+    }
+
+    .diagram-index {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 32px;
+    }
+
+    .diagram-index a {
+      display: inline-flex;
+      min-height: 38px;
+      align-items: center;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--body);
+      font-size: 13px;
+      font-weight: 800;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+      transition: transform 0.2s ease, border-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .diagram-index a:hover {
+      border-color: var(--teal);
+      color: var(--teal);
+      box-shadow: var(--shadow-soft);
+      transform: translateY(-1px);
+    }
+
+    .diagram-block {
+      margin-top: 64px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      box-shadow: none;
+      overflow: visible;
+    }
+
+    .diagram-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 24px;
+      align-items: center;
+      padding: 0 0 24px;
+      border-bottom: 1px solid rgba(20, 33, 61, 0.12);
+      background: transparent;
+    }
+
+    .diagram-head h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 30px;
+      line-height: 1.25;
+    }
+
+    .diagram-head p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .diagram-tag {
+      padding: 10px 14px;
+      border-radius: 8px;
+      background: var(--weak, var(--teal-weak));
+      color: var(--accent, var(--teal));
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .diagram-body {
+      padding: 32px 0 0;
+    }
+
+    .mini-note {
+      margin-top: 22px;
+      padding: 18px 20px;
+      border-left: 3px solid var(--accent, var(--teal));
+      background: var(--weak, var(--teal-weak));
+      color: var(--ink);
+      font-weight: 800;
+      font-size: 16px;
+    }
+
+    .node-row {
+      display: grid;
+      grid-template-columns: repeat(var(--cols, 4), minmax(0, 1fr));
+      gap: 10px;
+      align-items: stretch;
+    }
+
+    .node-row + .node-row {
+      margin-top: 12px;
+    }
+
+    .d-node {
+      position: relative;
+      min-height: 86px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--accent, var(--teal));
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .d-node strong {
+      display: block;
+      color: var(--ink);
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .d-node span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .d-node.center {
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .arrow-grid .d-node:not(:last-child)::after,
+    .lifecycle .d-node:not(:last-child)::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      width: 10px;
+      height: 2px;
+      background: var(--line);
+    }
+
+    .boss-node {
+      width: min(520px, 100%);
+      margin: 0 auto 28px;
+      padding: 24px;
+      border-radius: 8px;
+      background: var(--slate);
+      color: var(--white);
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .boss-node strong {
+      display: block;
+      font-size: 24px;
+    }
+
+    .boss-node span {
+      display: block;
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 15px;
+    }
+
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+    }
+
+    .role-card {
+      min-height: 188px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-top: 3px solid var(--accent);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .role-card b {
+      display: block;
+      color: var(--accent);
+      font-size: 26px;
+    }
+
+    .role-card p {
+      margin: 14px 0 0;
+      color: var(--body);
+      font-size: 16px;
+    }
+
+    .role-card small {
+      display: block;
+      margin-top: 14px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.45;
+      font-size: 14px;
+    }
+
+    .before-after {
+      display: grid;
+      grid-template-columns: 1fr 92px 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .ba-card {
+      min-height: 390px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--weak, var(--white));
+    }
+
+    .ba-card h4 {
+      margin: 0 0 20px;
+      color: var(--accent);
+      font-size: 30px;
+    }
+
+    .ba-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 16px;
+    }
+
+    .ba-list li {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      padding: 11px 0;
+      border-bottom: 1px solid rgba(20, 33, 61, 0.07);
+    }
+
+    .ba-list b {
+      color: var(--ink);
+    }
+
+    .ba-arrow {
+      height: 92px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--slate);
+      color: var(--white);
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .pivot-box {
+      margin: 22px auto;
+      width: min(760px, 100%);
+      padding: 22px 24px;
+      border: 1px solid rgba(25, 65, 165, 0.18);
+      border-left: 4px solid var(--amber);
+      border-radius: 8px;
+      background: var(--amber-weak);
+      text-align: center;
+    }
+
+    .pivot-box strong {
+      color: var(--ink);
+      font-size: 22px;
+    }
+
+    .split-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .split-card {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .split-card h4 {
+      margin: 0 0 16px;
+      color: var(--accent, var(--teal));
+      font-size: 24px;
+    }
+
+    .tree-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .tree-branch {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+    }
+
+    .swimlane {
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .swimlane-grid {
+      min-width: 980px;
+      display: grid;
+      grid-template-columns: 0.9fr 1.2fr 1.2fr 1.2fr 1fr;
+      gap: 10px;
+    }
+
+    .lane {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfdfc;
+      overflow: hidden;
+    }
+
+    .lane-title {
+      padding: 12px 14px;
+      background: var(--slate);
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .lane .d-node {
+      margin: 10px;
+      min-height: 88px;
+      background: var(--white);
+    }
+
+    .status-fork {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+
+    .fork-children {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .cost-sources {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .cost-target {
+      margin-top: 22px;
+      padding: 22px;
+      border-radius: 8px;
+      background: var(--slate);
+      color: var(--white);
+    }
+
+    .cost-target strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 22px;
+      text-align: center;
+    }
+
+    .cost-items {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .cost-items span {
+      padding: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .timeline-vertical {
+      display: grid;
+      gap: 12px;
+    }
+
+    .timeline-step {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .timeline-step b {
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: var(--accent, var(--teal));
+      color: var(--white);
+      font-size: 14px;
+    }
+
+    .timeline-step p {
+      margin: 0;
+      padding: 16px 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+      color: var(--body);
+      font-size: 15px;
+    }
+
+    .architecture-map {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+
+    .arch-top {
+      grid-column: 1 / -1;
+      padding: 20px;
+      border-radius: 8px;
+      background: var(--slate);
+      color: var(--white);
+      text-align: center;
+      font-weight: 900;
+      font-size: 20px;
+    }
+
+    .event-bus {
+      grid-column: 1 / -1;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.18);
+      background: var(--teal-weak);
+      color: var(--ink);
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .module-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 32px;
+      margin-top: 42px;
+      align-items: stretch;
+    }
+
+    .module-sidebar {
+      position: sticky;
+      top: 86px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-self: start;
+      min-height: 620px;
+    }
+
+    .module-tabs {
+      display: grid;
+      gap: 10px;
+    }
+
+    .module-tab {
+      width: 100%;
+      min-height: 64px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.82);
+      color: var(--ink);
+      text-align: left;
+      padding: 12px 14px;
+      cursor: pointer;
+      font: inherit;
+      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    }
+
+    .module-tab b {
+      display: block;
+      font-size: 15px;
+    }
+
+    .module-tab span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .module-tab.is-active {
+      background: linear-gradient(135deg, var(--ink), #173456);
+      color: var(--white);
+      box-shadow: var(--shadow);
+      transform: translateX(4px);
+    }
+
+    .module-tab.is-active span {
+      color: rgba(255, 255, 255, 0.68);
+    }
+
+    .module-sidebar-card {
+      flex: 1;
+      min-height: 264px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px;
+      border-radius: 8px;
+      border: 1px solid rgba(25, 65, 165, 0.12);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(236, 244, 255, 0.9));
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .module-sidebar-card small {
+      display: block;
+      color: var(--sjr-blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+    }
+
+    .module-sidebar-card b {
+      display: block;
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: 20px;
+      line-height: 1.25;
+    }
+
+    .module-sidebar-card span {
+      display: block;
+      margin-top: 10px;
+      color: var(--body);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .module-sidebar-list {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .module-sidebar-list li {
+      padding: 9px 10px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.78);
+      color: #23436b;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .module-panel {
+      display: none;
+    }
+
+    .module-panel.is-active {
+      display: block;
+      animation: reveal 0.42s ease both;
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .module-header {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 22px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    .module-header h3 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 31px;
+      line-height: 1.18;
+    }
+
+    .module-header p {
+      margin: 10px 0 0;
+      color: var(--muted);
+    }
+
+    .module-badge {
+      border-radius: 8px;
+      background: var(--weak);
+      color: var(--accent);
+      padding: 10px 14px;
+      font-weight: 900;
+      font-size: 13px;
+      white-space: nowrap;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .module-card {
+      padding: 22px;
+      min-height: 168px;
+      border-top: 3px solid var(--accent);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .module-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .module-card h4 {
+      margin: 0 0 12px;
+      color: var(--ink);
+      font-size: 20px;
+    }
+
+    .module-card dl {
+      margin: 0;
+      display: grid;
+      gap: 12px;
+    }
+
+    .module-card dt {
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .module-card dd {
+      margin: 4px 0 0;
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .decision-strip {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .decision-chip {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--weak, var(--white));
+    }
+
+    .decision-chip small {
+      display: block;
+      color: var(--accent, var(--teal));
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    .decision-chip b {
+      display: block;
+      margin-top: 6px;
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .delight-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .delight-card {
+      position: relative;
+      min-height: 252px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--surface), #fbfdfd);
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
+    }
+
+    .delight-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 3px;
+      background: var(--accent, var(--teal));
+    }
+
+    .delight-card .num {
+      color: var(--accent, var(--teal));
+      font-weight: 900;
+      font-size: 13px;
+    }
+
+    .delight-card h3 {
+      margin: 10px 0 14px;
+      color: var(--ink);
+      font-size: 23px;
+      line-height: 1.28;
+    }
+
+    .compare-mini {
+      display: grid;
+      gap: 10px;
+    }
+
+    .compare-mini p {
+      margin: 0;
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      color: var(--body);
+      background: var(--surface-soft);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .compare-mini p:last-child {
+      color: var(--ink);
+      background: var(--weak, var(--teal-weak));
+      font-weight: 800;
+    }
+
+    .linkage-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-top: 34px;
+    }
+
+    .linkage-card {
+      display: grid;
+      grid-template-columns: 132px 1fr;
+      gap: 16px;
+      align-items: center;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+    }
+
+    .linkage-card b {
+      color: var(--accent, var(--teal));
+      font-size: 16px;
+      line-height: 1.35;
+    }
+
+    .linkage-card p {
+      margin: 0;
+      color: var(--body);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .impact-panel {
+      margin-top: 34px;
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .impact-lead {
+      padding: 26px;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--slate), #173456);
+      color: var(--white);
+    }
+
+    .impact-lead h3 {
+      margin: 0;
+      font-size: 30px;
+      line-height: 1.22;
+    }
+
+    .impact-lead p {
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.76);
+    }
+
+    .impact-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .impact-list div {
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+    }
+
+    .impact-list b {
+      display: block;
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .impact-list span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .proof {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 36px;
+      align-items: center;
+    }
+
+    .proof-copy {
+      padding-right: 10px;
+    }
+
+    .screen-frame {
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      padding: 8px;
+    }
+
+    .screen-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .value-card {
+      padding: 24px;
+      min-height: 190px;
+      background: linear-gradient(180deg, var(--surface), #fbfdfd);
+    }
+
+    .value-card strong {
+      display: block;
+      color: var(--ink);
+      font-size: 21px;
+      line-height: 1.3;
+    }
+
+    .value-card span {
+      display: block;
+      width: 34px;
+      height: 3px;
+      margin: 18px 0;
+      background: var(--accent);
+    }
+
+    .value-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-top: 36px;
+    }
+
+    .step-card {
+      padding: 24px;
+      background: linear-gradient(180deg, var(--surface), #fbfdfa);
+    }
+
+    .step-card small {
+      color: var(--teal);
+      font-weight: 900;
+    }
+
+    .step-card b {
+      display: block;
+      margin-top: 8px;
+      color: var(--ink);
+      font-size: 21px;
+    }
+
+    .step-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    .closing {
+      width: 100%;
+      margin-top: 30px;
+      background: linear-gradient(135deg, var(--ink), #173456);
+      color: var(--white);
+    }
+
+    .closing section {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 34px;
+      align-items: center;
+      padding: 66px 0;
+    }
+
+    .closing h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.18;
+    }
+
+    .closing p {
+      max-width: 720px;
+      margin: 16px 0 0;
+      color: rgba(255, 255, 255, 0.76);
+      font-size: 16px;
+    }
+
+    .quote-box {
+      width: 280px;
+      border-left: 3px solid #ccfbf1;
+      padding-left: 18px;
+      color: #ccfbf1;
+      font-weight: 900;
+      line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    p,
+    a,
+    span,
+    b,
+    strong,
+    small {
+      overflow-wrap: break-word;
+    }
+
+    .pain-card,
+    .role-card,
+    .ba-card,
+    .split-card,
+    .lane,
+    .d-node,
+    .module-card,
+    .decision-chip,
+    .delight-card,
+    .linkage-card,
+    .impact-list div,
+    .value-card,
+    .step-card {
+      border-color: rgba(148, 163, 184, 0.28);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 250, 252, 0.92));
+      box-shadow: 0 16px 42px rgba(15, 23, 42, 0.06);
+      transition:
+        transform 0.22s ease,
+        box-shadow 0.22s ease,
+        border-color 0.22s ease,
+        background 0.22s ease;
+    }
+
+    .pain-card:hover,
+    .role-card:hover,
+    .ba-card:hover,
+    .split-card:hover,
+    .d-node:hover,
+    .module-card:hover,
+    .decision-chip:hover,
+    .delight-card:hover,
+    .linkage-card:hover,
+    .value-card:hover,
+    .step-card:hover {
+      border-color: rgba(64, 118, 225, 0.22);
+      box-shadow: 0 24px 62px rgba(15, 23, 42, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .section-kicker::before {
+      content: "";
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      margin-right: 10px;
+      vertical-align: middle;
+      background: currentColor;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 36%;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent, rgba(15, 23, 42, 0.18));
+    }
+
+    .hero-cockpit,
+    .metric-bubble {
+      transform: translateZ(0);
+    }
+
+    .stream-board {
+      box-shadow:
+        0 34px 92px rgba(15, 23, 42, 0.12),
+        0 0 0 1px rgba(255, 255, 255, 0.7);
+    }
+
+    .stage-cap span,
+    .stage-foot span {
+      min-height: 32px;
+      box-shadow: inset 0 0 0 1px rgba(25, 65, 165, 0.06);
+    }
+
+    .stage-core {
+      min-height: 154px;
+    }
+
+    .stage-core strong {
+      font-size: 20px;
+    }
+
+    .stage-core small {
+      font-size: 13px;
+    }
+
+    .stream-grip {
+      padding: 4px 20px 4px 18px;
+      background: transparent;
+    }
+
+    .stream-grip b {
+      font-size: 18px;
+    }
+
+    .diagram-block {
+      margin-top: 86px;
+    }
+
+    .diagram-head {
+      border-bottom-color: rgba(15, 23, 42, 0.14);
+    }
+
+    .diagram-head h3 {
+      font-size: clamp(28px, 3vw, 38px);
+    }
+
+    .diagram-tag,
+    .stream-badge,
+    .module-badge {
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.58);
+    }
+
+    .d-node {
+      border-left-width: 4px;
+    }
+
+    .d-node strong {
+      font-size: 19px;
+    }
+
+    .role-card {
+      min-height: 210px;
+    }
+
+    .role-card b {
+      font-size: 30px;
+    }
+
+    .ba-card {
+      min-height: 420px;
+    }
+
+    .ba-list {
+      gap: 11px;
+    }
+
+    .ba-list li {
+      grid-template-columns: 104px 1fr;
+      font-size: 16px;
+    }
+
+    .split-card {
+      position: relative;
+      overflow: hidden;
+      padding: 26px;
+    }
+
+    .split-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--accent, var(--teal));
+    }
+
+    .lane {
+      border: 0;
+      background: rgba(255, 255, 255, 0.76);
+      box-shadow: 0 18px 48px rgba(15, 23, 42, 0.08);
+    }
+
+    .lane-title {
+      background: linear-gradient(135deg, var(--slate), #1e3a5f);
+      font-size: 16px;
+    }
+
+    .timeline-step p {
+      box-shadow: 0 12px 34px rgba(15, 23, 42, 0.05);
+    }
+
+    .arch-top {
+      background:
+        linear-gradient(135deg, rgba(15, 23, 42, 0.98), rgba(23, 52, 86, 0.96));
+      box-shadow: var(--shadow-soft);
+    }
+
+    .event-bus {
+      box-shadow: 0 14px 34px rgba(25, 65, 165, 0.08);
+    }
+
+    .module-tab:not(.is-active):hover {
+      background: var(--surface);
+      box-shadow: var(--shadow-soft);
+      transform: translateX(2px);
+    }
+
+    .screen-frame img {
+      border-radius: 6px;
+    }
+
+    body {
+      background:
+        linear-gradient(180deg, #f6faff 0%, #ffffff 36%, #f3f7ff 100%);
+    }
+
+    .topbar {
+      color: var(--ink);
+      background: rgba(255, 255, 255, 0.86);
+      border-bottom: 1px solid rgba(25, 65, 165, 0.1);
+      box-shadow: 0 12px 38px rgba(25, 65, 165, 0.12);
+    }
+
+    .brand-mark {
+      background: linear-gradient(135deg, var(--sjr-blue), var(--sjr-blue-2));
+      box-shadow: 0 10px 24px rgba(25, 65, 165, 0.26);
+    }
+
+    .nav {
+      color: rgba(15, 23, 42, 0.76);
+    }
+
+    .nav a:hover {
+      background: var(--sjr-ice);
+      color: var(--sjr-blue);
+    }
+
+    .nav a:focus-visible,
+    .btn:focus-visible,
+    .module-tab:focus-visible {
+      outline-color: rgba(64, 118, 225, 0.42);
+    }
+
+    .hero {
+      min-height: 96vh;
+      align-items: center;
+      background:
+        linear-gradient(145deg, rgba(13, 33, 95, 0.98) 0%, rgba(25, 65, 165, 0.96) 48%, rgba(64, 118, 225, 0.94) 100%),
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 96px),
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 96px);
+    }
+
+    .hero::before {
+      background:
+        linear-gradient(112deg, transparent 0 48%, rgba(255, 255, 255, 0.16) 48% 48.4%, transparent 48.4%),
+        linear-gradient(154deg, transparent 0 66%, rgba(223, 240, 255, 0.18) 66% 66.35%, transparent 66.35%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 46%);
+      opacity: 1;
+    }
+
+    .hero::after {
+      height: 34%;
+      background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.1));
+    }
+
+    .hero-inner {
+      padding: 168px 0 132px;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(48px, 6.5vw, 84px);
+      text-shadow: 0 24px 70px rgba(0, 0, 0, 0.2);
+    }
+
+    .hero-title-line {
+      display: block;
+    }
+
+    .hero-copy {
+      max-width: 690px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .btn.primary {
+      background: var(--white);
+      color: var(--sjr-blue);
+      border-color: var(--white);
+      box-shadow: 0 18px 42px rgba(7, 25, 75, 0.2);
+    }
+
+    .btn.secondary {
+      background: rgba(255, 255, 255, 0.14);
+      border-color: rgba(255, 255, 255, 0.36);
+    }
+
+    .hero-visual {
+      top: 118px;
+      width: min(620px, 46vw);
+      min-height: 520px;
+    }
+
+    .hero-visual::before {
+      inset: 76px 0 94px 72px;
+      z-index: 0;
+      border-radius: 8px;
+      clip-path: none;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(239, 245, 255, 0.84));
+      border-color: rgba(255, 255, 255, 0.46);
+      box-shadow: 0 34px 90px rgba(5, 18, 55, 0.24);
+    }
+
+    .hero-visual::after {
+      content: "";
+      position: absolute;
+      z-index: 0;
+      top: 96px;
+      right: 34px;
+      width: 370px;
+      height: 236px;
+      border-radius: 8px;
+      background:
+        linear-gradient(90deg, rgba(25, 65, 165, 0.12) 0 28%, transparent 28%),
+        linear-gradient(180deg, rgba(25, 65, 165, 0.14), rgba(64, 118, 225, 0.05));
+      border: 1px solid rgba(25, 65, 165, 0.14);
+      box-shadow: inset 0 32px 0 rgba(25, 65, 165, 0.08);
+    }
+
+    .hero-orbits path {
+      stroke: rgba(255, 255, 255, 0.54);
+    }
+
+    .hero-orbits {
+      z-index: 1;
+    }
+
+    .hero-cockpit,
+    .orbit-node,
+    .metric-bubble {
+      z-index: 2;
+    }
+
+    .hero-orbits .path-soft {
+      stroke: rgba(255, 255, 255, 0.26);
+    }
+
+    .hero-cockpit {
+      top: 130px;
+      right: 58px;
+      width: 318px;
+      min-height: 220px;
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(25, 65, 165, 0.14);
+      box-shadow: 0 28px 80px rgba(5, 18, 55, 0.18);
+    }
+
+    .cockpit-title {
+      color: var(--sjr-blue);
+      font-size: 18px;
+    }
+
+    .cockpit-grid {
+      gap: 10px;
+    }
+
+    .cockpit-grid span {
+      min-height: 58px;
+      color: #315163;
+      background: var(--sjr-ice);
+      border: 1px solid rgba(25, 65, 165, 0.08);
+      font-size: 13px;
+    }
+
+    .orbit-node {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+    }
+
+    .orbit-node i {
+      background: var(--white);
+      box-shadow: 0 0 0 5px rgba(255, 255, 255, 0.14);
+    }
+
+    .metric-bubble {
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(25, 65, 165, 0.12);
+      box-shadow: 0 24px 64px rgba(5, 18, 55, 0.16);
+    }
+
+    .metric-bubble strong {
+      color: var(--sjr-blue);
+    }
+
+    .metric-bubble span {
+      color: var(--muted);
+    }
+
+    .metric-bubble.tertiary {
+      background: var(--sjr-blue);
+      color: var(--white);
+      border: 0;
+    }
+
+    .hero-strip {
+      width: min(1180px, calc(100% - 40px));
+      margin: 0 auto 42px;
+      padding: 0 22px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 22px 70px rgba(8, 25, 82, 0.16);
+    }
+
+    section {
+      padding: 110px 0;
+    }
+
+    section > .section-kicker,
+    section > .section-title,
+    section > .section-lead {
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+    }
+
+    section > .section-kicker {
+      display: inline-flex;
+      width: max-content;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--sjr-blue);
+      letter-spacing: 0.08em;
+    }
+
+    section > .section-kicker::before,
+    section > .section-kicker::after {
+      content: "";
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: rgba(25, 65, 165, 0.42);
+    }
+
+    .section-title {
+      max-width: 960px;
+    }
+
+    .title-line {
+      display: block;
+    }
+
+    .flow-band,
+    .closing {
+      background: linear-gradient(180deg, var(--sjr-blue) 0%, var(--sjr-blue-2) 100%);
+    }
+
+    .flow-band .section-kicker {
+      color: var(--white);
+    }
+
+    .flow-band .section-kicker::before,
+    .flow-band .section-kicker::after,
+    .closing .section-kicker::before,
+    .closing .section-kicker::after {
+      background: rgba(255, 255, 255, 0.5);
+    }
+
+    .flow-node,
+    .hinge {
+      border-color: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.12);
+      box-shadow: 0 16px 42px rgba(2, 8, 23, 0.12);
+    }
+
+    .flow-node strong {
+      color: var(--white);
+      font-size: 17px;
+    }
+
+    .value-stream {
+      background: linear-gradient(180deg, #ffffff 0%, #f0f6ff 100%);
+    }
+
+    .stream-board {
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 245, 255, 0.9));
+      box-shadow:
+        0 34px 92px rgba(25, 65, 165, 0.12),
+        0 0 0 1px rgba(25, 65, 165, 0.08);
+    }
+
+    .stream-board::before {
+      box-shadow:
+        inset 0 0 0 1px rgba(25, 65, 165, 0.12),
+        inset 0 3px 0 rgba(64, 118, 225, 0.62);
+    }
+
+    .stage-core {
+      background: linear-gradient(180deg, var(--sjr-blue-3), var(--sjr-blue));
+      box-shadow: 0 22px 56px rgba(25, 65, 165, 0.22);
+    }
+
+    .stream-stage.center .stage-core {
+      background: linear-gradient(180deg, #4076e1, #1941a5);
+    }
+
+    .stage-cap span,
+    .stage-foot span {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .stream-control {
+      background: linear-gradient(90deg, var(--sjr-blue), var(--sjr-blue-2));
+      color: var(--white);
+      box-shadow: 0 16px 40px rgba(25, 65, 165, 0.18);
+    }
+
+    .stream-step {
+      background: linear-gradient(180deg, var(--sjr-blue-3), var(--sjr-blue));
+      box-shadow: 0 14px 34px rgba(25, 65, 165, 0.14);
+    }
+
+    .diagram-index {
+      justify-content: center;
+    }
+
+    .diagram-index a,
+    .pain-card,
+    .role-card,
+    .ba-card,
+    .split-card,
+    .lane,
+    .d-node,
+    .module-card,
+    .decision-chip,
+    .delight-card,
+    .linkage-card,
+    .impact-list div,
+    .value-card,
+    .step-card {
+      border-color: rgba(25, 65, 165, 0.1);
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      box-shadow: 0 18px 52px rgba(25, 65, 165, 0.08);
+    }
+
+    .diagram-index a:hover,
+    .pain-card:hover,
+    .role-card:hover,
+    .ba-card:hover,
+    .split-card:hover,
+    .d-node:hover,
+    .module-card:hover,
+    .decision-chip:hover,
+    .delight-card:hover,
+    .linkage-card:hover,
+    .value-card:hover,
+    .step-card:hover {
+      border-color: rgba(64, 118, 225, 0.2);
+      box-shadow: 0 26px 70px rgba(25, 65, 165, 0.13);
+    }
+
+    .diagram-tag,
+    .stream-badge,
+    .module-badge {
+      background: var(--sjr-ice);
+      color: var(--sjr-blue);
+    }
+
+    .boss-node,
+    .arch-top,
+    .impact-lead {
+      background: linear-gradient(135deg, var(--sjr-blue), var(--sjr-blue-2));
+    }
+
+    .module-tab.is-active {
+      background: linear-gradient(135deg, var(--sjr-blue), var(--sjr-blue-2));
+    }
+
+    .proof .section-kicker,
+    .proof .section-title,
+    .proof .section-lead {
+      margin-left: 0;
+      margin-right: 0;
+      text-align: left;
+    }
+
+    .proof .section-kicker {
+      display: inline-flex;
+    }
+
+    .screen-frame {
+      box-shadow: 0 28px 86px rgba(25, 65, 165, 0.14);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (max-width: 980px) {
+      .nav {
+        display: none;
+      }
+
+      .hero-visual {
+        right: -54px;
+        width: 430px;
+        opacity: 0.62;
+        transform: scale(0.88);
+        transform-origin: top right;
+      }
+
+      .hero-strip,
+      .pain-grid,
+      .value-grid,
+      .steps,
+      .role-grid,
+      .cost-sources,
+      .cost-items,
+      .architecture-map,
+      .stream-grid,
+      .stream-grips,
+      .delight-grid,
+      .decision-strip,
+      .linkage-grid,
+      .ai-source-grid,
+      .ai-output-grid,
+      .ai-scene-grid,
+      .ai-mode-grid,
+      .ai-brief-output,
+      .ai-knowledge-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .stream-board-head,
+      .ai-board-head,
+      .ai-scenario-head,
+      .ai-mode-head,
+      .ai-briefing-head,
+      .ai-knowledge-head {
+        grid-template-columns: 1fr;
+      }
+
+      .stream-steps,
+      .ai-launch-steps,
+      .ai-briefing-flow {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .stream-stage:not(:last-child)::after {
+        display: none;
+      }
+
+      .flow-map {
+        grid-template-columns: repeat(4, 1fr);
+      }
+
+      .module-shell,
+      .proof,
+      .closing section,
+      .before-after,
+      .split-grid,
+      .impact-panel,
+      .ai-architecture,
+      .ai-answer-board,
+      .ai-cockpit-link,
+      .ai-mode-grid,
+      .ai-brief-output,
+      .ai-knowledge-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-brief-step:not(:last-child)::after {
+        display: none;
+      }
+
+      .ba-arrow {
+        min-height: 58px;
+        height: auto;
+      }
+
+      .module-tabs {
+        position: static;
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .module-sidebar {
+        position: static;
+        min-height: 0;
+      }
+
+      .module-sidebar-card {
+        min-height: 0;
+      }
+
+      .quote-box {
+        width: auto;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .topbar {
+        padding: 12px 18px;
+      }
+
+      .brand {
+        font-size: 14px;
+      }
+
+      .brand-text {
+        max-width: min(230px, calc(100vw - 112px));
+      }
+
+      .version-menu {
+        width: min(330px, calc(100vw - 36px));
+      }
+
+      .hero {
+        min-height: 94vh;
+      }
+
+      .hero-visual {
+        top: 70px;
+        right: -160px;
+        width: 420px;
+        opacity: 0.34;
+        transform: scale(0.82);
+      }
+
+      .hero-inner {
+        width: min(100% - 32px, 1180px);
+        padding-top: 122px;
+      }
+
+      .hero-title-line {
+        display: inline;
+      }
+
+      .hero-strip,
+      .pain-grid,
+      .flow-map,
+      .feature-grid,
+      .value-grid,
+      .steps,
+      .module-tabs,
+      .role-grid,
+      .node-row,
+      .tree-branch,
+      .fork-children,
+      .cost-sources,
+      .cost-items,
+      .architecture-map,
+      .stream-grid,
+      .stream-grips,
+      .stream-steps,
+      .ai-source-grid,
+      .ai-output-grid,
+      .ai-scene-grid,
+      .ai-metric-grid,
+      .ai-launch-steps,
+      .ai-mode-grid,
+      .ai-briefing-flow,
+      .ai-brief-output,
+      .ai-knowledge-grid,
+      .ai-knowledge-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .delight-grid,
+      .decision-strip,
+      .linkage-grid,
+      .linkage-card {
+        grid-template-columns: 1fr;
+      }
+
+      section {
+        width: min(100% - 32px, 1180px);
+        padding: 64px 0;
+      }
+
+      .module-header {
+        grid-template-columns: 1fr;
+      }
+
+      .flow-node:not(:last-child)::after {
+        display: none;
+      }
+
+      .diagram-head {
+        grid-template-columns: 1fr;
+      }
+
+      .ba-list li,
+      .timeline-step,
+      .ai-step {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-step em {
+        width: 38px;
+        height: 38px;
+      }
+
+      .ai-step:not(:last-child)::after,
+      .ai-launch-step:not(:last-child)::after,
+      .ai-brief-step:not(:last-child)::after {
+        display: none;
+      }
+    }
+  
+.solution-nav[hidden],
+.version-page[hidden] {
+  display: none !important;
+}
+
+.version-page {
+  display: none;
+}
+
+.version-page.is-active {
+  display: block;
+  animation: solutionReveal 0.32s ease both;
+}
+
+@keyframes solutionReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.version-menu button {
+  width: 100%;
+  display: grid;
+  gap: 3px;
+  padding: 12px 13px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-weight: 900;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+}
+
+.version-menu button small {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.version-menu button:hover,
+.version-menu button.is-active {
+  background: var(--sjr-ice);
+  color: var(--sjr-blue);
+}
+
+.version-menu button:focus-visible {
+  outline: 3px solid rgba(64, 118, 225, 0.28);
+  outline-offset: 2px;
+}
+
+  </style>
+</head>
+<body>
+<header class="topbar">
+  <a href="../" class="back-home" title="返回首页">← 首页</a>
+  <details class="version-switch">
+    <summary class="brand" aria-label="切换解决方案版本">
+      <span class="brand-mark">业</span>
+      <span class="brand-text" data-version-label>内容运营业财PMS-AI解决方案</span>
+      <span class="brand-caret">⌄</span>
+    </summary>
+    <div class="version-menu" role="menu" aria-label="解决方案版本切换">
+      <button type="button" data-version-target="standard" role="menuitem">
+        内容运营业财PMS解决方案
+        <small>标准业财一体化管理版本</small>
+      </button>
+      <button class="is-active" type="button" data-version-target="ai" role="menuitem">
+        内容运营业财PMS-AI解决方案
+        <small>融合AI问数与经营助理版本</small>
+      </button>
+    </div>
+  </details>
+  <nav class="nav solution-nav is-active" data-version-nav="ai" aria-label="PMS-AI页面导航">
+    <a href="#ai-pain">经营挑战</a>
+    <a href="#ai-flow">业务闭环</a>
+    <a href="#ai-value-stream">主价值流</a>
+    <a href="#ai-ai-flow">AI问数</a>
+    <a href="#ai-diagrams">流程图谱</a>
+    <a href="#ai-delights">应用价值</a>
+    <a href="#ai-modules">四大模块</a>
+    <a href="#ai-linkage">联动价值</a>
+    <a href="#ai-dashboard">驾驶舱</a>
+    <a href="#ai-launch">落地路径</a>
+  </nav>
+  <nav class="nav solution-nav" data-version-nav="standard" aria-label="PMS页面导航" hidden>
+    <a href="#std-pain">经营挑战</a>
+    <a href="#std-flow">业务闭环</a>
+    <a href="#std-value-stream">主价值流</a>
+    <a href="#std-diagrams">流程图谱</a>
+    <a href="#std-delights">应用价值</a>
+    <a href="#std-modules">四大模块</a>
+    <a href="#std-linkage">联动价值</a>
+    <a href="#std-dashboard">驾驶舱</a>
+    <a href="#std-launch">落地路径</a>
+  </nav>
+</header>
+
+<main id="ai-top" class="version-page is-active" data-version="ai">
+    <section class="hero">
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="hero-orbits" viewBox="0 0 560 460" role="img" aria-label="客户、合同、项目、产出汇入经营驾驶舱的数据流">
+          <path d="M34 298 C156 220 282 238 464 122" />
+          <path class="path-soft" d="M70 350 C198 306 338 318 514 244" />
+          <path class="path-soft" d="M104 170 C230 120 338 126 500 168" />
+          <circle cx="104" cy="260" r="5" />
+          <circle cx="204" cy="194" r="5" />
+          <circle cx="304" cy="264" r="5" />
+          <circle cx="420" cy="312" r="5" />
+        </svg>
+        <div class="hero-cockpit">
+          <div class="cockpit-title">经营驾驶舱</div>
+          <div class="cockpit-grid">
+            <span>收入</span>
+            <span>成本</span>
+            <span>利润</span>
+            <span>人效</span>
+          </div>
+        </div>
+        <div class="orbit-node orbit-client"><i></i><span>客户</span></div>
+        <div class="orbit-node orbit-contract"><i></i><span>合同</span></div>
+        <div class="orbit-node orbit-project"><i></i><span>项目</span></div>
+        <div class="orbit-node orbit-output"><i></i><span>产出</span></div>
+        <div class="metric-bubble primary"><strong>+18.5%</strong><span>收入趋势</span></div>
+        <div class="metric-bubble secondary"><strong>41%</strong><span>项目毛利</span></div>
+        <div class="metric-bubble tertiary">利润驾驶舱</div>
+      </div>
+      <div class="hero-inner">
+        <h1>
+          <span class="hero-title-line">把业务过程变成</span>
+          <span class="hero-title-line">管理层随时可问的</span>
+          <span class="hero-title-line">经营答案</span>
+        </h1>
+        <p class="hero-copy">专为电商内容运营公司打造，打通客户、合同、项目、产出、薪酬、成本、对账、应收和利润，再通过AI问数经营助理，让经营结果从月底汇总变为过程可见、随问随答、可追问原因。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#ai-modules">查看四大模块</a>
+          <a class="btn secondary" href="#ai-ai-flow">查看AI问数流程</a>
+        </div>
+      </div>
+      <div class="hero-strip" aria-label="核心指标">
+        <div class="hero-stat"><strong>30秒</strong><span>掌握项目进度与风险</span></div>
+        <div class="hero-stat"><strong>3分钟</strong><span>生成经营分析报告</span></div>
+        <div class="hero-stat"><strong>15分钟</strong><span>完成月度薪酬核算</span></div>
+        <div class="hero-stat"><strong>随时问</strong><span>查询收入、成本、利润、人效</span></div>
+      </div>
+    </section>
+
+    <section id="ai-pain">
+      <p class="section-kicker">经营管理现状</p>
+      <h2 class="section-title">
+        <span class="title-line">现有问题并非缺少数据</span>
+        <span class="title-line">而是数据散在表格、微信群、Excel和合同附件里</span>
+      </h2>
+      <p class="section-lead">管理层重点关注的是：收入从哪里来，项目卡在哪里，成本花到哪里，团队效率高不高，利润到底剩多少。</p>
+      <div class="pain-grid">
+        <article class="pain-card" style="--accent: var(--teal)">
+          <b>利润不可见</b>
+          <p>20多个项目同时跑，哪个客户赚钱、哪个项目亏损，要等月底财务核算才知道。</p>
+          <p class="after">系统价值：项目、品牌、客户、公司多维利润实时可查。</p>
+        </article>
+        <article class="pain-card" style="--accent: var(--amber)">
+          <b>预算不可控</b>
+          <p>年框签了1000万，执行到一半已消耗多少、还剩多少，全靠人工算。</p>
+          <p class="after">系统价值：合同金额、已对账、已消耗、剩余额度自动更新。</p>
+        </article>
+        <article class="pain-card" style="--accent: var(--coral)">
+          <b>人效不可知</b>
+          <p>员工忙不忙、外包划不划算、哪个岗位产能紧张，管理层只能凭感觉判断。</p>
+          <p class="after">系统价值：人均产出、薪酬产出比、人力成本占比一屏呈现。</p>
+        </article>
+      </div>
+    </section>
+
+    <div class="flow-band" id="ai-flow">
+      <section>
+        <p class="section-kicker">核心业务闭环</p>
+        <h2 class="section-title">
+          <span class="title-line">从客户合同到利润驾驶舱</span>
+          <span class="title-line">一条链路跑到底</span>
+        </h2>
+        <p class="section-lead">产出登记是中间枢纽：它不是简单填数量，而是同时驱动HR薪酬、FM成本、项目对账和经营利润视图。</p>
+        <div class="flow-map">
+          <div class="flow-node"><strong>客户</strong><span>客户360、集团层级、历史合作</span></div>
+          <div class="flow-node"><strong>合同</strong><span>金额、单价、KPI、补充协议</span></div>
+          <div class="flow-node"><strong>项目</strong><span>立项、预算池、里程碑</span></div>
+          <div class="flow-node"><strong>任务</strong><span>AE下单、脚本、拍摄、剪辑</span></div>
+          <div class="flow-node"><strong>产出</strong><span>数量、系数、人员、交付物</span></div>
+          <div class="flow-node"><strong>成本</strong><span>薪酬、外包、费用自动归集</span></div>
+          <div class="flow-node"><strong>对账</strong><span>匹配合同单价，生成对账单</span></div>
+          <div class="flow-node"><strong>利润</strong><span>回款、人效、毛利率、预警</span></div>
+        </div>
+        <div class="hinge">一句话：从月底汇总经营结果，升级为在业务过程中看风险、看利润、看现金流。</div>
+      </section>
+    </div>
+
+    <div class="value-stream" id="ai-value-stream">
+      <section>
+        <p class="section-kicker">重要实践</p>
+        <h2 class="section-title">
+          <span class="title-line">主价值流与核心管理抓手</span>
+          <span class="title-line">是业财一体化落地的关键载体</span>
+        </h2>
+        <p class="section-lead">以客户合同为源头，以项目交付为过程，以产出登记为数据中枢，把CRM、PM、HR、FM和经营驾驶舱串成一条可管控、可追踪、可复盘的经营主线。</p>
+
+        <div class="stream-board">
+          <div class="stream-board-head">
+            <div>
+              <h3>业财一体化主价值流蓝图</h3>
+              <p>系统以客户经营、项目执行、产出核算、财务回款为主线，形成从业务发生到经营结果的全过程闭环。</p>
+            </div>
+            <div class="stream-badge">全链路经营管控</div>
+          </div>
+
+          <div class="stream-grid">
+            <article class="stream-stage">
+              <div class="stage-cap"><span>客户档案</span><span>商机跟进</span><span>集团层级</span><span>历史合作</span></div>
+              <div class="stage-core"><div><strong>客户经营链</strong><small>客户资产、合作历史、未来订单储备统一沉淀</small></div></div>
+              <div class="stage-foot"><span>客户价值</span><span>合作风险</span><span>回款表现</span><span>续签机会</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>合同录入</span><span>单价规则</span><span>KPI模板</span><span>补充协议</span></div>
+              <div class="stage-core"><div><strong>合同预算链</strong><small>合同金额、预算边界、计价口径进入系统底账</small></div></div>
+              <div class="stage-foot"><span>预算池</span><span>执行周期</span><span>付款条件</span><span>结算规则</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>项目立项</span><span>AE下单</span><span>任务看板</span><span>脚本审核</span></div>
+              <div class="stage-core"><div><strong>项目交付链</strong><small>需求、任务、责任人、截止时间、交付物全过程在线</small></div></div>
+              <div class="stage-foot"><span>进度风险</span><span>返工记录</span><span>逾期预警</span><span>验收状态</span></div>
+            </article>
+
+            <article class="stream-stage center">
+              <div class="stage-cap"><span>人员</span><span>项目</span><span>数量</span><span>系数</span></div>
+              <div class="stage-core"><div><strong>产出登记中台</strong><small>一次登记，同时驱动薪酬、成本、对账和利润</small></div></div>
+              <div class="stage-foot"><span>薪酬计算</span><span>成本归集</span><span>对账依据</span><span>经营看板</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>内部薪酬</span><span>外包成本</span><span>费用报销</span><span>供应商月结</span></div>
+              <div class="stage-core"><div><strong>业财核算链</strong><small>人力、外包、费用进入项目成本，形成真实毛利</small></div></div>
+              <div class="stage-foot"><span>成本结构</span><span>项目毛利</span><span>预算消耗</span><span>人效分析</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>月度对账</span><span>开票管理</span><span>应收账龄</span><span>回款核销</span></div>
+              <div class="stage-core"><div><strong>经营结果链</strong><small>收入、回款、利润、人效、风险最终汇总到驾驶舱</small></div></div>
+              <div class="stage-foot"><span>现金流</span><span>客户贡献</span><span>利润排行</span><span>风险预警</span></div>
+            </article>
+          </div>
+
+          <div class="stream-control">业财一体化经营主线：合同全生命周期管理 + 项目全过程交付 + 产出驱动核算 + 经营风险实时预警</div>
+
+          <div class="stream-steps" aria-label="全过程经营路径">
+            <div class="stream-step"><small>01</small>市场研判</div>
+            <div class="stream-step"><small>02</small>商机跟进</div>
+            <div class="stream-step"><small>03</small>合同签订</div>
+            <div class="stream-step"><small>04</small>项目立项</div>
+            <div class="stream-step"><small>05</small>内容生产</div>
+            <div class="stream-step"><small>06</small>产出验收</div>
+            <div class="stream-step"><small>07</small>月度对账</div>
+            <div class="stream-step"><small>08</small>应收回款</div>
+            <div class="stream-step"><small>09</small>经营复盘</div>
+          </div>
+
+          <div class="stream-grips">
+            <article class="stream-grip"><b>合同预算抓手</b><p>从合同金额、单价、KPI、补充协议开始，把预算边界提前固化，避免执行到一半才发现口径不一致。</p></article>
+            <article class="stream-grip"><b>产出核算抓手</b><p>每条交付物都带上人员、项目、数量、系数，自动进入HR薪酬与FM成本，减少月底人工拼表。</p></article>
+            <article class="stream-grip"><b>对账回款抓手</b><p>已验收交付物自动进入对账池，对账确认后生成应收、开票、回款和账龄预警。</p></article>
+            <article class="stream-grip"><b>经营决策抓手</b><p>按客户、品牌、项目、人员汇总收入、成本、利润、人效和现金流，支撑管理层快速判断经营质量。</p></article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="ai-flow" id="ai-ai-flow">
+      <section>
+        <p class="section-kicker">AI经营问数</p>
+        <h2 class="section-title">
+          <span class="title-line">AI经营问数如何接入业财闭环</span>
+          <span class="title-line">从业务数据到经营答案</span>
+        </h2>
+        <p class="section-lead">AI不是单独聊天工具，而是建立在CRM、PM、HR、FM数据闭环之上。前端业务动作沉淀为可信数据，AI再把数据转化为可追问、可解释、可行动的管理答案。</p>
+
+        <div class="ai-board">
+          <div class="ai-board-head">
+            <div>
+              <h3>AI能力融合总架构图</h3>
+              <p>业财系统负责把数据做真、做全、做连续，AI问数经营助理负责把数据转成图表、归因、预警和行动建议。</p>
+            </div>
+            <div class="ai-badge">经营智能层</div>
+          </div>
+
+          <div class="ai-architecture" aria-label="AI能力融合总架构">
+            <div class="ai-source-grid">
+              <article class="ai-source-card"><small>CRM</small><b>客户与合同</b><span>客户档案、合同单价、年框预算、补充协议、商机漏斗。</span></article>
+              <article class="ai-source-card"><small>PM</small><b>项目与产出</b><span>立项、AE下单、任务状态、脚本审核、交付验收。</span></article>
+              <article class="ai-source-card"><small>HR</small><b>薪酬与人效</b><span>员工产出、薪酬规则、成本分摊、岗位产能。</span></article>
+              <article class="ai-source-card"><small>FM</small><b>财务与回款</b><span>对账、应收、开票、回款、成本归集、利润核算。</span></article>
+            </div>
+
+            <div class="ai-core">
+              <small>统一经营数据层</small>
+              <strong>AI问数经营助理</strong>
+              <p>连接系统底账，用中文提问即可获得经营答案、图表报告、异常归因和建议动作。</p>
+              <div class="ai-core-flow">
+                <span>中文问数</span>
+                <span>图表报告</span>
+                <span>异常归因</span>
+                <span>行动建议</span>
+              </div>
+            </div>
+
+            <div class="ai-output-grid">
+              <article class="ai-output-card"><small>驾驶舱</small><b>一屏看全局</b><span>收入、成本、利润、回款、人效和风险集中呈现。</span></article>
+              <article class="ai-output-card"><small>预警中心</small><b>风险主动提醒</b><span>低毛利、预算接近阈值、应收逾期、产能不足自动浮现。</span></article>
+              <article class="ai-output-card"><small>简报中心</small><b>周报月报生成</b><span>自动整理经营复盘底稿，减少会前人工统计。</span></article>
+              <article class="ai-output-card"><small>知识库</small><b>业务口径解释</b><span>结合合同规则、SOP、薪酬制度和财务口径回答问题。</span></article>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-answer-board">
+          <div class="ai-answer-head">
+            <h3>AI问数完整链路图</h3>
+            <p>客户问一句话之后，系统会先理解业务意图，再匹配数据口径，最终输出图表、原因和建议。</p>
+            <div class="ai-question">
+              <small>示例问题</small>
+              <b>本月哪些项目毛利低于30%，主要原因是什么？</b>
+            </div>
+          </div>
+          <div class="ai-step-chain" aria-label="AI问数完整链路">
+            <div class="ai-step"><em>01</em><div><small>提问</small><b>管理层用中文提问</b><span>不需要找报表，也不需要写SQL。</span></div></div>
+            <div class="ai-step"><em>02</em><div><small>理解</small><b>识别业务意图与指标口径</b><span>判断问题对应收入、成本、利润、回款还是人效。</span></div></div>
+            <div class="ai-step"><em>03</em><div><small>查询</small><b>调用CRM、PM、HR、FM底账</b><span>从合同、产出、薪酬、成本和应收中取数。</span></div></div>
+            <div class="ai-step"><em>04</em><div><small>分析</small><b>生成图表并定位异常原因</b><span>拆解项目、客户、人员、月份和成本结构。</span></div></div>
+            <div class="ai-step"><em>05</em><div><small>行动</small><b>输出建议动作并支持继续追问</b><span>给出报价、排期、催收或成本控制建议。</span></div></div>
+          </div>
+        </div>
+
+        <div class="ai-scenario">
+          <div class="ai-scenario-head">
+            <div>
+              <h3>AI适配四个高频经营场景</h3>
+              <p>选择客户最容易理解的经营问题来展示AI价值，让AI从概念变成业务动作。</p>
+            </div>
+            <div class="ai-badge">业务场景图</div>
+          </div>
+
+          <div class="ai-scene-grid">
+            <article class="ai-scene-card">
+              <small>场景 01</small>
+              <b>项目毛利AI归因</b>
+              <span>当项目毛利偏低，AI自动拆解收入、内部薪酬、外包成本、费用和返工记录。</span>
+              <div class="ai-scene-flow">
+                <span>毛利偏低</span>
+                <span>拆收入与成本</span>
+                <span>查返工和逾期</span>
+                <span>输出报价与排期建议</span>
+              </div>
+            </article>
+            <article class="ai-scene-card">
+              <small>场景 02</small>
+              <b>年框预算AI监控</b>
+              <span>围绕年框客户，AI实时判断预算消耗、剩余额度和是否需要追加预算。</span>
+              <div class="ai-scene-flow">
+                <span>合同年框预算</span>
+                <span>项目占用预算</span>
+                <span>对账扣减预算</span>
+                <span>提醒续签或补充协议</span>
+              </div>
+            </article>
+            <article class="ai-scene-card">
+              <small>场景 03</small>
+              <b>应收回款AI预警</b>
+              <span>AI结合账龄、开票状态、客户历史回款表现，识别临期、逾期和高风险款项。</span>
+              <div class="ai-scene-flow">
+                <span>对账确认</span>
+                <span>生成应收</span>
+                <span>计算账龄风险</span>
+                <span>推送跟进建议</span>
+              </div>
+            </article>
+            <article class="ai-scene-card">
+              <small>场景 04</small>
+              <b>团队人效AI分析</b>
+              <span>AI把PM产出、HR薪酬和FM成本联动起来，判断内部团队与外包哪个更划算。</span>
+              <div class="ai-scene-flow">
+                <span>产出登记</span>
+                <span>薪酬成本</span>
+                <span>项目毛利</span>
+                <span>人员配置建议</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="ai-cockpit-link">
+            <div class="ai-mini-dashboard">
+              <h4>经营驾驶舱看到什么</h4>
+              <div class="ai-metric-grid">
+                <div class="ai-metric"><b>+18.5%</b><span>收入趋势</span></div>
+                <div class="ai-metric"><b>41%</b><span>项目毛利</span></div>
+                <div class="ai-metric"><b>86万</b><span>待回款金额</span></div>
+                <div class="ai-metric"><b>1.8</b><span>薪酬产出比</span></div>
+              </div>
+            </div>
+            <div class="ai-chat-panel">
+              <h4>AI继续回答原因</h4>
+              <div class="ai-question-list">
+                <div class="ai-question-chip"><b>收入为什么下降？</b><br />按客户、项目和交付延迟拆解影响因素。</div>
+                <div class="ai-question-chip"><b>哪些项目拉低毛利？</b><br />定位单价、薪酬、外包、费用和返工原因。</div>
+                <div class="ai-question-chip"><b>哪些客户回款风险高？</b><br />结合账龄、开票状态和历史回款表现排序。</div>
+                <div class="ai-question-chip"><b>哪个岗位产能不足？</b><br />按岗位产出、任务积压和薪酬产出比判断。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-mode-board">
+          <div class="ai-mode-head">
+            <div>
+              <h3>双模式AI入口</h3>
+              <p>一个入口既能问经营数据，也能问业务知识。经营问题交给AI问数，日常材料和制度查询交给业务助手。</p>
+            </div>
+            <div class="ai-badge">双模式对话</div>
+          </div>
+          <div class="ai-mode-grid">
+            <article class="ai-mode-card">
+              <h4>经营问数模式</h4>
+              <p>连接CRM、PM、HR、FM和经营驾驶舱，围绕收入、成本、利润、回款、人效和风险生成可视化分析。</p>
+              <ul class="ai-mode-list">
+                <li>本月哪些项目毛利低于30%</li>
+                <li>TCL年框预算还剩多少</li>
+                <li>未来30天哪些应收需要跟进</li>
+                <li>内部团队和外包哪个更划算</li>
+              </ul>
+            </article>
+            <article class="ai-mode-card">
+              <h4>业务助手模式</h4>
+              <p>连接企业知识库，辅助项目周报、客户邮件、会议纪要、合同摘要、SOP查询和制度问答。</p>
+              <ul class="ai-mode-list">
+                <li>整理本周项目进展摘要</li>
+                <li>根据对账结果生成客户沟通稿</li>
+                <li>查询某客户结算口径和交付SOP</li>
+                <li>给新人解释薪酬和产出规则</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+
+        <div class="ai-briefing-board">
+          <div class="ai-briefing-head">
+            <div>
+              <h3>AI经营简报自动生成流程图</h3>
+              <p>系统按周或按月自动拉取经营数据，形成可直接开会使用的经营复盘材料。</p>
+            </div>
+            <div class="ai-badge">自动化工作流</div>
+          </div>
+          <div class="ai-briefing-flow" aria-label="AI经营简报自动生成流程">
+            <article class="ai-brief-step"><small>01</small><b>设定周期</b><span>按周、按月或项目节点自动触发。</span></article>
+            <article class="ai-brief-step"><small>02</small><b>拉取数据</b><span>自动读取收入、成本、利润、回款和人效。</span></article>
+            <article class="ai-brief-step"><small>03</small><b>分析风险</b><span>识别低毛利、逾期任务、预算超阈值和应收风险。</span></article>
+            <article class="ai-brief-step"><small>04</small><b>生成图表</b><span>输出趋势、排行、结构拆解和异常对比。</span></article>
+            <article class="ai-brief-step"><small>05</small><b>总结异常</b><span>解释指标变化背后的客户、项目和成本原因。</span></article>
+            <article class="ai-brief-step"><small>06</small><b>推送简报</b><span>形成经营简报，推送管理层和部门负责人。</span></article>
+          </div>
+          <div class="ai-brief-output">
+            <div class="ai-report-preview">
+              <h4>简报自动包含</h4>
+              <div class="ai-report-lines">
+                <span>收入与利润趋势</span>
+                <span>项目风险与交付卡点</span>
+                <span>应收账龄与回款风险</span>
+                <span>团队人效与岗位产能</span>
+              </div>
+            </div>
+            <div class="ai-action-preview">
+              <h4>自动给出动作建议</h4>
+              <div class="ai-action-lines">
+                <span>优先复盘低毛利项目报价口径</span>
+                <span>提醒客户经理跟进临期应收</span>
+                <span>建议调整下月拍摄与剪辑排期</span>
+                <span>识别需要追加预算或补充协议的客户</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-knowledge-board">
+          <div class="ai-knowledge-head">
+            <div>
+              <h3>企业知识库与AI问数协同图</h3>
+              <p>AI不仅能查数字，还能结合合同规则、客户结算口径、项目SOP和财务口径解释数据为什么这样算。</p>
+            </div>
+            <div class="ai-badge">知识库协同</div>
+          </div>
+          <div class="ai-knowledge-grid" aria-label="企业知识库与AI问数协同">
+            <div class="ai-knowledge-sources">
+              <article class="ai-knowledge-item"><small>合同规则</small><b>单价与KPI口径</b><span>视频、图文、直播、双重考核等结算规则。</span></article>
+              <article class="ai-knowledge-item"><small>客户口径</small><b>年框与补充协议</b><span>不同客户的预算、折扣、付款和验收要求。</span></article>
+              <article class="ai-knowledge-item"><small>项目SOP</small><b>交付流程与审核标准</b><span>脚本、拍摄、剪辑、发布、验收的执行规则。</span></article>
+              <article class="ai-knowledge-item"><small>薪酬制度</small><b>产出与分摊规则</b><span>岗位薪酬、计件系数、达标线和成本分摊口径。</span></article>
+            </div>
+            <div class="ai-knowledge-center">
+              <small>业务知识 + 经营数据</small>
+              <strong>AI回答更懂业务语境</strong>
+              <p>同样是“项目毛利下降”，AI可以结合合同单价、返工记录、外包成本和客户结算口径解释原因，而不是只返回一个数字。</p>
+            </div>
+            <div class="ai-knowledge-results">
+              <article class="ai-knowledge-item"><small>指标解释</small><b>解释为什么这样算</b><span>回答毛利率、预算消耗、人效、账龄等指标口径。</span></article>
+              <article class="ai-knowledge-item"><small>材料生成</small><b>生成周报和客户沟通稿</b><span>结合真实项目数据和客户规则生成可用文本。</span></article>
+              <article class="ai-knowledge-item"><small>新人培训</small><b>辅助理解业务规则</b><span>快速查询合同、项目、薪酬、对账的标准流程。</span></article>
+              <article class="ai-knowledge-item"><small>制度问答</small><b>减少反复询问</b><span>把常见制度、SOP和财务口径变成随问随答。</span></article>
+            </div>
+          </div>
+          <div class="ai-knowledge-strip" aria-label="知识库协同价值">
+            <span><b>口径统一</b>合同、项目、薪酬、财务规则进入同一套解释体系。</span>
+            <span><b>解释可追溯</b>每个经营答案都能关联数据来源和业务规则。</span>
+            <span><b>输出可复用</b>问数结果可继续生成周报、复盘材料和沟通文案。</span>
+          </div>
+        </div>
+
+        <div class="ai-launch-map">
+          <div class="ai-launch-head">
+            <h3>AI分阶段落地路径</h3>
+            <p>先让数据真实，再让流程闭环，再让指标可见，最后让AI可问、可解释、可预警。</p>
+          </div>
+          <div class="ai-launch-steps" aria-label="AI分阶段落地路径">
+            <article class="ai-launch-step"><small>Phase 01</small><b>数据底账</b><span>梳理客户、合同、单价、人员、项目和历史产出。</span></article>
+            <article class="ai-launch-step"><small>Phase 02</small><b>业务闭环</b><span>跑通立项、下单、产出、对账、应收和回款。</span></article>
+            <article class="ai-launch-step"><small>Phase 03</small><b>经营驾驶舱</b><span>沉淀收入、成本、利润、回款、人效和风险指标。</span></article>
+            <article class="ai-launch-step"><small>Phase 04</small><b>AI问数</b><span>配置月度复盘、项目毛利、预算和回款高频问题。</span></article>
+            <article class="ai-launch-step"><small>Phase 05</small><b>自动化工作流</b><span>自动生成经营简报、预算预警和应收跟进提醒。</span></article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="ai-diagrams">
+      <p class="section-kicker">经营流程蓝图</p>
+      <h2 class="section-title">
+        <span class="title-line">关键业务流程全景展开</span>
+        <span class="title-line">从执行链路沉淀经营结果</span>
+      </h2>
+      <p class="section-lead">围绕业务断点、系统运转、模块联动和经营结果，将客户、合同、项目、产出、薪酬、成本、对账、回款串成一套可追踪的经营闭环。</p>
+      <div class="diagram-index">
+        <a href="#ai-diagram-current">现状全景</a>
+        <a href="#ai-diagram-before-after">上线前后</a>
+        <a href="#ai-diagram-nine">9步闭环</a>
+        <a href="#ai-diagram-crm">CRM流程</a>
+        <a href="#ai-diagram-pm">PM泳道</a>
+        <a href="#ai-diagram-fm">FM财务</a>
+        <a href="#ai-diagram-hr">HR薪酬</a>
+        <a href="#ai-diagram-arch">经营架构</a>
+      </div>
+
+      <article class="diagram-block" id="ai-diagram-current" style="--accent: var(--coral); --weak: var(--coral-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>现状全景：手工运转的“表格帝国”</h3>
+            <p>每个部门都有表格，但管理层看到的是滞后的经营结果，而不是实时业务事实。</p>
+          </div>
+          <div class="diagram-tag">现状诊断图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="boss-node">
+            <strong>管理层</strong>
+            <span>这月利润多少？哪个品牌最赚钱？为什么月底才知道？</span>
+          </div>
+          <div class="role-grid">
+            <div class="role-card" style="--accent: var(--amber)"><b>PM</b><p>微信群派活，腾讯文档翻进度。</p><small>任务逾期靠喊，脚本审核靠群。</small></div>
+            <div class="role-card" style="--accent: var(--green)"><b>财务</b><p>手工对账，记忆追应收。</p><small>月结对账2-3天，逾期靠人发现。</small></div>
+            <div class="role-card" style="--accent: var(--coral)"><b>HR</b><p>手工算薪，交叉翻表。</p><small>月薪计算2-3天，出错率5%-8%。</small></div>
+            <div class="role-card" style="--accent: var(--teal)"><b>仓务</b><p>口头领用，人脑记位。</p><small>样机盘点靠人，库位全凭记忆。</small></div>
+          </div>
+          <div class="mini-note">经营挑战：公司不是没有数据，而是数据没有连成经营链路，结果只能月底拼出来。</div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-before-after" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>从“表格记录”升级为“系统闭环”</h3>
+            <p>同一条业务数据，同时服务项目管理、薪酬计算、成本归集、对账回款和经营驾驶舱。</p>
+          </div>
+          <div class="diagram-tag">价值对比图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="before-after">
+            <div class="ba-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
+              <h4>上线前</h4>
+              <ul class="ba-list">
+                <li><b>客户信息</b><span>散落在多个腾讯文档表格中</span></li>
+                <li><b>合同单价</b><span>锁在PDF里，对账时财务手动翻查</span></li>
+                <li><b>项目进度</b><span>微信群问 + 表格一行行翻</span></li>
+                <li><b>脚本审核</b><span>群里说“改一下”，版本混乱</span></li>
+                <li><b>薪酬计算</b><span>HR月底翻5-6张表手工算</span></li>
+                <li><b>应收管理</b><span>全靠财务记忆追踪</span></li>
+              </ul>
+            </div>
+            <div class="ba-arrow">系统上线</div>
+            <div class="ba-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+              <h4>上线后</h4>
+              <ul class="ba-list">
+                <li><b>客户信息</b><span>客户360，一屏展示合同与项目</span></li>
+                <li><b>合同单价</b><span>结构化存储，对账自动匹配</span></li>
+                <li><b>项目进度</b><span>甘特图+看板，30秒掌握全貌</span></li>
+                <li><b>脚本审核</b><span>系统强制卡点，全程可追溯</span></li>
+                <li><b>薪酬计算</b><span>一键生成，目标15分钟完成</span></li>
+                <li><b>应收管理</b><span>三级预警，到期自动通知</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-nine" style="--accent: var(--amber); --weak: var(--amber-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>项目全生命周期：9步业务闭环</h3>
+            <p>产出登记是中间枢纽，向下驱动HR薪酬和FM成本，向后驱动对账、应收和利润。</p>
+          </div>
+          <div class="diagram-tag">核心流程图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="node-row arrow-grid" style="--cols: 6">
+            <div class="d-node" style="--accent: var(--teal)"><strong>1. 立项</strong><span>PM关联合同、预算、里程碑</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>2. AE下单</strong><span>接收需求，指派执行人</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>3. 制脚本</strong><span>编导/外包提交脚本</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>4. 审脚本</strong><span>AE审核，通过才可拍摄</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>5. 拍摄</strong><span>场景预订、样机申领</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>6. 剪辑</strong><span>剪辑交付，形成交付物</span></div>
+          </div>
+          <div class="pivot-box">
+            <strong>产出登记：产出量 × 难度系数 = 加权产出</strong>
+            <div>一次登记，同时驱动薪酬、成本、对账和利润。</div>
+          </div>
+          <div class="node-row arrow-grid" style="--cols: 4">
+            <div class="d-node" style="--accent: var(--green)"><strong>7. 月度对账</strong><span>拉取交付物，匹配合同单价</span></div>
+            <div class="d-node" style="--accent: var(--green)"><strong>8. 决算</strong><span>收入 - 成本 = 项目利润</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>9. 关项</strong><span>归档复盘，沉淀数据</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>BI看板</strong><span>管理层查看利润、人效、回款、预算</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>CRM流程：客户层级、合同生命周期、结算规则</h3>
+            <p>CRM不是客户名录，而是后续PM立项和FM对账的经营底账。</p>
+          </div>
+          <div class="diagram-tag">CRM业务图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="split-grid">
+            <div class="split-card" style="--accent: var(--teal)">
+              <h4>客户层级架构</h4>
+              <div class="tree-grid">
+                <div class="d-node center" style="--accent: var(--teal)"><strong>集团客户：TCL集团</strong><span>集团汇总，子公司独立签约</span></div>
+                <div class="tree-branch">
+                  <div class="d-node" style="--accent: var(--teal)"><strong>TCL空调事业部</strong><span>年框合同800万/年 → 项目执行</span></div>
+                  <div class="d-node" style="--accent: var(--teal)"><strong>TCL电视事业部</strong><span>年框合同500万/年 → 项目执行</span></div>
+                  <div class="d-node" style="--accent: var(--teal)"><strong>酷友科技</strong><span>补充协议追加50万 → 临时项目</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="split-card" style="--accent: var(--amber)">
+              <h4>合同生命周期</h4>
+              <div class="node-row lifecycle" style="--cols: 5">
+                <div class="d-node" style="--accent: var(--amber)"><strong>草稿</strong><span>录入合同单价体系</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已签约</strong><span>正式签章，上传附件</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>执行中</strong><span>项目启动，月度预算</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已完成</strong><span>对账完毕，回款完毕</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已归档</strong><span>历史归档，规则留痕</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--amber); --weak: var(--amber-weak)">补充协议：追加预算、调整单价、延长合作期，自动同步到执行链路。</div>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 16px">
+            <div class="split-card" style="--accent: var(--green)">
+              <h4>标准模式 simple</h4>
+              <div class="d-node" style="--accent: var(--green)"><strong>对账金额 = Σ(产出量 × 单价 × 阶梯折扣)</strong><span>适用于大多数按条、按场、按项计价客户。</span></div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>双重考核 double_eval</h4>
+              <div class="d-node" style="--accent: var(--coral)"><strong>基本服务费50% + 考核服务费50% × KPI达成率</strong><span>适用于TCL等考核制客户，系统自动按KPI阶梯计算。</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>PM流程：多角色协同泳道 + 任务状态流转 + 强制卡点</h3>
+            <p>把“微信群派活”变成角色、状态、产出、成本全程可追踪。</p>
+          </div>
+          <div class="diagram-tag">PM执行图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="swimlane">
+            <div class="swimlane-grid">
+              <div class="lane"><div class="lane-title">仓务+场景</div><div class="d-node" style="--accent: var(--teal)"><strong>场景预订</strong><span>拍摄前锁定场景排期</span></div><div class="d-node" style="--accent: var(--teal)"><strong>样机申领</strong><span>申领、归还、盘点留痕</span></div></div>
+              <div class="lane"><div class="lane-title">项目部 PM+AE</div><div class="d-node" style="--accent: var(--amber)"><strong>PM立项</strong><span>关联合同、预算、里程碑、WBS</span></div><div class="d-node" style="--accent: var(--amber)"><strong>AE接单下单</strong><span>接收需求，选择内部或外包</span></div></div>
+              <div class="lane"><div class="lane-title">编导组/外包</div><div class="d-node" style="--accent: var(--coral)"><strong>制作脚本</strong><span>产出量×难度系数，提交审核</span></div><div class="d-node" style="--accent: var(--coral)"><strong>退回修改</strong><span>审核意见和版本记录留痕</span></div></div>
+              <div class="lane"><div class="lane-title">拍摄/剪辑/外包</div><div class="d-node" style="--accent: var(--green)"><strong>拍摄执行</strong><span>依赖脚本审核通过</span></div><div class="d-node" style="--accent: var(--green)"><strong>剪辑交付</strong><span>交付物进入验收和对账池</span></div></div>
+              <div class="lane"><div class="lane-title">人资/财务</div><div class="d-node" style="--accent: var(--teal)"><strong>薪酬计算</strong><span>产出自动进入HR规则</span></div><div class="d-node" style="--accent: var(--green)"><strong>财务对账</strong><span>交付物匹配合同单价</span></div></div>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card">
+              <h4>任务状态流转</h4>
+              <div class="status-fork">
+                <div class="d-node center" style="--accent: var(--teal)"><strong>待分配 → 进行中 → 审核中</strong><span>AE下单后自动进入任务流转</span></div>
+                <div class="fork-children">
+                  <div class="d-node" style="--accent: var(--green)"><strong>审核通过</strong><span>进入已完成</span></div>
+                  <div class="d-node" style="--accent: var(--amber)"><strong>需修改</strong><span>回到进行中</span></div>
+                  <div class="d-node" style="--accent: var(--coral)"><strong>已驳回</strong><span>回到待分配</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="split-card">
+              <h4>强制卡点机制</h4>
+              <div class="node-row arrow-grid" style="--cols: 3">
+                <div class="d-node" style="--accent: var(--amber)"><strong>脚本任务</strong><span>提交AE审核</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>AE审核</strong><span>未通过，拍摄无法开始</span></div>
+                <div class="d-node" style="--accent: var(--green)"><strong>拍摄任务</strong><span>通过后自动解锁</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--coral); --weak: var(--coral-weak)">管理价值：减少错拍、返工和责任不清。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-fm" style="--accent: var(--green); --weak: var(--green-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>FM流程：成本自动归集、月度对账、应收回款</h3>
+            <p>财务从月底拼账，变成过程核对和经营预警。</p>
+          </div>
+          <div class="diagram-tag">FM财务图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="cost-sources">
+            <div class="d-node" style="--accent: var(--teal)"><strong>内部员工产出</strong><span>编导/拍摄/剪辑产出进入HR薪酬计算</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>外包供应商产出</strong><span>按品类单价计件，进入供应商月结</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>费用报销</strong><span>差旅、设备、场地、模特、投放费用</span></div>
+          </div>
+          <div class="cost-target">
+            <strong>FM成本归集：项目总成本 = 四类成本之和</strong>
+            <div class="cost-items">
+              <span>内部计件成本</span>
+              <span>内部分摊成本</span>
+              <span>外包成本</span>
+              <span>费用成本</span>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card" style="--accent: var(--green)">
+              <h4>月度对账自动化</h4>
+              <div class="timeline-vertical">
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 1</b><p>系统自动拉取当月可对账交付物，按项目和品类汇总。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 2</b><p>自动匹配CRM合同单价，应用阶梯折扣。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 3</b><p>双重考核客户自动计算KPI服务费。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 4</b><p>一键生成对账单，提交甲方确认。</p></div>
+              </div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>应收账款生命周期</h4>
+              <div class="node-row arrow-grid" style="--cols: 4">
+                <div class="d-node" style="--accent: var(--teal)"><strong>对账确认</strong><span>应收生成</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>待开票</strong><span>科目来自对账单</span></div>
+                <div class="d-node" style="--accent: var(--green)"><strong>已开票</strong><span>待回款</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>已逾期</strong><span>三级预警升级</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--coral); --weak: var(--coral-weak)">到期前3天提醒，到期当天重点预警，逾期3天升级管理层。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>HR流程：薪酬自动计算 + 成本精准分摊</h3>
+            <p>HR算的是员工工资，FM拿到的是项目成本，两套口径不再打架。</p>
+          </div>
+          <div class="diagram-tag">HR薪酬图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="timeline-vertical">
+            <div class="timeline-step" style="--accent: var(--teal)"><b>启动</b><p>月度薪酬计算启动，系统汇总当月所有产出。</p></div>
+            <div class="timeline-step" style="--accent: var(--teal)"><b>汇总</b><p>Σ(产出量 × 难度系数)，计算员工总加权产出。</p></div>
+            <div class="timeline-step" style="--accent: var(--amber)"><b>判断</b><p>区分内部员工和外包供应商，判断是否达到保底阈值。</p></div>
+            <div class="timeline-step" style="--accent: var(--coral)"><b>计算</b><p>达标：底薪分摊 + 绩效分摊 + 计件提成；未达标：绩效为0或按规则折算。</p></div>
+            <div class="timeline-step" style="--accent: var(--green)"><b>写入</b><p>底薪、绩效、计件、外包月结全部写入FM成本归集。</p></div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card" style="--accent: var(--teal)">
+              <h4>成本分摊示例</h4>
+              <div class="d-node" style="--accent: var(--teal)"><strong>项目A：240加权产出，占40%</strong><span>底薪5000、绩效2000按40%分摊，提成按具体产出归属。</span></div>
+              <div class="d-node" style="--accent: var(--teal); margin-top: 10px"><strong>项目B：360加权产出，占60%</strong><span>底薪5000、绩效2000按60%分摊，形成真实人力成本。</span></div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>经营层可获得的信息</h4>
+              <div class="node-row" style="--cols: 2">
+                <div class="d-node" style="--accent: var(--coral)"><strong>员工人效</strong><span>人均加权产出、薪酬产出比</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>项目人力成本</strong><span>每个项目真实承担多少工资</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>岗位产能</strong><span>哪个岗位紧张，哪个岗位闲置</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>外包对比</strong><span>内部做还是外包划算</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="ai-diagram-arch" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>经营架构：四大核心模块 + 事件总线 + BI驾驶舱</h3>
+            <p>模块关系清晰后，业务动作、财务口径和经营指标可以在同一条数据链上闭环。</p>
+          </div>
+          <div class="diagram-tag">系统架构图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="architecture-map">
+            <div class="arch-top">BI经营驾驶舱：项目利润 / 品牌盈利 / 人效分析 / 预算消耗 / 现金流预测</div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>CRM</strong><span>客户、合同、商机、单价、KPI模板</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>PM</strong><span>项目立项、AE需求、任务WBS、脚本审核、交付验收</span></div>
+            <div class="d-node" style="--accent: var(--green)"><strong>FM</strong><span>预算、成本、对账、应收、开票、回款、利润</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>HR</strong><span>员工、薪酬结构、产出登记、薪酬计算、成本分摊</span></div>
+            <div class="event-bus">事件总线：产出登记 → 薪酬计算 + 成本归集；对账确认 → 应收生成 + 预算扣减；逾期事件 → 多级预警</div>
+          </div>
+          <div class="mini-note">管理价值：所有部门不再各算各的，最终都沉淀成一套可实时查看的经营数据。</div>
+        </div>
+      </article>
+    </section>
+
+    <section id="ai-delights">
+      <p class="section-kicker">应用价值场景</p>
+      <h2 class="section-title">
+        <span class="title-line">上线前后变化一眼看清</span>
+        <span class="title-line">经营管理改善可量化呈现</span>
+      </h2>
+      <p class="section-lead">围绕项目利润、预算消耗、进度风险、应收回款、成本结构与客户价值，展示从分散协作到一体化经营的升级结果。</p>
+      <div class="delight-grid">
+        <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <div class="num">场景 01</div>
+          <h3>无需等到月底，项目盈利情况过程可见</h3>
+          <div class="compare-mini">
+            <p>传统方式：经营管理者只能等财务月底汇总，发现亏损时项目已经接近结束。</p>
+            <p>系统价值：收入、内部人力、外包、费用持续归集，项目执行中即可看到预估毛利。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <div class="num">场景 02</div>
+          <h3>年框预算不再靠人算，剩余额度实时清楚</h3>
+          <div class="compare-mini">
+            <p>传统方式：合同在PDF里，执行在项目表里，预算消耗需要财务手工核对。</p>
+            <p>系统价值：对账确认自动扣减预算，已消耗、已回款、剩余额度一屏可见。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
+          <div class="num">场景 03</div>
+          <h3>项目卡点不靠问，责任人和逾期自动浮出来</h3>
+          <div class="compare-mini">
+            <p>传统方式：项目进度靠口头同步，难以及时判断卡在脚本、拍摄、剪辑还是客户确认。</p>
+            <p>系统价值：任务状态、责任人、截止时间、审核意见全留痕，风险自动暴露。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--green); --weak: var(--green-weak)">
+          <div class="num">场景 04</div>
+          <h3>钱什么时候回来，不再靠财务记忆</h3>
+          <div class="compare-mini">
+            <p>传统方式：对账确认后还要手工建立应收，逾期往往晚几天才发现。</p>
+            <p>系统价值：对账确认自动生成应收，开票、回款、逾期预警全生命周期追踪。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <div class="num">场景 05</div>
+          <h3>内部团队和外包哪个划算，有统一口径比较</h3>
+          <div class="compare-mini">
+            <p>传统方式：内部工资和外包月结各算各的，很难比较真实项目毛利。</p>
+            <p>系统价值：内部薪酬分摊和外包计件都进入项目成本，可按项目统一对比。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <div class="num">场景 06</div>
+          <h3>客户值不值得继续做，不再只看合同额</h3>
+          <div class="compare-mini">
+            <p>传统方式：大客户合同额高，但可能回款慢、返工多、毛利低。</p>
+            <p>系统价值：按客户集团看收入、成本、回款、毛利和人效，判断客户真实价值。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="ai-modules">
+      <p class="section-kicker">四大模块</p>
+      <h2 class="section-title">
+        <span class="title-line">不是功能堆叠</span>
+        <span class="title-line">而是围绕经营管理视角重构业务协同</span>
+      </h2>
+      <p class="section-lead">点击左侧模块，可以快速查看每个模块解决的管理挑战与系统价值。</p>
+      <div class="module-shell">
+        <div class="module-sidebar">
+          <div class="module-tabs" role="tablist" aria-label="四大模块">
+            <button class="module-tab is-active" role="tab" aria-selected="true" data-module="crm" style="--accent: var(--teal)">
+              <b>CRM 客户与合同</b><span>客户资产与合同底账</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="pm" style="--accent: var(--amber)">
+              <b>PM 项目管理</b><span>项目进度与交付风险</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="fm" style="--accent: var(--green)">
+              <b>FM 财务管理</b><span>收入成本利润回款</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="hr" style="--accent: var(--coral)">
+              <b>HR 人力资源</b><span>薪酬成本与团队人效</span>
+            </button>
+          </div>
+          <div class="module-sidebar-card" aria-label="四大模块联动结果">
+            <div>
+              <small>联动结果</small>
+              <b>一条经营数据链跑到底</b>
+              <span>客户合同 → 项目交付 → 产出登记 → 薪酬成本 → 对账回款 → 利润驾驶舱</span>
+            </div>
+            <ul class="module-sidebar-list">
+              <li>业务动作一次录入</li>
+              <li>成本收入自动联动</li>
+              <li>经营结果实时呈现</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <article class="module-panel is-active" id="ai-panel-crm" data-module-panel="crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+            <div class="module-header">
+              <div>
+                <h3>CRM不是客户名录，而是经营底账的入口</h3>
+                <p>让管理层看清客户资产、合同金额、预算余额和未来订单储备。</p>
+              </div>
+              <div class="module-badge">客户与合同底座</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>客户360视图</h4><dl><div><dt>管理挑战</dt><dd>客户信息散在AE、PM、财务各自表格和微信里。</dd></div><div><dt>系统价值</dt><dd>一个客户下的对接人、合同、项目、商机、历史合作集中展示。</dd></div></dl></div>
+              <div class="module-card"><h4>合同单价结构化</h4><dl><div><dt>管理挑战</dt><dd>财务月底翻PDF找单价，容易漏算、错算、争议多。</dd></div><div><dt>系统价值</dt><dd>视频、图文、直播等单价录入系统，立项、预算、对账自动调用。</dd></div></dl></div>
+              <div class="module-card"><h4>补充协议管理</h4><dl><div><dt>管理挑战</dt><dd>追加预算、调价、续签停留在聊天记录里，执行端不知道。</dd></div><div><dt>系统价值</dt><dd>变更留痕并同步到预算池、单价规则和项目执行链路。</dd></div></dl></div>
+              <div class="module-card"><h4>商机漏斗</h4><dl><div><dt>管理挑战</dt><dd>只能看已签合同，看不到未来订单储备。</dd></div><div><dt>系统价值</dt><dd>线索、沟通、报价、赢单、输单可视化，提前判断未来收入。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个客户合同额高，但回款慢、毛利低</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪个集团客户预算快用完，需要提前续签或追加</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>销售优先跟进哪些商机，避免下月收入断档</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="ai-panel-pm" data-module-panel="pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+            <div class="module-header">
+              <div>
+                <h3>PM不是任务列表，而是多角色协同的执行中枢</h3>
+                <p>让管理层看清项目卡在哪里、谁负责、是否延期、是否影响收入。</p>
+              </div>
+              <div class="module-badge">进度与交付风险</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>合同一键立项</h4><dl><div><dt>管理挑战</dt><dd>项目和合同脱节，预算和单价靠PM手工填。</dd></div><div><dt>系统价值</dt><dd>项目自动继承合同金额、单价、KPI规则和预算口径。</dd></div></dl></div>
+              <div class="module-card"><h4>AE批量下单</h4><dl><div><dt>管理挑战</dt><dd>微信群派活容易漏人、漏数量、漏截止时间。</dd></div><div><dt>系统价值</dt><dd>按型号、内容类型、数量批量生成任务，自动进入执行人待办。</dd></div></dl></div>
+              <div class="module-card"><h4>脚本审核强制卡点</h4><dl><div><dt>管理挑战</dt><dd>脚本没定稿就拍摄，后面返工，责任还说不清。</dd></div><div><dt>系统价值</dt><dd>脚本未通过不能进入拍摄，审核意见、版本、责任人全留痕。</dd></div></dl></div>
+              <div class="module-card"><h4>产出登记</h4><dl><div><dt>管理挑战</dt><dd>产出只是表格数字，和薪酬、成本、对账没有自动关系。</dd></div><div><dt>系统价值</dt><dd>每条产出记录人员、项目、数量、系数，自动驱动薪酬和成本。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个项目逾期会影响收入确认和客户满意度</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>返工是卡在脚本审核、拍摄执行还是交付验收</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>把空闲人员调到高风险项目，避免月底集中处理</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="ai-panel-fm" data-module-panel="fm" style="--accent: var(--green); --weak: var(--green-weak)">
+            <div class="module-header">
+              <div>
+                <h3>FM不再月底拼账，而是在过程中看收入、成本和利润</h3>
+                <p>让管理层无需等到月底，就能掌握项目盈利情况和回款进度。</p>
+              </div>
+              <div class="module-badge">利润与现金流</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>项目对账</h4><dl><div><dt>管理挑战</dt><dd>财务月底汇总产出、翻合同、拼Excel，慢且容易出错。</dd></div><div><dt>系统价值</dt><dd>自动拉取已验收交付物，按合同单价生成对账金额。</dd></div></dl></div>
+              <div class="module-card"><h4>成本自动归集</h4><dl><div><dt>管理挑战</dt><dd>项目过程中看不到是否超预算或亏损。</dd></div><div><dt>系统价值</dt><dd>内部人力、外包、场地、模特、投放、费用自动进入项目成本。</dd></div></dl></div>
+              <div class="module-card"><h4>应收管理</h4><dl><div><dt>管理挑战</dt><dd>钱什么时候该收、谁逾期了，靠财务记忆。</dd></div><div><dt>系统价值</dt><dd>对账确认后自动生成应收，按客户、项目、账龄查看并预警。</dd></div></dl></div>
+              <div class="module-card"><h4>利润核算</h4><dl><div><dt>管理挑战</dt><dd>最怕月底才发现项目其实亏了。</dd></div><div><dt>系统价值</dt><dd>项目、品牌、客户、公司三级利润实时计算。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪些项目毛利过低，要调整报价或执行方式</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪笔应收快逾期，责任人是谁，客户卡在哪里</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>优先催收高金额逾期款，缓解现金流压力</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="ai-panel-hr" data-module-panel="hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+            <div class="module-header">
+              <div>
+                <h3>HR不只是算工资，而是沉淀真实人力成本和团队人效</h3>
+                <p>让管理层看清谁产出高、谁成本高、内部做还是外包更划算。</p>
+              </div>
+              <div class="module-badge">薪酬与人效</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>岗位与薪酬配置</h4><dl><div><dt>管理挑战</dt><dd>不同员工薪酬规则不一样，靠HR记忆容易错。</dd></div><div><dt>系统价值</dt><dd>底薪、绩效、提成、达标线、计件单价结构化配置。</dd></div></dl></div>
+              <div class="module-card"><h4>月度薪酬计算</h4><dl><div><dt>管理挑战</dt><dd>HR月底翻多张表，手工算2-3天，出错率高。</dd></div><div><dt>系统价值</dt><dd>自动读取PM产出，计算加权产出和薪酬，目标15分钟完成。</dd></div></dl></div>
+              <div class="module-card"><h4>薪酬分摊明细</h4><dl><div><dt>管理挑战</dt><dd>只知道工资总额，不知道具体落在哪些项目成本里。</dd></div><div><dt>系统价值</dt><dd>员工薪酬按项目产出比例分摊，形成真实项目人力成本。</dd></div></dl></div>
+              <div class="module-card"><h4>人效分析</h4><dl><div><dt>管理挑战</dt><dd>哪个员工高产、哪个岗位低效，只能凭感觉。</dd></div><div><dt>系统价值</dt><dd>人均加权产出、薪酬产出比、闲置人力、人力成本占比可视化。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个岗位产能不足，需要招聘或外包补位</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪个员工薪酬高但产出低，是否需要调岗或辅导</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>内部和外包按项目毛利对比，选择更划算的交付方式</b></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai-linkage">
+      <p class="section-kicker">四模块联动价值</p>
+      <h2 class="section-title">
+        <span class="title-line">核心价值在于</span>
+        <span class="title-line">业务动作发生一次</span>
+        <span class="title-line">后续经营数据自动联动</span>
+      </h2>
+      <p class="section-lead">四大模块围绕同一套合同、项目、产出和财务数据联动，形成从合同到利润的自动经营链路。</p>
+      <div class="linkage-grid">
+        <article class="linkage-card" style="--accent: var(--teal)">
+          <b>CRM合同 → PM立项</b>
+          <p>项目不再靠PM手填口径，自动继承合同金额、单价、预算、KPI规则。管理层可在项目启动时明确合同来源与预算边界。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--amber)">
+          <b>PM产出 → HR薪酬</b>
+          <p>每条产出登记后，员工、项目、任务、数量、系数都进入薪酬计算。HR不用月底翻表，管理层也能看到产出和薪酬是否匹配。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--coral)">
+          <b>HR薪酬 → FM成本</b>
+          <p>薪酬确认后自动按项目分摊，工资不再只是公司总成本，而是能精确落到每个项目的真实人力成本里。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--green)">
+          <b>PM交付 → FM对账</b>
+          <p>已验收交付物自动进入对账池，财务不用手工汇总产出，系统按合同单价和折扣规则生成对账金额。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--green)">
+          <b>FM对账 → 应收回款</b>
+          <p>对账确认后自动生成应收、开票、回款、核销状态。管理层能看到钱在哪里、谁该催、哪笔已经逾期。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--teal)">
+          <b>全部数据 → 经营驾驶舱</b>
+          <p>客户、项目、财务、人效统一汇总，管理层可按客户、品牌、项目、人员多维查看经营表现，不再等月底听汇报。</p>
+        </article>
+      </div>
+      <div class="impact-panel">
+        <div class="impact-lead">
+          <h3>从“谁来统计”变成“系统自动沉淀”</h3>
+          <p>这才是业财一体化的核心体验：不是把表格搬到网页，而是让业务动作天然生成经营结果。</p>
+        </div>
+        <div class="impact-list">
+          <div><b>管理层无需多头追问</b><span>项目、财务、人力数据都在同一个经营视图里。</span></div>
+          <div><b>部门不用再重复录入</b><span>同一条产出驱动薪酬、成本、对账和利润。</span></div>
+          <div><b>风险不用等月底发现</b><span>逾期、超预算、低毛利、低人效都会在过程中浮现。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" id="ai-dashboard">
+      <div class="proof-copy">
+        <p class="section-kicker">经营驾驶舱</p>
+        <h2 class="section-title">
+          <span class="title-line">所有流程最终汇总到</span>
+          <span class="title-line">管理层可直接理解的经营面板</span>
+        </h2>
+        <p class="section-lead">管理层打开系统，不是看一堆操作菜单，而是直接看到在途合同、已回款与应收、预估毛利率、收入趋势、客户贡献、团队人效和风险预警。</p>
+      </div>
+      <figure class="screen-frame">
+        <img src="../07-脚本工具/outputs/manual-20260611-ppt/presentations/yecai-platform/preview/slide-13.png" alt="业财一体化经营驾驶舱预览" />
+      </figure>
+    </section>
+
+    <section>
+      <p class="section-kicker">核心应用价值</p>
+      <h2 class="section-title">
+        <span class="title-line">从事后汇总</span>
+        <span class="title-line">升级为过程化经营管理</span>
+      </h2>
+      <div class="value-grid">
+        <article class="value-card" style="--accent: var(--teal)"><strong>过程实时看见</strong><span></span><p>项目进度、收入、成本、利润、回款、人效不再等月底统计。</p></article>
+        <article class="value-card" style="--accent: var(--amber)"><strong>系统自动提醒</strong><span></span><p>预算超支、任务逾期、脚本未审、应收逾期自动预警。</p></article>
+        <article class="value-card" style="--accent: var(--green)"><strong>财务变经营</strong><span></span><p>系统不仅算对账单，还支持管理层判断客户价值和项目毛利。</p></article>
+        <article class="value-card" style="--accent: var(--coral)"><strong>公司级管理</strong><span></span><p>按客户、品牌、项目、月份、人员、岗位多维度查看经营表现。</p></article>
+      </div>
+    </section>
+
+    <section id="ai-launch">
+      <p class="section-kicker">落地路径</p>
+      <h2 class="section-title">
+        <span class="title-line">先跑通一个年框客户闭环</span>
+        <span class="title-line">再扩展经营驾驶舱</span>
+      </h2>
+      <p class="section-lead">建议以一个典型年框客户项目试点，验证“立项 → 下单 → 产出 → 对账 → 应收”的完整链路。</p>
+      <div class="steps">
+        <div class="step-card"><small>Phase 01</small><b>数据准备</b><p>客户、合同、单价、项目成员、薪酬规则和历史产出样例。</p></div>
+        <div class="step-card"><small>Phase 02</small><b>核心MVP</b><p>CRM合同、PM立项、AE下单、产出登记先跑起来。</p></div>
+        <div class="step-card"><small>Phase 03</small><b>业财闭环</b><p>打通HR薪酬、FM成本、月度对账、应收回款。</p></div>
+        <div class="step-card"><small>Phase 04</small><b>经营驾驶舱</b><p>汇总收入、成本、利润、回款、人效和风险预警。</p></div>
+      </div>
+    </section>
+
+    <div class="closing">
+      <section>
+        <div>
+          <h2>
+            <span class="title-line">这不是少填几张表</span>
+            <span class="title-line">而是形成实时经营仪表盘</span>
+          </h2>
+          <p>过去业务、财务、人力各算各的；上系统后，同一条业务数据贯穿客户、项目、产出、薪酬、成本、对账、回款和利润。</p>
+        </div>
+        <div class="quote-box">把“月底算账”变成“实时管理”，把“业务过程”变成“经营数据”。</div>
+      </section>
+    </div>
+  </main>
+
+  
+<main id="std-top" class="version-page" data-version="standard" hidden>
+    <section class="hero">
+      <div class="hero-visual" aria-hidden="true">
+        <svg class="hero-orbits" viewBox="0 0 560 460" role="img" aria-label="客户、合同、项目、产出汇入经营驾驶舱的数据流">
+          <path d="M34 298 C156 220 282 238 464 122" />
+          <path class="path-soft" d="M70 350 C198 306 338 318 514 244" />
+          <path class="path-soft" d="M104 170 C230 120 338 126 500 168" />
+          <circle cx="104" cy="260" r="5" />
+          <circle cx="204" cy="194" r="5" />
+          <circle cx="304" cy="264" r="5" />
+          <circle cx="420" cy="312" r="5" />
+        </svg>
+        <div class="hero-cockpit">
+          <div class="cockpit-title">经营驾驶舱</div>
+          <div class="cockpit-grid">
+            <span>收入</span>
+            <span>成本</span>
+            <span>利润</span>
+            <span>人效</span>
+          </div>
+        </div>
+        <div class="orbit-node orbit-client"><i></i><span>客户</span></div>
+        <div class="orbit-node orbit-contract"><i></i><span>合同</span></div>
+        <div class="orbit-node orbit-project"><i></i><span>项目</span></div>
+        <div class="orbit-node orbit-output"><i></i><span>产出</span></div>
+        <div class="metric-bubble primary"><strong>+18.5%</strong><span>收入趋势</span></div>
+        <div class="metric-bubble secondary"><strong>41%</strong><span>项目毛利</span></div>
+        <div class="metric-bubble tertiary">利润驾驶舱</div>
+      </div>
+      <div class="hero-inner">
+        <h1>
+          <span class="hero-title-line">把业务过程变成</span>
+          <span class="hero-title-line">管理层实时掌握的</span>
+          <span class="hero-title-line">经营数据</span>
+        </h1>
+        <p class="hero-copy">专为电商内容运营公司打造，打通客户、合同、项目、产出、薪酬、成本、对账、应收和利润，让经营结果从月底汇总变为过程可见。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#std-modules">查看四大模块</a>
+          <a class="btn secondary" href="#std-diagrams">查看业务流程图</a>
+        </div>
+      </div>
+      <div class="hero-strip" aria-label="核心指标">
+        <div class="hero-stat"><strong>30秒</strong><span>掌握项目进度与风险</span></div>
+        <div class="hero-stat"><strong>30分钟</strong><span>生成月度对账单</span></div>
+        <div class="hero-stat"><strong>15分钟</strong><span>完成月度薪酬核算</span></div>
+        <div class="hero-stat"><strong>实时</strong><span>查看收入、成本、利润、人效</span></div>
+      </div>
+    </section>
+
+    <section id="std-pain">
+      <p class="section-kicker">经营管理现状</p>
+      <h2 class="section-title">
+        <span class="title-line">现有问题并非缺少数据</span>
+        <span class="title-line">而是数据散在表格、微信群、Excel和合同附件里</span>
+      </h2>
+      <p class="section-lead">管理层重点关注的是：收入从哪里来，项目卡在哪里，成本花到哪里，团队效率高不高，利润到底剩多少。</p>
+      <div class="pain-grid">
+        <article class="pain-card" style="--accent: var(--teal)">
+          <b>利润不可见</b>
+          <p>20多个项目同时跑，哪个客户赚钱、哪个项目亏损，要等月底财务核算才知道。</p>
+          <p class="after">系统价值：项目、品牌、客户、公司多维利润实时可查。</p>
+        </article>
+        <article class="pain-card" style="--accent: var(--amber)">
+          <b>预算不可控</b>
+          <p>年框签了1000万，执行到一半已消耗多少、还剩多少，全靠人工算。</p>
+          <p class="after">系统价值：合同金额、已对账、已消耗、剩余额度自动更新。</p>
+        </article>
+        <article class="pain-card" style="--accent: var(--coral)">
+          <b>人效不可知</b>
+          <p>员工忙不忙、外包划不划算、哪个岗位产能紧张，管理层只能凭感觉判断。</p>
+          <p class="after">系统价值：人均产出、薪酬产出比、人力成本占比一屏呈现。</p>
+        </article>
+      </div>
+    </section>
+
+    <div class="flow-band" id="std-flow">
+      <section>
+        <p class="section-kicker">核心业务闭环</p>
+        <h2 class="section-title">
+          <span class="title-line">从客户合同到利润驾驶舱</span>
+          <span class="title-line">一条链路跑到底</span>
+        </h2>
+        <p class="section-lead">产出登记是中间枢纽：它不是简单填数量，而是同时驱动HR薪酬、FM成本、项目对账和经营利润视图。</p>
+        <div class="flow-map">
+          <div class="flow-node"><strong>客户</strong><span>客户360、集团层级、历史合作</span></div>
+          <div class="flow-node"><strong>合同</strong><span>金额、单价、KPI、补充协议</span></div>
+          <div class="flow-node"><strong>项目</strong><span>立项、预算池、里程碑</span></div>
+          <div class="flow-node"><strong>任务</strong><span>AE下单、脚本、拍摄、剪辑</span></div>
+          <div class="flow-node"><strong>产出</strong><span>数量、系数、人员、交付物</span></div>
+          <div class="flow-node"><strong>成本</strong><span>薪酬、外包、费用自动归集</span></div>
+          <div class="flow-node"><strong>对账</strong><span>匹配合同单价，生成对账单</span></div>
+          <div class="flow-node"><strong>利润</strong><span>回款、人效、毛利率、预警</span></div>
+        </div>
+        <div class="hinge">一句话：从月底汇总经营结果，升级为在业务过程中看风险、看利润、看现金流。</div>
+      </section>
+    </div>
+
+    <div class="value-stream" id="std-value-stream">
+      <section>
+        <p class="section-kicker">重要实践</p>
+        <h2 class="section-title">
+          <span class="title-line">主价值流与核心管理抓手</span>
+          <span class="title-line">是业财一体化落地的关键载体</span>
+        </h2>
+        <p class="section-lead">以客户合同为源头，以项目交付为过程，以产出登记为数据中枢，把CRM、PM、HR、FM和经营驾驶舱串成一条可管控、可追踪、可复盘的经营主线。</p>
+
+        <div class="stream-board">
+          <div class="stream-board-head">
+            <div>
+              <h3>业财一体化主价值流蓝图</h3>
+              <p>系统以客户经营、项目执行、产出核算、财务回款为主线，形成从业务发生到经营结果的全过程闭环。</p>
+            </div>
+            <div class="stream-badge">全链路经营管控</div>
+          </div>
+
+          <div class="stream-grid">
+            <article class="stream-stage">
+              <div class="stage-cap"><span>客户档案</span><span>商机跟进</span><span>集团层级</span><span>历史合作</span></div>
+              <div class="stage-core"><div><strong>客户经营链</strong><small>客户资产、合作历史、未来订单储备统一沉淀</small></div></div>
+              <div class="stage-foot"><span>客户价值</span><span>合作风险</span><span>回款表现</span><span>续签机会</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>合同录入</span><span>单价规则</span><span>KPI模板</span><span>补充协议</span></div>
+              <div class="stage-core"><div><strong>合同预算链</strong><small>合同金额、预算边界、计价口径进入系统底账</small></div></div>
+              <div class="stage-foot"><span>预算池</span><span>执行周期</span><span>付款条件</span><span>结算规则</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>项目立项</span><span>AE下单</span><span>任务看板</span><span>脚本审核</span></div>
+              <div class="stage-core"><div><strong>项目交付链</strong><small>需求、任务、责任人、截止时间、交付物全过程在线</small></div></div>
+              <div class="stage-foot"><span>进度风险</span><span>返工记录</span><span>逾期预警</span><span>验收状态</span></div>
+            </article>
+
+            <article class="stream-stage center">
+              <div class="stage-cap"><span>人员</span><span>项目</span><span>数量</span><span>系数</span></div>
+              <div class="stage-core"><div><strong>产出登记中台</strong><small>一次登记，同时驱动薪酬、成本、对账和利润</small></div></div>
+              <div class="stage-foot"><span>薪酬计算</span><span>成本归集</span><span>对账依据</span><span>经营看板</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>内部薪酬</span><span>外包成本</span><span>费用报销</span><span>供应商月结</span></div>
+              <div class="stage-core"><div><strong>业财核算链</strong><small>人力、外包、费用进入项目成本，形成真实毛利</small></div></div>
+              <div class="stage-foot"><span>成本结构</span><span>项目毛利</span><span>预算消耗</span><span>人效分析</span></div>
+            </article>
+
+            <article class="stream-stage">
+              <div class="stage-cap"><span>月度对账</span><span>开票管理</span><span>应收账龄</span><span>回款核销</span></div>
+              <div class="stage-core"><div><strong>经营结果链</strong><small>收入、回款、利润、人效、风险最终汇总到驾驶舱</small></div></div>
+              <div class="stage-foot"><span>现金流</span><span>客户贡献</span><span>利润排行</span><span>风险预警</span></div>
+            </article>
+          </div>
+
+          <div class="stream-control">业财一体化经营主线：合同全生命周期管理 + 项目全过程交付 + 产出驱动核算 + 经营风险实时预警</div>
+
+          <div class="stream-steps" aria-label="全过程经营路径">
+            <div class="stream-step"><small>01</small>市场研判</div>
+            <div class="stream-step"><small>02</small>商机跟进</div>
+            <div class="stream-step"><small>03</small>合同签订</div>
+            <div class="stream-step"><small>04</small>项目立项</div>
+            <div class="stream-step"><small>05</small>内容生产</div>
+            <div class="stream-step"><small>06</small>产出验收</div>
+            <div class="stream-step"><small>07</small>月度对账</div>
+            <div class="stream-step"><small>08</small>应收回款</div>
+            <div class="stream-step"><small>09</small>经营复盘</div>
+          </div>
+
+          <div class="stream-grips">
+            <article class="stream-grip"><b>合同预算抓手</b><p>从合同金额、单价、KPI、补充协议开始，把预算边界提前固化，避免执行到一半才发现口径不一致。</p></article>
+            <article class="stream-grip"><b>产出核算抓手</b><p>每条交付物都带上人员、项目、数量、系数，自动进入HR薪酬与FM成本，减少月底人工拼表。</p></article>
+            <article class="stream-grip"><b>对账回款抓手</b><p>已验收交付物自动进入对账池，对账确认后生成应收、开票、回款和账龄预警。</p></article>
+            <article class="stream-grip"><b>经营决策抓手</b><p>按客户、品牌、项目、人员汇总收入、成本、利润、人效和现金流，支撑管理层快速判断经营质量。</p></article>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="std-diagrams">
+      <p class="section-kicker">经营流程蓝图</p>
+      <h2 class="section-title">
+        <span class="title-line">关键业务流程全景展开</span>
+        <span class="title-line">从执行链路沉淀经营结果</span>
+      </h2>
+      <p class="section-lead">围绕业务断点、系统运转、模块联动和经营结果，将客户、合同、项目、产出、薪酬、成本、对账、回款串成一套可追踪的经营闭环。</p>
+      <div class="diagram-index">
+        <a href="#std-diagram-current">现状全景</a>
+        <a href="#std-diagram-before-after">上线前后</a>
+        <a href="#std-diagram-nine">9步闭环</a>
+        <a href="#std-diagram-crm">CRM流程</a>
+        <a href="#std-diagram-pm">PM泳道</a>
+        <a href="#std-diagram-fm">FM财务</a>
+        <a href="#std-diagram-hr">HR薪酬</a>
+        <a href="#std-diagram-arch">经营架构</a>
+      </div>
+
+      <article class="diagram-block" id="std-diagram-current" style="--accent: var(--coral); --weak: var(--coral-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>现状全景：手工运转的“表格帝国”</h3>
+            <p>每个部门都有表格，但管理层看到的是滞后的经营结果，而不是实时业务事实。</p>
+          </div>
+          <div class="diagram-tag">现状诊断图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="boss-node">
+            <strong>管理层</strong>
+            <span>这月利润多少？哪个品牌最赚钱？为什么月底才知道？</span>
+          </div>
+          <div class="role-grid">
+            <div class="role-card" style="--accent: var(--amber)"><b>PM</b><p>微信群派活，腾讯文档翻进度。</p><small>任务逾期靠喊，脚本审核靠群。</small></div>
+            <div class="role-card" style="--accent: var(--green)"><b>财务</b><p>手工对账，记忆追应收。</p><small>月结对账2-3天，逾期靠人发现。</small></div>
+            <div class="role-card" style="--accent: var(--coral)"><b>HR</b><p>手工算薪，交叉翻表。</p><small>月薪计算2-3天，出错率5%-8%。</small></div>
+            <div class="role-card" style="--accent: var(--teal)"><b>仓务</b><p>口头领用，人脑记位。</p><small>样机盘点靠人，库位全凭记忆。</small></div>
+          </div>
+          <div class="mini-note">经营挑战：公司不是没有数据，而是数据没有连成经营链路，结果只能月底拼出来。</div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-before-after" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>从“表格记录”升级为“系统闭环”</h3>
+            <p>同一条业务数据，同时服务项目管理、薪酬计算、成本归集、对账回款和经营驾驶舱。</p>
+          </div>
+          <div class="diagram-tag">价值对比图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="before-after">
+            <div class="ba-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
+              <h4>上线前</h4>
+              <ul class="ba-list">
+                <li><b>客户信息</b><span>散落在多个腾讯文档表格中</span></li>
+                <li><b>合同单价</b><span>锁在PDF里，对账时财务手动翻查</span></li>
+                <li><b>项目进度</b><span>微信群问 + 表格一行行翻</span></li>
+                <li><b>脚本审核</b><span>群里说“改一下”，版本混乱</span></li>
+                <li><b>薪酬计算</b><span>HR月底翻5-6张表手工算</span></li>
+                <li><b>应收管理</b><span>全靠财务记忆追踪</span></li>
+              </ul>
+            </div>
+            <div class="ba-arrow">系统上线</div>
+            <div class="ba-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+              <h4>上线后</h4>
+              <ul class="ba-list">
+                <li><b>客户信息</b><span>客户360，一屏展示合同与项目</span></li>
+                <li><b>合同单价</b><span>结构化存储，对账自动匹配</span></li>
+                <li><b>项目进度</b><span>甘特图+看板，30秒掌握全貌</span></li>
+                <li><b>脚本审核</b><span>系统强制卡点，全程可追溯</span></li>
+                <li><b>薪酬计算</b><span>一键生成，目标15分钟完成</span></li>
+                <li><b>应收管理</b><span>三级预警，到期自动通知</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-nine" style="--accent: var(--amber); --weak: var(--amber-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>项目全生命周期：9步业务闭环</h3>
+            <p>产出登记是中间枢纽，向下驱动HR薪酬和FM成本，向后驱动对账、应收和利润。</p>
+          </div>
+          <div class="diagram-tag">核心流程图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="node-row arrow-grid" style="--cols: 6">
+            <div class="d-node" style="--accent: var(--teal)"><strong>1. 立项</strong><span>PM关联合同、预算、里程碑</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>2. AE下单</strong><span>接收需求，指派执行人</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>3. 制脚本</strong><span>编导/外包提交脚本</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>4. 审脚本</strong><span>AE审核，通过才可拍摄</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>5. 拍摄</strong><span>场景预订、样机申领</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>6. 剪辑</strong><span>剪辑交付，形成交付物</span></div>
+          </div>
+          <div class="pivot-box">
+            <strong>产出登记：产出量 × 难度系数 = 加权产出</strong>
+            <div>一次登记，同时驱动薪酬、成本、对账和利润。</div>
+          </div>
+          <div class="node-row arrow-grid" style="--cols: 4">
+            <div class="d-node" style="--accent: var(--green)"><strong>7. 月度对账</strong><span>拉取交付物，匹配合同单价</span></div>
+            <div class="d-node" style="--accent: var(--green)"><strong>8. 决算</strong><span>收入 - 成本 = 项目利润</span></div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>9. 关项</strong><span>归档复盘，沉淀数据</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>BI看板</strong><span>管理层查看利润、人效、回款、预算</span></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>CRM流程：客户层级、合同生命周期、结算规则</h3>
+            <p>CRM不是客户名录，而是后续PM立项和FM对账的经营底账。</p>
+          </div>
+          <div class="diagram-tag">CRM业务图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="split-grid">
+            <div class="split-card" style="--accent: var(--teal)">
+              <h4>客户层级架构</h4>
+              <div class="tree-grid">
+                <div class="d-node center" style="--accent: var(--teal)"><strong>集团客户：TCL集团</strong><span>集团汇总，子公司独立签约</span></div>
+                <div class="tree-branch">
+                  <div class="d-node" style="--accent: var(--teal)"><strong>TCL空调事业部</strong><span>年框合同800万/年 → 项目执行</span></div>
+                  <div class="d-node" style="--accent: var(--teal)"><strong>TCL电视事业部</strong><span>年框合同500万/年 → 项目执行</span></div>
+                  <div class="d-node" style="--accent: var(--teal)"><strong>酷友科技</strong><span>补充协议追加50万 → 临时项目</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="split-card" style="--accent: var(--amber)">
+              <h4>合同生命周期</h4>
+              <div class="node-row lifecycle" style="--cols: 5">
+                <div class="d-node" style="--accent: var(--amber)"><strong>草稿</strong><span>录入合同单价体系</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已签约</strong><span>正式签章，上传附件</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>执行中</strong><span>项目启动，月度预算</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已完成</strong><span>对账完毕，回款完毕</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>已归档</strong><span>历史归档，规则留痕</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--amber); --weak: var(--amber-weak)">补充协议：追加预算、调整单价、延长合作期，自动同步到执行链路。</div>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 16px">
+            <div class="split-card" style="--accent: var(--green)">
+              <h4>标准模式 simple</h4>
+              <div class="d-node" style="--accent: var(--green)"><strong>对账金额 = Σ(产出量 × 单价 × 阶梯折扣)</strong><span>适用于大多数按条、按场、按项计价客户。</span></div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>双重考核 double_eval</h4>
+              <div class="d-node" style="--accent: var(--coral)"><strong>基本服务费50% + 考核服务费50% × KPI达成率</strong><span>适用于TCL等考核制客户，系统自动按KPI阶梯计算。</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>PM流程：多角色协同泳道 + 任务状态流转 + 强制卡点</h3>
+            <p>把“微信群派活”变成角色、状态、产出、成本全程可追踪。</p>
+          </div>
+          <div class="diagram-tag">PM执行图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="swimlane">
+            <div class="swimlane-grid">
+              <div class="lane"><div class="lane-title">仓务+场景</div><div class="d-node" style="--accent: var(--teal)"><strong>场景预订</strong><span>拍摄前锁定场景排期</span></div><div class="d-node" style="--accent: var(--teal)"><strong>样机申领</strong><span>申领、归还、盘点留痕</span></div></div>
+              <div class="lane"><div class="lane-title">项目部 PM+AE</div><div class="d-node" style="--accent: var(--amber)"><strong>PM立项</strong><span>关联合同、预算、里程碑、WBS</span></div><div class="d-node" style="--accent: var(--amber)"><strong>AE接单下单</strong><span>接收需求，选择内部或外包</span></div></div>
+              <div class="lane"><div class="lane-title">编导组/外包</div><div class="d-node" style="--accent: var(--coral)"><strong>制作脚本</strong><span>产出量×难度系数，提交审核</span></div><div class="d-node" style="--accent: var(--coral)"><strong>退回修改</strong><span>审核意见和版本记录留痕</span></div></div>
+              <div class="lane"><div class="lane-title">拍摄/剪辑/外包</div><div class="d-node" style="--accent: var(--green)"><strong>拍摄执行</strong><span>依赖脚本审核通过</span></div><div class="d-node" style="--accent: var(--green)"><strong>剪辑交付</strong><span>交付物进入验收和对账池</span></div></div>
+              <div class="lane"><div class="lane-title">人资/财务</div><div class="d-node" style="--accent: var(--teal)"><strong>薪酬计算</strong><span>产出自动进入HR规则</span></div><div class="d-node" style="--accent: var(--green)"><strong>财务对账</strong><span>交付物匹配合同单价</span></div></div>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card">
+              <h4>任务状态流转</h4>
+              <div class="status-fork">
+                <div class="d-node center" style="--accent: var(--teal)"><strong>待分配 → 进行中 → 审核中</strong><span>AE下单后自动进入任务流转</span></div>
+                <div class="fork-children">
+                  <div class="d-node" style="--accent: var(--green)"><strong>审核通过</strong><span>进入已完成</span></div>
+                  <div class="d-node" style="--accent: var(--amber)"><strong>需修改</strong><span>回到进行中</span></div>
+                  <div class="d-node" style="--accent: var(--coral)"><strong>已驳回</strong><span>回到待分配</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="split-card">
+              <h4>强制卡点机制</h4>
+              <div class="node-row arrow-grid" style="--cols: 3">
+                <div class="d-node" style="--accent: var(--amber)"><strong>脚本任务</strong><span>提交AE审核</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>AE审核</strong><span>未通过，拍摄无法开始</span></div>
+                <div class="d-node" style="--accent: var(--green)"><strong>拍摄任务</strong><span>通过后自动解锁</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--coral); --weak: var(--coral-weak)">管理价值：减少错拍、返工和责任不清。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-fm" style="--accent: var(--green); --weak: var(--green-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>FM流程：成本自动归集、月度对账、应收回款</h3>
+            <p>财务从月底拼账，变成过程核对和经营预警。</p>
+          </div>
+          <div class="diagram-tag">FM财务图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="cost-sources">
+            <div class="d-node" style="--accent: var(--teal)"><strong>内部员工产出</strong><span>编导/拍摄/剪辑产出进入HR薪酬计算</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>外包供应商产出</strong><span>按品类单价计件，进入供应商月结</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>费用报销</strong><span>差旅、设备、场地、模特、投放费用</span></div>
+          </div>
+          <div class="cost-target">
+            <strong>FM成本归集：项目总成本 = 四类成本之和</strong>
+            <div class="cost-items">
+              <span>内部计件成本</span>
+              <span>内部分摊成本</span>
+              <span>外包成本</span>
+              <span>费用成本</span>
+            </div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card" style="--accent: var(--green)">
+              <h4>月度对账自动化</h4>
+              <div class="timeline-vertical">
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 1</b><p>系统自动拉取当月可对账交付物，按项目和品类汇总。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 2</b><p>自动匹配CRM合同单价，应用阶梯折扣。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 3</b><p>双重考核客户自动计算KPI服务费。</p></div>
+                <div class="timeline-step" style="--accent: var(--green)"><b>Step 4</b><p>一键生成对账单，提交甲方确认。</p></div>
+              </div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>应收账款生命周期</h4>
+              <div class="node-row arrow-grid" style="--cols: 4">
+                <div class="d-node" style="--accent: var(--teal)"><strong>对账确认</strong><span>应收生成</span></div>
+                <div class="d-node" style="--accent: var(--amber)"><strong>待开票</strong><span>科目来自对账单</span></div>
+                <div class="d-node" style="--accent: var(--green)"><strong>已开票</strong><span>待回款</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>已逾期</strong><span>三级预警升级</span></div>
+              </div>
+              <div class="mini-note" style="--accent: var(--coral); --weak: var(--coral-weak)">到期前3天提醒，到期当天重点预警，逾期3天升级管理层。</div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>HR流程：薪酬自动计算 + 成本精准分摊</h3>
+            <p>HR算的是员工工资，FM拿到的是项目成本，两套口径不再打架。</p>
+          </div>
+          <div class="diagram-tag">HR薪酬图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="timeline-vertical">
+            <div class="timeline-step" style="--accent: var(--teal)"><b>启动</b><p>月度薪酬计算启动，系统汇总当月所有产出。</p></div>
+            <div class="timeline-step" style="--accent: var(--teal)"><b>汇总</b><p>Σ(产出量 × 难度系数)，计算员工总加权产出。</p></div>
+            <div class="timeline-step" style="--accent: var(--amber)"><b>判断</b><p>区分内部员工和外包供应商，判断是否达到保底阈值。</p></div>
+            <div class="timeline-step" style="--accent: var(--coral)"><b>计算</b><p>达标：底薪分摊 + 绩效分摊 + 计件提成；未达标：绩效为0或按规则折算。</p></div>
+            <div class="timeline-step" style="--accent: var(--green)"><b>写入</b><p>底薪、绩效、计件、外包月结全部写入FM成本归集。</p></div>
+          </div>
+          <div class="split-grid" style="margin-top: 20px">
+            <div class="split-card" style="--accent: var(--teal)">
+              <h4>成本分摊示例</h4>
+              <div class="d-node" style="--accent: var(--teal)"><strong>项目A：240加权产出，占40%</strong><span>底薪5000、绩效2000按40%分摊，提成按具体产出归属。</span></div>
+              <div class="d-node" style="--accent: var(--teal); margin-top: 10px"><strong>项目B：360加权产出，占60%</strong><span>底薪5000、绩效2000按60%分摊，形成真实人力成本。</span></div>
+            </div>
+            <div class="split-card" style="--accent: var(--coral)">
+              <h4>经营层可获得的信息</h4>
+              <div class="node-row" style="--cols: 2">
+                <div class="d-node" style="--accent: var(--coral)"><strong>员工人效</strong><span>人均加权产出、薪酬产出比</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>项目人力成本</strong><span>每个项目真实承担多少工资</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>岗位产能</strong><span>哪个岗位紧张，哪个岗位闲置</span></div>
+                <div class="d-node" style="--accent: var(--coral)"><strong>外包对比</strong><span>内部做还是外包划算</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="diagram-block" id="std-diagram-arch" style="--accent: var(--teal); --weak: var(--teal-weak)">
+        <div class="diagram-head">
+          <div>
+            <h3>经营架构：四大核心模块 + 事件总线 + BI驾驶舱</h3>
+            <p>模块关系清晰后，业务动作、财务口径和经营指标可以在同一条数据链上闭环。</p>
+          </div>
+          <div class="diagram-tag">系统架构图</div>
+        </div>
+        <div class="diagram-body">
+          <div class="architecture-map">
+            <div class="arch-top">BI经营驾驶舱：项目利润 / 品牌盈利 / 人效分析 / 预算消耗 / 现金流预测</div>
+            <div class="d-node" style="--accent: var(--teal)"><strong>CRM</strong><span>客户、合同、商机、单价、KPI模板</span></div>
+            <div class="d-node" style="--accent: var(--amber)"><strong>PM</strong><span>项目立项、AE需求、任务WBS、脚本审核、交付验收</span></div>
+            <div class="d-node" style="--accent: var(--green)"><strong>FM</strong><span>预算、成本、对账、应收、开票、回款、利润</span></div>
+            <div class="d-node" style="--accent: var(--coral)"><strong>HR</strong><span>员工、薪酬结构、产出登记、薪酬计算、成本分摊</span></div>
+            <div class="event-bus">事件总线：产出登记 → 薪酬计算 + 成本归集；对账确认 → 应收生成 + 预算扣减；逾期事件 → 多级预警</div>
+          </div>
+          <div class="mini-note">管理价值：所有部门不再各算各的，最终都沉淀成一套可实时查看的经营数据。</div>
+        </div>
+      </article>
+    </section>
+
+    <section id="std-delights">
+      <p class="section-kicker">应用价值场景</p>
+      <h2 class="section-title">
+        <span class="title-line">上线前后变化一眼看清</span>
+        <span class="title-line">经营管理改善可量化呈现</span>
+      </h2>
+      <p class="section-lead">围绕项目利润、预算消耗、进度风险、应收回款、成本结构与客户价值，展示从分散协作到一体化经营的升级结果。</p>
+      <div class="delight-grid">
+        <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <div class="num">场景 01</div>
+          <h3>无需等到月底，项目盈利情况过程可见</h3>
+          <div class="compare-mini">
+            <p>传统方式：经营管理者只能等财务月底汇总，发现亏损时项目已经接近结束。</p>
+            <p>系统价值：收入、内部人力、外包、费用持续归集，项目执行中即可看到预估毛利。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <div class="num">场景 02</div>
+          <h3>年框预算不再靠人算，剩余额度实时清楚</h3>
+          <div class="compare-mini">
+            <p>传统方式：合同在PDF里，执行在项目表里，预算消耗需要财务手工核对。</p>
+            <p>系统价值：对账确认自动扣减预算，已消耗、已回款、剩余额度一屏可见。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--coral); --weak: var(--coral-weak)">
+          <div class="num">场景 03</div>
+          <h3>项目卡点不靠问，责任人和逾期自动浮出来</h3>
+          <div class="compare-mini">
+            <p>传统方式：项目进度靠口头同步，难以及时判断卡在脚本、拍摄、剪辑还是客户确认。</p>
+            <p>系统价值：任务状态、责任人、截止时间、审核意见全留痕，风险自动暴露。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--green); --weak: var(--green-weak)">
+          <div class="num">场景 04</div>
+          <h3>钱什么时候回来，不再靠财务记忆</h3>
+          <div class="compare-mini">
+            <p>传统方式：对账确认后还要手工建立应收，逾期往往晚几天才发现。</p>
+            <p>系统价值：对账确认自动生成应收，开票、回款、逾期预警全生命周期追踪。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--teal); --weak: var(--teal-weak)">
+          <div class="num">场景 05</div>
+          <h3>内部团队和外包哪个划算，有统一口径比较</h3>
+          <div class="compare-mini">
+            <p>传统方式：内部工资和外包月结各算各的，很难比较真实项目毛利。</p>
+            <p>系统价值：内部薪酬分摊和外包计件都进入项目成本，可按项目统一对比。</p>
+          </div>
+        </article>
+        <article class="delight-card" style="--accent: var(--amber); --weak: var(--amber-weak)">
+          <div class="num">场景 06</div>
+          <h3>客户值不值得继续做，不再只看合同额</h3>
+          <div class="compare-mini">
+            <p>传统方式：大客户合同额高，但可能回款慢、返工多、毛利低。</p>
+            <p>系统价值：按客户集团看收入、成本、回款、毛利和人效，判断客户真实价值。</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="std-modules">
+      <p class="section-kicker">四大模块</p>
+      <h2 class="section-title">
+        <span class="title-line">不是功能堆叠</span>
+        <span class="title-line">而是围绕经营管理视角重构业务协同</span>
+      </h2>
+      <p class="section-lead">点击左侧模块，可以快速查看每个模块解决的管理挑战与系统价值。</p>
+      <div class="module-shell">
+        <div class="module-sidebar">
+          <div class="module-tabs" role="tablist" aria-label="四大模块">
+            <button class="module-tab is-active" role="tab" aria-selected="true" data-module="crm" style="--accent: var(--teal)">
+              <b>CRM 客户与合同</b><span>客户资产与合同底账</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="pm" style="--accent: var(--amber)">
+              <b>PM 项目管理</b><span>项目进度与交付风险</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="fm" style="--accent: var(--green)">
+              <b>FM 财务管理</b><span>收入成本利润回款</span>
+            </button>
+            <button class="module-tab" role="tab" aria-selected="false" data-module="hr" style="--accent: var(--coral)">
+              <b>HR 人力资源</b><span>薪酬成本与团队人效</span>
+            </button>
+          </div>
+          <div class="module-sidebar-card" aria-label="四大模块联动结果">
+            <div>
+              <small>联动结果</small>
+              <b>一条经营数据链跑到底</b>
+              <span>客户合同 → 项目交付 → 产出登记 → 薪酬成本 → 对账回款 → 利润驾驶舱</span>
+            </div>
+            <ul class="module-sidebar-list">
+              <li>业务动作一次录入</li>
+              <li>成本收入自动联动</li>
+              <li>经营结果实时呈现</li>
+            </ul>
+          </div>
+        </div>
+
+        <div>
+          <article class="module-panel is-active" id="std-panel-crm" data-module-panel="crm" style="--accent: var(--teal); --weak: var(--teal-weak)">
+            <div class="module-header">
+              <div>
+                <h3>CRM不是客户名录，而是经营底账的入口</h3>
+                <p>让管理层看清客户资产、合同金额、预算余额和未来订单储备。</p>
+              </div>
+              <div class="module-badge">客户与合同底座</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>客户360视图</h4><dl><div><dt>管理挑战</dt><dd>客户信息散在AE、PM、财务各自表格和微信里。</dd></div><div><dt>系统价值</dt><dd>一个客户下的对接人、合同、项目、商机、历史合作集中展示。</dd></div></dl></div>
+              <div class="module-card"><h4>合同单价结构化</h4><dl><div><dt>管理挑战</dt><dd>财务月底翻PDF找单价，容易漏算、错算、争议多。</dd></div><div><dt>系统价值</dt><dd>视频、图文、直播等单价录入系统，立项、预算、对账自动调用。</dd></div></dl></div>
+              <div class="module-card"><h4>补充协议管理</h4><dl><div><dt>管理挑战</dt><dd>追加预算、调价、续签停留在聊天记录里，执行端不知道。</dd></div><div><dt>系统价值</dt><dd>变更留痕并同步到预算池、单价规则和项目执行链路。</dd></div></dl></div>
+              <div class="module-card"><h4>商机漏斗</h4><dl><div><dt>管理挑战</dt><dd>只能看已签合同，看不到未来订单储备。</dd></div><div><dt>系统价值</dt><dd>线索、沟通、报价、赢单、输单可视化，提前判断未来收入。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个客户合同额高，但回款慢、毛利低</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪个集团客户预算快用完，需要提前续签或追加</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>销售优先跟进哪些商机，避免下月收入断档</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="std-panel-pm" data-module-panel="pm" style="--accent: var(--amber); --weak: var(--amber-weak)">
+            <div class="module-header">
+              <div>
+                <h3>PM不是任务列表，而是多角色协同的执行中枢</h3>
+                <p>让管理层看清项目卡在哪里、谁负责、是否延期、是否影响收入。</p>
+              </div>
+              <div class="module-badge">进度与交付风险</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>合同一键立项</h4><dl><div><dt>管理挑战</dt><dd>项目和合同脱节，预算和单价靠PM手工填。</dd></div><div><dt>系统价值</dt><dd>项目自动继承合同金额、单价、KPI规则和预算口径。</dd></div></dl></div>
+              <div class="module-card"><h4>AE批量下单</h4><dl><div><dt>管理挑战</dt><dd>微信群派活容易漏人、漏数量、漏截止时间。</dd></div><div><dt>系统价值</dt><dd>按型号、内容类型、数量批量生成任务，自动进入执行人待办。</dd></div></dl></div>
+              <div class="module-card"><h4>脚本审核强制卡点</h4><dl><div><dt>管理挑战</dt><dd>脚本没定稿就拍摄，后面返工，责任还说不清。</dd></div><div><dt>系统价值</dt><dd>脚本未通过不能进入拍摄，审核意见、版本、责任人全留痕。</dd></div></dl></div>
+              <div class="module-card"><h4>产出登记</h4><dl><div><dt>管理挑战</dt><dd>产出只是表格数字，和薪酬、成本、对账没有自动关系。</dd></div><div><dt>系统价值</dt><dd>每条产出记录人员、项目、数量、系数，自动驱动薪酬和成本。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个项目逾期会影响收入确认和客户满意度</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>返工是卡在脚本审核、拍摄执行还是交付验收</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>把空闲人员调到高风险项目，避免月底集中处理</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="std-panel-fm" data-module-panel="fm" style="--accent: var(--green); --weak: var(--green-weak)">
+            <div class="module-header">
+              <div>
+                <h3>FM不再月底拼账，而是在过程中看收入、成本和利润</h3>
+                <p>让管理层无需等到月底，就能掌握项目盈利情况和回款进度。</p>
+              </div>
+              <div class="module-badge">利润与现金流</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>项目对账</h4><dl><div><dt>管理挑战</dt><dd>财务月底汇总产出、翻合同、拼Excel，慢且容易出错。</dd></div><div><dt>系统价值</dt><dd>自动拉取已验收交付物，按合同单价生成对账金额。</dd></div></dl></div>
+              <div class="module-card"><h4>成本自动归集</h4><dl><div><dt>管理挑战</dt><dd>项目过程中看不到是否超预算或亏损。</dd></div><div><dt>系统价值</dt><dd>内部人力、外包、场地、模特、投放、费用自动进入项目成本。</dd></div></dl></div>
+              <div class="module-card"><h4>应收管理</h4><dl><div><dt>管理挑战</dt><dd>钱什么时候该收、谁逾期了，靠财务记忆。</dd></div><div><dt>系统价值</dt><dd>对账确认后自动生成应收，按客户、项目、账龄查看并预警。</dd></div></dl></div>
+              <div class="module-card"><h4>利润核算</h4><dl><div><dt>管理挑战</dt><dd>最怕月底才发现项目其实亏了。</dd></div><div><dt>系统价值</dt><dd>项目、品牌、客户、公司三级利润实时计算。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪些项目毛利过低，要调整报价或执行方式</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪笔应收快逾期，责任人是谁，客户卡在哪里</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>优先催收高金额逾期款，缓解现金流压力</b></div>
+            </div>
+          </article>
+
+          <article class="module-panel" id="std-panel-hr" data-module-panel="hr" style="--accent: var(--coral); --weak: var(--coral-weak)">
+            <div class="module-header">
+              <div>
+                <h3>HR不只是算工资，而是沉淀真实人力成本和团队人效</h3>
+                <p>让管理层看清谁产出高、谁成本高、内部做还是外包更划算。</p>
+              </div>
+              <div class="module-badge">薪酬与人效</div>
+            </div>
+            <div class="feature-grid">
+              <div class="module-card"><h4>岗位与薪酬配置</h4><dl><div><dt>管理挑战</dt><dd>不同员工薪酬规则不一样，靠HR记忆容易错。</dd></div><div><dt>系统价值</dt><dd>底薪、绩效、提成、达标线、计件单价结构化配置。</dd></div></dl></div>
+              <div class="module-card"><h4>月度薪酬计算</h4><dl><div><dt>管理挑战</dt><dd>HR月底翻多张表，手工算2-3天，出错率高。</dd></div><div><dt>系统价值</dt><dd>自动读取PM产出，计算加权产出和薪酬，目标15分钟完成。</dd></div></dl></div>
+              <div class="module-card"><h4>薪酬分摊明细</h4><dl><div><dt>管理挑战</dt><dd>只知道工资总额，不知道具体落在哪些项目成本里。</dd></div><div><dt>系统价值</dt><dd>员工薪酬按项目产出比例分摊，形成真实项目人力成本。</dd></div></dl></div>
+              <div class="module-card"><h4>人效分析</h4><dl><div><dt>管理挑战</dt><dd>哪个员工高产、哪个岗位低效，只能凭感觉。</dd></div><div><dt>系统价值</dt><dd>人均加权产出、薪酬产出比、闲置人力、人力成本占比可视化。</dd></div></dl></div>
+            </div>
+            <div class="decision-strip">
+              <div class="decision-chip"><small>可直接判断</small><b>哪个岗位产能不足，需要招聘或外包补位</b></div>
+              <div class="decision-chip"><small>可快速定位</small><b>哪个员工薪酬高但产出低，是否需要调岗或辅导</b></div>
+              <div class="decision-chip"><small>可及时安排</small><b>内部和外包按项目毛利对比，选择更划算的交付方式</b></div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="std-linkage">
+      <p class="section-kicker">四模块联动价值</p>
+      <h2 class="section-title">
+        <span class="title-line">核心价值在于</span>
+        <span class="title-line">业务动作发生一次</span>
+        <span class="title-line">后续经营数据自动联动</span>
+      </h2>
+      <p class="section-lead">四大模块围绕同一套合同、项目、产出和财务数据联动，形成从合同到利润的自动经营链路。</p>
+      <div class="linkage-grid">
+        <article class="linkage-card" style="--accent: var(--teal)">
+          <b>CRM合同 → PM立项</b>
+          <p>项目不再靠PM手填口径，自动继承合同金额、单价、预算、KPI规则。管理层可在项目启动时明确合同来源与预算边界。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--amber)">
+          <b>PM产出 → HR薪酬</b>
+          <p>每条产出登记后，员工、项目、任务、数量、系数都进入薪酬计算。HR不用月底翻表，管理层也能看到产出和薪酬是否匹配。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--coral)">
+          <b>HR薪酬 → FM成本</b>
+          <p>薪酬确认后自动按项目分摊，工资不再只是公司总成本，而是能精确落到每个项目的真实人力成本里。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--green)">
+          <b>PM交付 → FM对账</b>
+          <p>已验收交付物自动进入对账池，财务不用手工汇总产出，系统按合同单价和折扣规则生成对账金额。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--green)">
+          <b>FM对账 → 应收回款</b>
+          <p>对账确认后自动生成应收、开票、回款、核销状态。管理层能看到钱在哪里、谁该催、哪笔已经逾期。</p>
+        </article>
+        <article class="linkage-card" style="--accent: var(--teal)">
+          <b>全部数据 → 经营驾驶舱</b>
+          <p>客户、项目、财务、人效统一汇总，管理层可按客户、品牌、项目、人员多维查看经营表现，不再等月底听汇报。</p>
+        </article>
+      </div>
+      <div class="impact-panel">
+        <div class="impact-lead">
+          <h3>从“谁来统计”变成“系统自动沉淀”</h3>
+          <p>这才是业财一体化的核心体验：不是把表格搬到网页，而是让业务动作天然生成经营结果。</p>
+        </div>
+        <div class="impact-list">
+          <div><b>管理层无需多头追问</b><span>项目、财务、人力数据都在同一个经营视图里。</span></div>
+          <div><b>部门不用再重复录入</b><span>同一条产出驱动薪酬、成本、对账和利润。</span></div>
+          <div><b>风险不用等月底发现</b><span>逾期、超预算、低毛利、低人效都会在过程中浮现。</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="proof" id="std-dashboard">
+      <div class="proof-copy">
+        <p class="section-kicker">经营驾驶舱</p>
+        <h2 class="section-title">
+          <span class="title-line">所有流程最终汇总到</span>
+          <span class="title-line">管理层可直接理解的经营面板</span>
+        </h2>
+        <p class="section-lead">管理层打开系统，不是看一堆操作菜单，而是直接看到在途合同、已回款与应收、预估毛利率、收入趋势、客户贡献、团队人效和风险预警。</p>
+      </div>
+      <figure class="screen-frame">
+        <img src="../07-脚本工具/outputs/manual-20260611-ppt/presentations/yecai-platform/preview/slide-13.png" alt="业财一体化经营驾驶舱预览" />
+      </figure>
+    </section>
+
+    <section>
+      <p class="section-kicker">核心应用价值</p>
+      <h2 class="section-title">
+        <span class="title-line">从事后汇总</span>
+        <span class="title-line">升级为过程化经营管理</span>
+      </h2>
+      <div class="value-grid">
+        <article class="value-card" style="--accent: var(--teal)"><strong>过程实时看见</strong><span></span><p>项目进度、收入、成本、利润、回款、人效不再等月底统计。</p></article>
+        <article class="value-card" style="--accent: var(--amber)"><strong>系统自动提醒</strong><span></span><p>预算超支、任务逾期、脚本未审、应收逾期自动预警。</p></article>
+        <article class="value-card" style="--accent: var(--green)"><strong>财务变经营</strong><span></span><p>系统不仅算对账单，还支持管理层判断客户价值和项目毛利。</p></article>
+        <article class="value-card" style="--accent: var(--coral)"><strong>公司级管理</strong><span></span><p>按客户、品牌、项目、月份、人员、岗位多维度查看经营表现。</p></article>
+      </div>
+    </section>
+
+    <section id="std-launch">
+      <p class="section-kicker">落地路径</p>
+      <h2 class="section-title">
+        <span class="title-line">先跑通一个年框客户闭环</span>
+        <span class="title-line">再扩展经营驾驶舱</span>
+      </h2>
+      <p class="section-lead">建议以一个典型年框客户项目试点，验证“立项 → 下单 → 产出 → 对账 → 应收”的完整链路。</p>
+      <div class="steps">
+        <div class="step-card"><small>Phase 01</small><b>数据准备</b><p>客户、合同、单价、项目成员、薪酬规则和历史产出样例。</p></div>
+        <div class="step-card"><small>Phase 02</small><b>核心MVP</b><p>CRM合同、PM立项、AE下单、产出登记先跑起来。</p></div>
+        <div class="step-card"><small>Phase 03</small><b>业财闭环</b><p>打通HR薪酬、FM成本、月度对账、应收回款。</p></div>
+        <div class="step-card"><small>Phase 04</small><b>经营驾驶舱</b><p>汇总收入、成本、利润、回款、人效和风险预警。</p></div>
+      </div>
+    </section>
+
+    <div class="closing">
+      <section>
+        <div>
+          <h2>
+            <span class="title-line">这不是少填几张表</span>
+            <span class="title-line">而是形成实时经营仪表盘</span>
+          </h2>
+          <p>过去业务、财务、人力各算各的；上系统后，同一条业务数据贯穿客户、项目、产出、薪酬、成本、对账、回款和利润。</p>
+        </div>
+        <div class="quote-box">把“月底算账”变成“实时管理”，把“业务过程”变成“经营数据”。</div>
+      </section>
+    </div>
+  </main>
+
+  
+
+<script>
+  const solutionState = {
+    ai: {
+      label: '内容运营业财PMS-AI解决方案',
+      title: '内容运营业财PMS-AI解决方案 | 产品介绍',
+      top: 'ai-top'
+    },
+    standard: {
+      label: '内容运营业财PMS解决方案',
+      title: '内容运营业财PMS解决方案 | 产品介绍',
+      top: 'std-top'
+    }
+  };
+
+  const versionPages = Array.from(document.querySelectorAll('.version-page'));
+  const versionNavs = Array.from(document.querySelectorAll('[data-version-nav]'));
+  const versionButtons = Array.from(document.querySelectorAll('[data-version-target]'));
+  const versionLabel = document.querySelector('[data-version-label]');
+  const versionSwitch = document.querySelector('.version-switch');
+
+  function setSolutionVersion(version, shouldScroll = true) {
+    const state = solutionState[version] || solutionState.ai;
+    versionPages.forEach((page) => {
+      const active = page.dataset.version === version;
+      page.classList.toggle('is-active', active);
+      page.hidden = !active;
+    });
+    versionNavs.forEach((nav) => {
+      const active = nav.dataset.versionNav === version;
+      nav.classList.toggle('is-active', active);
+      nav.hidden = !active;
+    });
+    versionButtons.forEach((button) => {
+      const active = button.dataset.versionTarget === version;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+    versionLabel.textContent = state.label;
+    document.title = state.title;
+    versionSwitch.open = false;
+    if (shouldScroll) {
+      history.replaceState(null, '', `#${state.top}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }
+
+  versionButtons.forEach((button) => {
+    button.addEventListener('click', () => setSolutionVersion(button.dataset.versionTarget));
+  });
+
+  document.querySelectorAll('.version-page').forEach((page) => {
+    const tabs = Array.from(page.querySelectorAll('.module-tab'));
+    const panels = Array.from(page.querySelectorAll('.module-panel'));
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.module;
+        tabs.forEach((item) => {
+          const active = item === tab;
+          item.classList.toggle('is-active', active);
+          item.setAttribute('aria-selected', String(active));
+        });
+        panels.forEach((panel) => {
+          panel.classList.toggle('is-active', panel.dataset.modulePanel === target);
+        });
+      });
+    });
+  });
+
+  const initialVersion = window.location.hash.startsWith('#std-') ? 'standard' : 'ai';
+  setSolutionVersion(initialVersion, false);
+</script>
+
+</body>
+</html>
