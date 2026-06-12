@@ -57,6 +57,24 @@
       text-decoration: none;
     }
 
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.85);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+      flex-shrink: 0;
+    }
+    .back-home:hover {
+      background: rgba(255,255,255,0.2);
+      color: #fff;
+    }
     .topbar {
       position: fixed;
       z-index: 50;
@@ -3374,6 +3392,7 @@
 </head>
 <body>
   <header class="topbar">
+    <a href="../" class="back-home" title="返回首页">← 首页</a>
     <details class="version-switch">
       <summary class="brand" aria-label="切换解决方案版本">
         <span class="brand-mark">业</span>
