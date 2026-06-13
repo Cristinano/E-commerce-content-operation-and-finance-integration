@@ -296,6 +296,7 @@ textarea.form-input{min-height:80px;resize:vertical}
 <tr><td class="number">EMP-2024-005</td><td>王五</td><td>剪辑</td><td>剪辑组</td><td class="number">¥5,000</td><td class="number">¥1,800</td><td class="number">450</td><td class="number">¥16/条</td><td>2024-07</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('王五','剪辑','剪辑组')" style="color:var(--accent)">转岗</button></td></tr>
 <tr><td class="number">EMP-2025-007</td><td>王PM</td><td>PM</td><td>项目部</td><td class="number">¥6,000</td><td>-</td><td>-</td><td>-</td><td>2025-01</td><td><span class="badge badge-teal"><span class="badge-dot"></span>在职</span></td><td><div class="toggle on" onclick="event.stopPropagation()" title="点击切换分摊到项目（按项目数均分底薪）"></div></td><td><button class="btn btn-xs btn-ghost">编辑</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openTransfer('王PM','PM','项目部')" style="color:var(--accent)">转岗</button></td></tr>
 <tr><td class="number">EMP-2025-004</td><td>soso</td><td>编导</td><td>编导组</td><td class="number">¥5,000</td><td class="number">¥1,000</td><td class="number">500</td><td class="number">¥15/条</td><td>2025-08</td><td><span class="badge badge-gray"><span class="badge-dot"></span>离职</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost">查看</button></td></tr>
+<tr><td class="number">EMP-2026-001</td><td>赵六</td><td>剪辑</td><td>剪辑组</td><td class="number">¥5,000</td><td class="number">¥1,800</td><td class="number">450</td><td class="number">¥16/条</td><td>2026-01</td><td><span class="badge badge-amber"><span class="badge-dot"></span>离职中</span><span class="muted" style="font-size:10px;margin-left:4px">8条任务待交接</span></td><td><span class="muted">—</span></td><td><button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openResign('赵六')">查看</button> <button class="btn btn-xs btn-ghost" onclick="event.stopPropagation();openResign('赵六')" style="color:var(--blue)">确认离职</button></td></tr>
 </tbody></table>
 </div></div>
 <div class="row-between"><span class="muted">共22条记录，第1-8条</span><div class="flex gap-sm"><button class="btn btn-sm btn-secondary" disabled>上一页</button><button class="btn btn-sm btn-secondary">下一页</button></div></div>
@@ -304,7 +305,7 @@ textarea.form-input{min-height:80px;resize:vertical}
 
 <!-- ===== PAGE: Employee Detail ===== -->
 <section class="page" id="pg-employee-detail">
-<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('employee')">←</span><span class="topbar-title" style="margin-left:8px">员工详情</span></div><div class="topbar-actions"><button class="btn btn-secondary btn-sm">编辑</button><button class="btn btn-ghost btn-sm" onclick="openTransfer('巫昭仪','编导','编导组')" style="color:var(--accent)">转岗</button><button class="btn btn-ghost btn-sm" style="color:var(--amber)">办理离职</button></div></div>
+<div class="topbar"><div class="topbar-left"><span class="topbar-title" style="cursor:pointer" onclick="navTo('employee')">←</span><span class="topbar-title" style="margin-left:8px">员工详情</span></div><div class="topbar-actions"><button class="btn btn-secondary btn-sm">编辑</button><button class="btn btn-ghost btn-sm" onclick="openTransfer('巫昭仪','编导','编导组')" style="color:var(--accent)">转岗</button><button class="btn btn-ghost btn-sm" style="color:var(--amber)" onclick="openResign('巫昭仪')">办理离职</button></div></div>
 <div class="content">
 
 <div class="emp-card">
@@ -921,9 +922,81 @@ textarea.form-input{min-height:80px;resize:vertical}
       <div class="form-group"><label class="form-label">计件单价</label><input type="number" class="form-input" id="transfer-piece" placeholder="元/条"></div>
     </div>
   </div>
+  <div id="transfer-task-warn" style="margin-top:10px;padding:12px;background:#fff5f5;border:1px solid #fecaca;border-radius:8px">
+    <div style="font-weight:700;font-size:13px;color:#b91c1c;margin-bottom:6px">🔴 工作进行中</div>
+    <div style="font-size:12px;color:#7f1d1d" id="transfer-task-summary">⚠️ 巫昭仪在 2 个项目中有 5 条进行中/待审核任务</div>
+    <div id="transfer-task-detail" style="font-size:11px;color:#991b1b;margin-top:4px;line-height:1.6">
+      PJ-001 美的年度框架 ｜ 脚本 × 3条（待执行）<br>
+      PJ-002 松下Q1季度包 ｜ 脚本 × 2条（审核中）
+    </div>
+    <div style="font-size:11px;color:#b91c1c;margin-top:4px">💡 转岗确认后，系统将自动通知以上项目经理重新分配这些任务</div>
+  </div>
   <div class="form-group" style="margin-top:8px"><label class="form-label">备注</label><textarea class="form-input" rows="2" placeholder="用于审计追溯，记录转岗详情"></textarea></div>
 </div>
-<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-emp-transfer')">取消</button><button class="btn btn-primary" onclick="closeModal('modal-emp-transfer');showToast('转岗已记录，已生成新薪酬版本','ok')">确认转岗并生成新版本</button></div>
+  <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-emp-transfer')">取消</button><button class="btn btn-primary" onclick="confirmTransfer()">确认转岗并生成新版本</button></div>
+</div></div>
+
+<!-- Modal: Employee Resignation v2.12 -->
+<div class="modal-overlay" id="modal-emp-resign">
+<div class="modal wide">
+<div class="modal-header"><span class="modal-title" id="modal-resign-title">办理离职：巫昭仪</span><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-emp-resign')">✕</button></div>
+<div class="modal-body">
+  <div class="card-title mb-sm" style="margin-top:0">离职信息</div>
+  <div class="alert alert-info" style="margin-bottom:8px">📋 员工：<b id="resign-emp-name">巫昭仪</b>（<span id="resign-emp-no">EMP-2025-001</span>）· 岗位：<span id="resign-emp-pos">编导</span> · 部门：<span id="resign-emp-dept">编导组</span> · 入职：<span id="resign-emp-hired">2025-03-01</span></div>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">最后工作日 *</label><input type="date" class="form-input" id="resign-leave-date" value="2026-08-15"></div>
+    <div class="form-group"><label class="form-label">离职类型 *</label>
+      <select class="form-select" id="resign-leave-type">
+        <option value="voluntary">主动离职</option>
+        <option value="negotiated">协商离职</option>
+        <option value="dismissed">辞退</option>
+      </select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group" style="flex:1"><label class="form-label">离职原因</label><input type="text" class="form-input" id="resign-reason" placeholder="补充说明..."></div>
+  </div>
+
+  <div id="resign-task-block" style="margin-top:12px;padding:12px;background:#fff5f5;border:1px solid #fecaca;border-radius:8px">
+    <div style="font-weight:700;font-size:13px;color:#b91c1c;margin-bottom:6px">🔴 进行中任务</div>
+    <div style="font-size:12px;color:#7f1d1d" id="resign-task-summary">⚠️ 巫昭仪在 3 个项目中有 12 条进行中/待审核任务</div>
+    <div id="resign-task-detail" style="font-size:11px;color:#991b1b;margin-top:4px;line-height:1.6">
+      PJ-001 美的年度框架 ｜ 脚本 × 5条 ｜ 待执行 ×3 审核×2<br>
+      PJ-002 松下Q1季度包 ｜ 脚本 × 4条 ｜ 待执行 ×4<br>
+      PJ-003 TCL新春campaign｜ 剪辑 × 3条 ｜ 审核中 ×3
+    </div>
+    <div style="margin-top:6px;display:flex;gap:8px">
+      <button class="btn btn-sm" style="background:#fee2e2;color:#b91c1c;border-color:#fecaca" onclick="showToast('已通知3位项目经理处理任务交接','ok')">📨 通知项目经理处理</button>
+      <button class="btn btn-ghost btn-sm" onclick="showToast('已保存草稿，可稍后继续处理','ok')">我稍后处理</button>
+    </div>
+  </div>
+
+  <div id="resign-freeze-warn" style="margin-top:10px;padding:10px 12px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;font-size:12px;color:#9a3412">
+    🔒 <b>确认提交后该员工账号将被立即冻结</b>，禁止登录系统。项目经理将从「人员管理 → 异动通知」收到待办，完成所有任务交接后HR可最终确认离职。
+  </div>
+
+  <div class="card-title mb-sm" style="margin-top:10px">薪酬结算预览</div>
+  <div style="background:var(--bg-body);padding:12px;border-radius:8px;font-size:12px;line-height:1.8">
+    <div>当月标准工作日：<b>22天</b> &nbsp; 实际出勤（至最后工作日）：<b>10天</b> &nbsp; 折算率：<b>45.5%</b></div>
+    <div style="margin-top:4px">折算底薪：<b>¥5,000 × 45.5% = ¥2,273</b></div>
+    <div>绩效：由HR在月底薪酬核算时评定</div>
+    <div>提成：按截至最后工作日的超额产出计算</div>
+  </div>
+  <div style="margin-top:10px">
+    <label class="form-label">薪酬结算方式</label>
+    <div style="display:flex;flex-direction:column;gap:6px;margin-top:4px">
+      <label style="display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border:1px solid var(--accent);border-radius:8px;background:var(--accent-light);cursor:pointer">
+        <input type="radio" name="resign-settle" value="month_end" checked style="margin-top:3px;accent-color:var(--accent)">
+        <div><div style="font-weight:600;font-size:13px">月底统一结算（推荐）</div><div style="font-size:11px;color:var(--text-secondary)">与全员一起在下个发薪日结算</div></div>
+      </label>
+      <label style="display:flex;align-items:flex-start;gap:8px;padding:8px 12px;border:1px solid var(--border);border-radius:8px;cursor:pointer">
+        <input type="radio" name="resign-settle" value="immediate" style="margin-top:3px;accent-color:var(--accent)">
+        <div><div style="font-weight:600;font-size:13px">立即结算</div><div style="font-size:11px;color:var(--text-secondary)">离职日单独结算当月薪酬，立即生成薪酬单</div></div>
+      </label>
+    </div>
+  </div>
+</div>
+<div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-emp-resign')">取消</button><button class="btn btn-ghost btn-sm" onclick="closeModal('modal-emp-resign');showToast('离职草稿已保存','ok')">保存草稿</button><button class="btn btn-primary" style="background:var(--amber);border-color:var(--amber);color:#fff" onclick="confirmResign()">确认离职并通知PM</button></div>
 </div></div>
 
 <!-- Modal: Edit Employee Salary -->
@@ -1347,6 +1420,36 @@ function showHistAtt(month, el) {
     html += '<td>' + r[5] + '</td><td>陈HR</td></tr>';
   });
   body.innerHTML = html;
+}
+
+function confirmTransfer() {
+  closeModal('modal-emp-transfer');
+  showToast('转岗已记录，已生成新薪酬版本 · 已通知项目经理处理进行中任务','ok');
+}
+
+function confirmResign() {
+  var settleEl = document.querySelector('input[name="resign-settle"]:checked');
+  var settleMode = settleEl ? settleEl.value : 'month_end';
+  var msg = settleMode === 'immediate' 
+    ? '离职已确认 · 账号已冻结 · 已通知PM进行任务交接 · 当月薪酬将立即结算'
+    : '离职已确认 · 账号已冻结 · 已通知PM进行任务交接 · 月底统一结算';
+  closeModal('modal-emp-resign');
+  showToast(msg, 'ok');
+}
+
+function openResign(name) {
+  document.getElementById('modal-resign-title').textContent = '办理离职：' + name;
+  document.getElementById('resign-emp-name').textContent = name;
+  document.getElementById('resign-emp-no').textContent = 'EMP-2025-001';
+  document.getElementById('resign-emp-pos').textContent = '编导';
+  document.getElementById('resign-emp-dept').textContent = '编导组';
+  document.getElementById('resign-emp-hired').textContent = '2025-03-01';
+  openModal('modal-emp-resign');
+}
+
+function confirmResignDraft() {
+  closeModal('modal-emp-resign');
+  showToast('离职草稿已保存，可稍后继续处理','ok');
 }
 </script>
 </body>
