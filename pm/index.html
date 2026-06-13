@@ -275,7 +275,8 @@ tbody tr:hover{background:#f8f9fb}
     <div class="nav-sub" data-nav="modellist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><circle cx="12" cy="10" r="4"/><path d="M5 20v-1a5 5 0 015-5h4a5 5 0 015 5v1"/></svg>模特资源库</div>
     <div class="nav-sub" data-nav="venuelist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M8 3v5"/><path d="M16 3v5"/><path d="M3 13h18"/></svg>场地资源库</div>
     <div class="nav-sub" data-nav="samplist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M12 8v8m-4-4h8"/></svg>样机资源库</div>
-    <div class="nav-sub" data-nav="resusage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>📋 资源使用记录</div>
+    <!-- <div class="nav-sub" data-nav="resusage">...📋 资源使用记录</div>（v2.39 已合并至「资源任务关联」）-->
+    <div class="nav-sub" data-nav="restask"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>📋 资源任务关联</div>
     <div class="sidebar-subsection">供应商资源库</div>
     <div class="nav-sub" data-nav="vendorlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="width:14px;height:14px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><circle cx="12" cy="14" r="2"/><path d="M8 14h-1a2 2 0 00-2 2v1m14-3h1a2 2 0 012 2v1"/></svg>供应商资源库</div>
     <div class="sidebar-subsection">发布账号管理</div>
@@ -1036,6 +1037,33 @@ tbody tr:hover{background:#f8f9fb}
 </div>
 </section>
 
+<!-- RESOURCE TASK RELATION -->
+<section class="page" id="pg-restask">
+<div class="topbar"><div class="topbar-left"><h1 class="topbar-title">📋 资源任务关联</h1><div class="topbar-breadcrumb">资源管理 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span>资源任务关联</span></div></div><div class="topbar-actions"><div class="filter-row" style="gap:6px"><span class="muted">资源类型：</span><select class="filter-select" id="rt-type" onchange="renderRestask()"><option value="all">全部</option><option value="model">模特</option><option value="venue">场地</option><option value="sample">样机</option></select><span class="muted">项目：</span><select class="filter-select" id="rt-project" onchange="renderRestask()"><option value="all">全部项目</option><option value="1">美的 · PJ-001</option><option value="2">松下 · PJ-002</option><option value="3">TCL · PJ-003</option><option value="4">创维 · PJ-004</option></select></div></div></div>
+<div class="content" style="padding-top:0">
+  <div class="card anim" style="border-radius:0 0 var(--radius-md) var(--radius-md);border-top:0">
+    <div class="card-header" style="border-bottom:0;padding-bottom:4px">
+      <div class="filter-row" style="flex-wrap:wrap;gap:6px">
+        <span class="muted">状态：</span>
+        <div class="filter-row" id="rt-status-chips" style="gap:4px">
+          <button class="filter-chip active" data-rtst="all">全部状态</button>
+          <button class="filter-chip" data-rtst="reserved">已预约</button>
+          <button class="filter-chip" data-rtst="in_use">使用中</button>
+          <button class="filter-chip" data-rtst="returned">已归还</button>
+          <button class="filter-chip" data-rtst="settled">已结算</button>
+        </div>
+        <div class="filter-spacer"></div>
+        <input class="form-input" id="rt-search" placeholder="搜索资源名称…" style="width:160px;border-radius:16px;padding:5px 12px;font-size:12px" oninput="renderRestask()">
+      </div>
+    </div>
+  </div>
+  <div class="stats-grid" id="rt-summary"></div>
+  <div class="card" id="rt-list-card">
+    <div class="table-wrap"><table><thead><tr><th style="width:30px"></th><th style="width:110px">资源名称</th><th style="width:55px">类型</th><th style="width:70px">关联任务</th><th style="width:50px">累计天数</th><th style="width:80px">累计费用</th><th style="width:100px">时间跨度</th></tr></thead><tbody id="rt-tbody"></tbody></table></div>
+  </div>
+</div>
+</section>
+
 <!-- VENDOR LIST -->
 <section class="page" id="pg-vendorlist">
 <div class="topbar"><div class="topbar-left"><h1 class="topbar-title">供应商资源库</h1><div class="topbar-breadcrumb">资源管理 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span>供应商资源库</span></div></div><div class="topbar-actions"><button class="btn btn-primary btn-sm" onclick="openVendorModal()">+ 新增供应商</button></div></div>
@@ -1667,7 +1695,7 @@ tbody tr:hover{background:#f8f9fb}
 <div class="toast" id="toast"></div>
 
 <script>
-const pages = ['projects','batch','detail','mytasks','review','recon','matrix','archiveproj','costconfig','modellist','venuelist','samplist','resusage','vendorlist','talentlist','shoplist'];
+const pages = ['projects','batch','detail','mytasks','review','recon','matrix','archiveproj','costconfig','modellist','venuelist','samplist','resusage','restask','vendorlist','talentlist','shoplist'];
 const projects = {'1':{name:'美的2026年度框架',code:'PJ-2026-001',client:'美的集团',type:'年框',pm:'张三',ae:'赵六,钱七',budget:'¥10,000,000',contract:'HT-2026-001'},'2':{name:'松下Q1季度包',code:'PJ-2026-002',client:'松下',type:'季度包',pm:'李四',ae:'王总',budget:'¥1,000,000',contract:'HT-2026-002'},'3':{name:'TCL新春campaign',code:'PJ-2026-003',client:'TCL',type:'临时',pm:'王五',ae:'钱七',budget:'¥500,000',contract:'HT-2026-003'},'4':{name:'创维年度框架',code:'PJ-2026-004',client:'创维',type:'年框',pm:'张三',ae:'赵六',budget:'¥8,000,000',contract:'HT-2026-004'},'5':{name:'长虹2025年度框架',code:'PJ-2025-012',client:'长虹',type:'年框',pm:'李四',ae:'王总',budget:'¥6,000,000',contract:'HT-2025-012'}};
 let currentPid='1';
 
@@ -5229,6 +5257,7 @@ function toggleCostItem(id){
    if(id==='shoplist') setTimeout(renderShopList,0);
    if(id==='samplist') setTimeout(renderSampleList,0);
    if(id==='resusage') setTimeout(renderResourceUsage,0);
+   if(id==='restask') setTimeout(renderRestask,0);
   };
 
 // Talent list data & render
@@ -5594,7 +5623,7 @@ function renderProjResourceConfig() {
       <td><span class="badge badge-${gc}"><span class="badge-dot"></span>${m.grade}级</span></td>
       <td>${m.portrait}</td>
       <td class="code">${m.base || '-'}</td>
-      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('model','${m.id}')">移除</button></td>
+      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('model','${m.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('model','${m.id}')">移除</button></td>
     </tr>`;
   }).join('');
 
@@ -5609,7 +5638,7 @@ function renderProjResourceConfig() {
       <td>${v.location}</td>
       <td>${v.area}㎡</td>
       <td>${costInfo}</td>
-      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('venue','${v.id}')">移除</button></td>
+      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('venue','${v.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('venue','${v.id}')">移除</button></td>
     </tr>`;
   }).join('');
 
@@ -5622,7 +5651,7 @@ function renderProjResourceConfig() {
       <td>${s.model}</td>
       <td class="code">${s.serial}</td>
       <td><span class="badge badge-${sc}"><span class="badge-dot"></span>${s.status}</span></td>
-      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('sample','${s.id}')">移除</button></td>
+      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('sample','${s.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('sample','${s.id}')">移除</button></td>
     </tr>`;
   }).join('');
 }
@@ -5829,7 +5858,7 @@ function renderModelList(){
       <td>${m.portrait}</td>
       <td class="code">${m.base}</td>
       <td>${m.active?'<span class="badge badge-teal"><span class="badge-dot"></span>启用</span>':'<span class="badge badge-gray"><span class="badge-dot"></span>停用</span>'}</td>
-      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
+      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('model','${m.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
     </tr>`;
   }).join('');
 }
@@ -6024,7 +6053,7 @@ function renderVenueList() {
       <td>${billingCell}</td>
       <td>${costCell}</td>
       <td>${v.active?'<span class="badge badge-teal"><span class="badge-dot"></span>启用</span>':'<span class="badge badge-gray"><span class="badge-dot"></span>停用</span>'}</td>
-      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
+      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('venue','${v.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
     </tr>`;
   }).join('');
 }
@@ -6350,7 +6379,7 @@ function renderSampleList() {
       <td>${s.location}</td>
       <td style="font-size:11px">${s.attachments}</td>
       <td><span class="badge badge-${statusColor}"><span class="badge-dot"></span>${s.status}</span></td>
-      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已更新状态','ok')">${s.status==='已借出'?'归还':'借出'}</button></td>
+      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('sample','${s.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已更新状态','ok')">${s.status==='已借出'?'归还':'借出'}</button></td>
     </tr>`;
   }).join('');
 }
@@ -6366,6 +6395,10 @@ const resourceUsageData=[
   {id:'UR-006',type:'model',name:'小王 (B级)',projectId:'4',projectName:'创维',taskId:'sh13',taskTitle:'拍摄-燃热HWF商品01',start:'2026-06-18',end:'2026-06-18',days:1,price:500,amount:500,status:'reserved',detail:'肖像类型：厨房场景 · ¥500/天 × 1天 · 登记人：陈影 · 2026-06-13 10:30'},
   {id:'UR-007',type:'venue',name:'公司自建拍摄间-客厅场景',projectId:'1',projectName:'美的',taskId:'sh06',taskTitle:'拍摄-燃热LN7PRO商品01',start:'2026-06-05',end:'2026-06-09',days:5,price:260,amount:1300,status:'settled',detail:'类型：企业自建 · 面积：60㎡ · 风格：奶油风 · ¥260/天(月租分摊) × 5天 · 登记人：李四 · 2026-06-02 09:00'},
   {id:'UR-008',type:'sample',name:'JM1 (电热)',projectId:'2',projectName:'松下',taskId:'sh12',taskTitle:'拍摄-电热JM1成片01',start:'2026-06-10',end:'2026-06-14',days:4,price:0,amount:0,status:'in_use',detail:'机身编号：JM1-2026-003 · 颜色：象牙白 · 存放位置：A-2-1 · 登记人：张摄 · 2026-06-09 16:45'},
+  {id:'UR-009',type:'model',name:'小林 (S级)',projectId:'1',projectName:'美的',taskId:'sh14',taskTitle:'拍摄-净水白泽1000G产品02',start:'2026-06-20',end:'2026-06-20',days:1,price:1200,amount:1200,status:'reserved',detail:'肖像类型：时尚/家居类 · ¥1,200/天 × 1天 · 登记人：李四 · 2026-06-18 09:30'},
+  {id:'UR-010',type:'venue',name:'广州天河创意园A区',projectId:'1',projectName:'美的',taskId:'sh15',taskTitle:'拍摄-烟机AK5pro商品04',start:'2026-06-15',end:'2026-06-15',days:1,price:1500,amount:1500,status:'in_use',detail:'类型：外部场地 · 面积：120㎡ · 风格：现代简约 · ¥1,500/天 × 1天 · 登记人：张摄 · 2026-06-12 14:00'},
+  {id:'UR-011',type:'model',name:'小林 (S级)',projectId:'3',projectName:'TCL',taskId:'sh16',taskTitle:'拍摄-消毒柜110HQ2商品03',start:'2026-06-20',end:'2026-06-20',days:1,price:1200,amount:1200,status:'reserved',detail:'肖像类型：时尚/家居类 · ¥1,200/天 × 1天 · 登记人：张摄 · 2026-06-18 10:00'},
+  {id:'UR-012',type:'sample',name:'AK5 PRO (烟灶)',projectId:'1',projectName:'美的',taskId:'sh15',taskTitle:'拍摄-烟机AK5pro商品04',start:'2026-06-15',end:'2026-06-17',days:3,price:0,amount:0,status:'in_use',detail:'机身编号：AK5-2026-001 · 颜色：星云灰 · 存放位置：A-3-2 · 登记人：张摄 · 2026-06-14 09:00'},
 ];
 let ruType='all';let ruProject='all';let ruStatus='all';
 function renderResourceUsage(){
@@ -6404,6 +6437,144 @@ document.querySelectorAll('#ru-status-chips .filter-chip[data-rust]').forEach(ch
     renderResourceUsage();
   });
 });
+
+// ------ Resource Task Relation ------
+let rtType='all';let rtProject='all';let rtStatus='all';let rtSearch='';
+let rtFocusResource=null;
+
+function navigateToRestask(resourceType,resourceName){
+  rtFocusResource={type:resourceType,name:resourceName};
+  document.getElementById('rt-type').value=resourceType;
+  rtType=resourceType;
+  document.getElementById('rt-project').value='all';
+  rtProject='all';
+  rtStatus='all';
+  document.querySelectorAll('#rt-status-chips .filter-chip[data-rtst]').forEach(c=>{c.classList.toggle('active',c.dataset.rtst==='all')});
+  document.getElementById('rt-search').value='';
+  rtSearch='';
+  navTo('restask');
+}
+
+function checkTimeConflict(records){
+  const dateMap={};
+  let hasConflict=false;
+  records.forEach(r=>{
+    const s=new Date(r.start); const e=new Date(r.end);
+    for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1)){
+      const ds=d.toISOString().slice(0,10);
+      dateMap[ds]=(dateMap[ds]||0)+1;
+      if(dateMap[ds]>1) hasConflict=true;
+    }
+  });
+  return hasConflict;
+}
+
+function renderRestask(){
+  rtType=document.getElementById('rt-type')?.value||'all';
+  rtProject=document.getElementById('rt-project')?.value||'all';
+  rtSearch=(document.getElementById('rt-search')?.value||'').toLowerCase();
+
+  let records=resourceUsageData.slice();
+  if(rtType!=='all') records=records.filter(r=>r.type===rtType);
+  if(rtProject!=='all') records=records.filter(r=>r.projectId===rtProject);
+  if(rtSearch) records=records.filter(r=>r.name.toLowerCase().includes(rtSearch));
+  if(rtStatus!=='all') records=records.filter(r=>r.status===rtStatus);
+
+  const grouped={};
+  records.forEach(r=>{
+    const key=r.type+'|||'+r.name;
+    if(!grouped[key]) grouped[key]={type:r.type,name:r.name,tasks:[],totalDays:0,totalAmount:0,minStart:r.start,maxEnd:r.end,statuses:new Set()};
+    grouped[key].tasks.push(r);
+    grouped[key].totalDays+=r.days;
+    grouped[key].totalAmount+=r.amount;
+    if(r.start<grouped[key].minStart) grouped[key].minStart=r.start;
+    if(r.end>grouped[key].maxEnd) grouped[key].maxEnd=r.end;
+    grouped[key].statuses.add(r.status);
+  });
+
+  let groups=Object.values(grouped);
+
+  if(rtFocusResource){
+    groups=groups.filter(g=>g.type===rtFocusResource.type&&g.name===rtFocusResource.name);
+    rtFocusResource=null;
+  }
+
+  groups.sort((a,b)=>b.totalAmount-a.totalAmount);
+
+  const statusMap={reserved:'已预约',in_use:'使用中',returned:'已归还',settled:'已结算'};
+  const statusBadge={reserved:'badge-blue',in_use:'badge-amber',returned:'badge-teal',settled:'badge-gray'};
+
+  const totalResources=groups.length;
+  const totalTasks=groups.reduce((s,g)=>s+g.tasks.length,0);
+  const totalDays=groups.reduce((s,g)=>s+g.totalDays,0);
+  const totalAmount=groups.reduce((s,g)=>s+g.totalAmount,0);
+
+  document.getElementById('rt-summary').innerHTML=`
+    <div class="stat-card purple" style="border-left:3px solid var(--purple)"><div class="stat-label">资源总数</div><div class="stat-value">${totalResources}</div></div>
+    <div class="stat-card blue"><div class="stat-label">关联任务</div><div class="stat-value">${totalTasks}</div></div>
+    <div class="stat-card teal"><div class="stat-label">累计使用天数</div><div class="stat-value">${totalDays}天</div></div>
+    <div class="stat-card amber"><div class="stat-label">累计费用</div><div class="stat-value">¥${totalAmount.toLocaleString()}</div></div>
+  `;
+
+  document.getElementById('rt-tbody').innerHTML=groups.map(g=>{
+    const conflict=checkTimeConflict(g.tasks);
+    const rowBg=conflict?'background:#fff9e6':'';
+    const conflictIcon=conflict?'<span style="color:var(--amber);font-size:10px;margin-left:4px" title="存在时间冲突">⚠️</span>':'';
+    const isSample=g.type==='sample';
+    const typeBadge=g.type==='model'?'badge-purple':g.type==='venue'?'badge-teal':'badge-blue';
+    return `<tr class="rt-resource-row" data-rtid="${g.type+'|||'+g.name}" style="cursor:pointer;${rowBg}" onclick="toggleRTDetail('${g.type.replace(/'/g,"\\'")}','${g.name.replace(/'/g,"\\'")}')">
+      <td style="text-align:center;font-size:11px">▶</td>
+      <td><strong>${g.name}</strong>${conflictIcon}<td><span class="badge ${typeBadge}" style="font-size:10px">${resourceTypeLabels[g.type]||g.type}</span></td>
+      <td class="code">${g.tasks.length}个任务</td>
+      <td class="code">${g.totalDays}天</td>
+      <td class="code" style="font-weight:600;color:${isSample?'var(--text-tertiary)':'var(--text-primary)'}">${isSample?'—':'¥'+g.totalAmount.toLocaleString()}</td>
+      <td class="code" style="font-size:10.5px">${g.minStart}~${g.maxEnd}</td>
+    </tr>
+    <tr id="rt-detail-${g.type.replace(/\s/g,'_')+'_'+g.name.replace(/\s/g,'_')}" style="display:none">
+      <td colspan="7" style="padding:0">
+        <div style="background:#f8f9fb;border-top:1px dashed var(--border-light)">
+          <table style="width:100%;font-size:11.5px"><thead><tr><th style="width:30px"></th><th style="width:80px">任务编号</th><th>任务名称</th><th style="width:65px">项目</th><th style="width:100px">使用时间</th><th style="width:40px">天数</th><th style="width:55px">单价</th><th style="width:55px">金额</th><th style="width:55px">状态</th></tr></thead><tbody>
+          ${g.tasks.map(t=>`<tr style="cursor:pointer" onclick="event.stopPropagation();showPipeDrawer('${t.taskId||''}')">
+            <td></td>
+            <td class="code" style="color:var(--blue);font-weight:500">${t.taskId||'—'}</td>
+            <td style="font-size:12px">${t.taskTitle}</td>
+            <td>${t.projectName}</td>
+            <td class="code" style="font-size:10.5px">${t.start}~${t.end}</td>
+            <td class="code">${t.days}天</td>
+            <td class="code">${t.price>0?'¥'+t.price:'—'}</td>
+            <td class="code" style="font-weight:600;color:${t.price>0?'var(--text-primary)':'var(--text-tertiary)'}">${t.price>0?'¥'+t.amount.toLocaleString():'—'}</td>
+            <td><span class="badge ${statusBadge[t.status]||'badge-gray'}"><span class="badge-dot"></span>${statusMap[t.status]||t.status}</span></td>
+          </tr>`).join('')}
+          </tbody></table>
+        </div>
+      </td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-tertiary);font-size:13px">暂无关联数据</td></tr>';
+}
+
+function toggleRTDetail(type,name){
+  const id='rt-detail-'+type.replace(/\s/g,'_')+'_'+name.replace(/\s/g,'_');
+  const row=document.getElementById(id);
+  if(!row) return;
+  const isOpen=row.style.display!=='none';
+  row.style.display=isOpen?'none':'';
+  const parentRow=row.previousElementSibling;
+  if(parentRow){
+    const arrow=parentRow.querySelector('td:first-child');
+    if(arrow) arrow.textContent=isOpen?'▶':'▼';
+  }
+}
+
+setTimeout(()=>{
+  document.querySelectorAll('#rt-status-chips .filter-chip[data-rtst]').forEach(chip=>{
+    chip.addEventListener('click',function(){
+      this.parentElement.querySelectorAll('.filter-chip[data-rtst]').forEach(c=>c.classList.remove('active'));
+      this.classList.add('active');
+      rtStatus=this.dataset.rtst;
+      renderRestask();
+    });
+  });
+},100);
 
 // ------ Vendor Resource Management ------
 const vendors=[
