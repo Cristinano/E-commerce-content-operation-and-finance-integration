@@ -566,7 +566,7 @@ tbody tr:hover{background:#f8f9fb}
 <div class="topbar"><div class="topbar-left"><h1 class="topbar-title" id="detail-title">美的2026年度框架</h1><div class="topbar-breadcrumb">项目管理 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span id="detail-code">PJ-2026-001</span></div></div><div class="topbar-actions"><span class="badge badge-blue" id="detail-status-badge"><span class="badge-dot"></span>执行中</span><span class="muted">2026-01-01 ~ 2026-12-31</span><div class="month-switch" style="margin-left:12px"><button class="month-switch-btn" onclick="switchMonth(-1)">&#8249;</button><span class="month-switch-val" id="cur-month-display">2026-06</span><button class="month-switch-btn" onclick="switchMonth(1)">&#8250;</button></div><button class="btn btn-sm btn-secondary" id="btn-close-project" style="margin-left:12px;display:none" onclick="openModal('modal-close-project')">关项归档</button></div></div>
 <div class="content" style="padding-top:0">
 <div class="card" style="border-radius:0 0 var(--radius-md) var(--radius-md);border-top:0">
-<div class="tabs" style="padding:0 18px"><div class="tab active" data-tab="overview">概览</div><div class="tab" data-tab="tasks">任务看板</div><div class="tab" data-tab="batch">批次管理</div><div class="tab" data-tab="budget">预算执行</div><div class="tab" data-tab="cost">项目成本</div><!-- <div class="tab" data-tab="finance">财务</div> --><div class="tab" data-tab="personnel">人员管理</div><div class="tab" data-tab="milestone">里程碑</div><div class="tab" data-tab="costconfig">项目资源库</div><div class="tab" data-tab="accountbind">项目发布账号</div></div>
+<div class="tabs" style="padding:0 18px"><div class="tab active" data-tab="overview">概览</div><div class="tab" data-tab="tasks">任务看板</div><div class="tab" data-tab="batch">批次管理</div><div class="tab" data-tab="budget">预算执行</div><div class="tab" data-tab="cost">项目成本</div><!-- <div class="tab" data-tab="finance">财务</div> --><div class="tab" data-tab="personnel">人员管理</div><div class="tab" data-tab="milestone">里程碑</div><div class="tab" data-tab="costconfig">项目资源库</div><div class="tab" data-tab="accountbind">项目发布账号</div><div class="tab" data-tab="documents">📁 项目资料</div></div>
 
 <!-- Overview Tab -->
 <div class="tab-content active" id="tab-overview">
@@ -755,6 +755,17 @@ tbody tr:hover{background:#f8f9fb}
 </div></div>
 
 <div class="tab-content" id="tab-personnel"><div class="card-body">
+<!-- Handover Notification Banner (v2.40) -->
+<div id="handover-banner" style="margin-bottom:12px;padding:10px 14px;background:#fff7ed;border:1px solid #fdba74;border-radius:8px;font-size:12px;display:flex;align-items:center;justify-content:space-between">
+  <div style="display:flex;align-items:center;gap:8px">
+    <span style="font-size:16px">📋</span>
+    <span><b id="handover-banner-title">人员异动通知</b> · <span id="handover-banner-desc">HR 已发起 1 项离职/转岗申请，涉及人员：赵六（剪辑·离职中）· 巫昭仪（编导·转岗待生效）。点击对应成员「移除」按钮处理任务交接。</span></span>
+  </div>
+  <div style="display:flex;gap:6px;flex-shrink:0">
+    <button class="btn btn-xs" style="background:#fed7aa;color:#9a3412;border-color:#fdba74" onclick="document.getElementById('handover-banner').style.display='none'">忽略</button>
+    <button class="btn btn-xs btn-primary" onclick="document.querySelector('[data-tab=personnel]').click()">查看详情</button>
+  </div>
+</div>
 <!-- Personnel Overview Stats -->
 <div class="stats-grid col4" style="margin-bottom:16px">
   <div class="stat-card blue"><div class="stat-label">👥 项目总人数</div><div class="stat-value" id="pers-total-count">13</div><div class="stat-sub">内部 12 · 外包 1</div></div>
@@ -858,6 +869,37 @@ tbody tr:hover{background:#f8f9fb}
 
 </div></div>
 
+<!-- Documents Tab content -->
+<div class="tab-content" id="tab-documents" style="height:calc(100vh - 170px)">
+<div style="display:flex;height:100%">
+<!-- Left: Folder Tree -->
+<div style="width:220px;flex-shrink:0;border-right:1px solid var(--border-light);overflow-y:auto;padding:12px 8px;background:#fafbfc">
+  <div style="font-size:10.5px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px;padding:0 6px">📂 文件目录</div>
+  <div id="doc-tree"></div>
+  <div style="margin-top:12px;padding:0 6px">
+    <button class="btn btn-xs" style="width:100%;color:var(--blue);border-color:var(--blue)" onclick="newDocFolder()">+ 新建文件夹</button>
+  </div>
+</div>
+<!-- Right: File List -->
+<div style="flex:1;display:flex;flex-direction:column;overflow:hidden">
+  <!-- Toolbar -->
+  <div style="display:flex;align-items:center;gap:8px;padding:10px 16px;border-bottom:1px solid var(--border-light);flex-shrink:0;flex-wrap:wrap">
+    <div id="doc-breadcrumb" style="font-size:12px;color:var(--text-secondary);display:flex;align-items:center;gap:4px"></div>
+    <div class="filter-spacer"></div>
+    <input class="form-input" id="doc-search" placeholder="搜索文件…" style="width:140px;border-radius:16px;padding:4px 10px;font-size:11.5px" oninput="renderDocList()">
+    <button class="btn btn-xs btn-primary" onclick="openDocUpload()">+ 上传文件</button>
+    <button class="btn btn-xs" style="color:var(--purple);border-color:var(--purple)" onclick="openDocLink()">+ 添加链接</button>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" id="doc-view-list" onclick="switchDocView('list')">列表</button>
+      <button class="view-toggle-btn" id="doc-view-grid" onclick="switchDocView('grid')">网格</button>
+    </div>
+  </div>
+  <!-- File list area -->
+  <div style="flex:1;overflow-y:auto;padding:12px 16px" id="doc-list-area"></div>
+</div>
+</div>
+</div>
+
 <!-- Add Member to Project Modal -->
 <div class="modal-overlay" id="modal-add-member"><div class="modal">
   <div class="modal-header"><div class="modal-title">添加项目成员</div><button class="drawer-close" onclick="closeModal('modal-add-member')">✕</button></div>
@@ -869,6 +911,28 @@ tbody tr:hover{background:#f8f9fb}
     <span class="hint" id="add-member-hint" style="margin-right:auto"></span>
     <button class="btn btn-secondary" onclick="closeModal('modal-add-member')">取消</button>
     <button class="btn btn-primary" onclick="saveAddMember()">确认添加</button>
+  </div>
+</div></div>
+
+<!-- Reassign Tasks Modal (v2.40) -->
+<div class="modal-overlay" id="modal-reassign"><div class="modal" style="max-width:620px">
+  <div class="modal-header"><div class="modal-title" id="reassign-title">任务重新指派</div><button class="drawer-close" onclick="closeModal('modal-reassign')">✕</button></div>
+  <div class="modal-body">
+    <div class="alert alert-warn" id="reassign-info" style="margin-bottom:8px"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div style="font-size:11px;color:var(--text-secondary)">勾选任务后批量指派，或逐条选择接替人：</div>
+      <div id="batch-assign-row" style="display:flex;align-items:center;gap:6px;font-size:11px">
+        <span class="muted" id="batch-count" style="display:none">已选 <b>0</b> 条</span>
+        <select class="form-select" id="batch-assign-target" style="font-size:11px;padding:2px 6px;display:none"><option value="">-- 批量指派给 --</option></select>
+        <button class="btn btn-xs btn-primary" id="batch-assign-btn" style="display:none" onclick="batchReassign()">批量指派</button>
+      </div>
+    </div>
+    <div id="reassign-task-list" style="max-height:300px;overflow-y:auto"></div>
+  </div>
+  <div class="modal-footer">
+    <span class="hint" id="reassign-hint" style="margin-right:auto"></span>
+    <button class="btn btn-secondary" onclick="closeModal('modal-reassign')">取消</button>
+    <button class="btn btn-primary" onclick="confirmReassign()">确认重新指派</button>
   </div>
 </div></div>
 
@@ -1692,6 +1756,33 @@ tbody tr:hover{background:#f8f9fb}
   <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-sample-detail')">关闭</button></div>
 </div></div>
 
+<!-- Doc Upload Modal -->
+<div class="modal-overlay" id="modal-doc-upload"><div class="modal" style="max-width:420px">
+  <div class="modal-header"><div class="modal-title">上传文件</div><button class="drawer-close" onclick="closeModal('modal-doc-upload')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-group"><div class="form-label">上传到</div><div id="doc-upload-folder" style="font-size:12px;color:var(--text-secondary);padding:4px 0">📁 全部文件</div></div>
+    <div style="border:2px dashed var(--border);border-radius:8px;padding:24px;text-align:center;cursor:pointer" onclick="simulateDocUpload()">
+      <div style="font-size:28px;margin-bottom:6px">📤</div>
+      <div style="font-size:12px;font-weight:600">点击选择文件</div>
+      <div style="font-size:10px;color:var(--text-tertiary);margin-top:4px">支持 PDF、DOC、XLSX、PPT、JPG、PNG、ZIP（≤50MB）</div>
+    </div>
+    <div class="form-group" style="margin-top:10px"><div class="form-label">文件名（演示版自动生成）</div><input class="form-input" id="doc-upload-name" placeholder="如：合同附件_v2.pdf"></div>
+    <div class="form-group"><div class="form-label">文件类型</div><select class="form-input form-select" id="doc-upload-type"><option value="pdf">PDF</option><option value="doc">DOCX</option><option value="xlsx">XLSX</option><option value="ppt">PPT</option><option value="jpg">JPG 图片</option><option value="png">PNG 图片</option><option value="zip">ZIP</option></select></div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-doc-upload')">取消</button><button class="btn btn-primary" onclick="confirmDocUpload()">确认上传</button></div>
+</div></div>
+
+<!-- Doc Link Modal -->
+<div class="modal-overlay" id="modal-doc-link"><div class="modal" style="max-width:420px">
+  <div class="modal-header"><div class="modal-title">添加在线链接</div><button class="drawer-close" onclick="closeModal('modal-doc-link')">✕</button></div>
+  <div class="modal-body">
+    <div class="form-group"><div class="form-label">链接名称 <span class="hint">（必填）</span></div><input class="form-input" id="doc-link-name" placeholder="如：需求文档在线版"></div>
+    <div class="form-group"><div class="form-label">链接URL <span class="hint">（必填）</span></div><input class="form-input" id="doc-link-url" placeholder="https://docs.qq.com/xxx"></div>
+    <div class="form-group"><div class="form-label">存放位置</div><div id="doc-link-folder" style="font-size:12px;color:var(--text-secondary);padding:4px 0">📁 全部文件</div></div>
+  </div>
+  <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('modal-doc-link')">取消</button><button class="btn btn-primary" onclick="confirmDocLink()">确认添加</button></div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1870,7 +1961,7 @@ function switchPMCostView(view){
 }
 document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',function(e){e.stopPropagation();navTo(this.dataset.nav)}));
 document.querySelectorAll('.nav-sub').forEach(i=>i.addEventListener('click',function(e){e.stopPropagation();navTo(this.dataset.nav,this.dataset.pid)}));
-document.querySelectorAll('.tab').forEach(tab=>{tab.addEventListener('click',function(){let p=this.closest('.tabs');p.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');let c=this.closest('.card');c.querySelectorAll('.tab-content').forEach(ct=>ct.classList.remove('active'));let tg=c.querySelector('#tab-'+this.dataset.tab);if(tg)tg.classList.add('active');if(this.dataset.tab==='costconfig'){if(!document.getElementById('proj-model-cards').innerHTML)renderProjResourceConfig()}if(this.dataset.tab==='accountbind'){if(!document.getElementById('proj-account-tbody').innerHTML)renderProjAccountBind()}if(this.dataset.tab==='personnel'){if(!document.getElementById('personnel-tbody').innerHTML)renderPersonnel()}if(this.dataset.tab==='finance'){renderFinanceCostTable('finance')}})});
+document.querySelectorAll('.tab').forEach(tab=>{tab.addEventListener('click',function(){let p=this.closest('.tabs');p.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');let c=this.closest('.card');c.querySelectorAll('.tab-content').forEach(ct=>ct.classList.remove('active'));let tg=c.querySelector('#tab-'+this.dataset.tab);if(tg)tg.classList.add('active');if(this.dataset.tab==='costconfig'){if(!document.getElementById('proj-model-cards').innerHTML)renderProjResourceConfig()}if(this.dataset.tab==='accountbind'){if(!document.getElementById('proj-account-tbody').innerHTML)renderProjAccountBind()}if(this.dataset.tab==='documents'){renderDocTree();renderDocBreadcrumb();renderDocList()}if(this.dataset.tab==='personnel'){if(!document.getElementById('personnel-tbody').innerHTML)renderPersonnel()}if(this.dataset.tab==='finance'){renderFinanceCostTable('finance')}})});
 document.querySelectorAll('.filter-chip').forEach(b=>b.addEventListener('click',function(){if(this.closest('#tab-tasks')||this.closest('#review-project-chips')||this.closest('#tab-personnel'))return;this.parentElement.querySelectorAll('.filter-chip').forEach(bb=>bb.classList.remove('active'));this.classList.add('active')}));
 document.querySelectorAll('#tab-tasks .filter-chip').forEach(chip=>{chip.addEventListener('click',function(){this.parentElement.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));this.classList.add('active');renderPipeline();if(document.getElementById('task-list-view').style.display!=='none')renderTaskList()})});
 
@@ -6577,6 +6668,277 @@ setTimeout(()=>{
 },100);
 
 // ------ Vendor Resource Management ------
+
+// ------ Project Documents ------
+const projDocData={
+  '1':{
+    folders:[
+      {id:'df1',name:'合同',pid:null},
+      {id:'df2',name:'2026年度',pid:'df1'},
+      {id:'df3',name:'2025年度',pid:'df1'},
+      {id:'df4',name:'brief',pid:null},
+      {id:'df5',name:'拍摄方案',pid:null},
+      {id:'df6',name:'验收单',pid:null},
+      {id:'df7',name:'报价单',pid:null},
+      {id:'df8',name:'其他',pid:null}
+    ],
+    files:[
+      {id:'fl1',name:'美的年度框架合同.pdf',folderId:'df2',type:'pdf',size:1258291,version:1,isLatest:true,uploadedBy:'张三',uploadedAt:'2026-06-08 14:30'},
+      {id:'fl2',name:'合同附件条款.docx',folderId:'df2',type:'doc',size:876544,version:1,isLatest:true,uploadedBy:'张三',uploadedAt:'2026-06-05 10:15'},
+      {id:'fl3',name:'2025年度续签协议.pdf',folderId:'df3',type:'pdf',size:645120,version:1,isLatest:true,uploadedBy:'李四',uploadedAt:'2025-12-20 09:00'},
+      {id:'fl4',name:'净水器产品brief_v1.docx',folderId:'df4',type:'doc',size:423936,version:1,isLatest:false,uploadedBy:'赵六',uploadedAt:'2026-06-01 16:00'},
+      {id:'fl5',name:'净水器产品brief_v2.docx',folderId:'df4',type:'doc',size:512000,version:2,isLatest:true,uploadedBy:'赵六',uploadedAt:'2026-06-03 11:30'},
+      {id:'fl6',name:'烟机系列brief.pdf',folderId:'df4',type:'pdf',size:389120,version:1,isLatest:true,uploadedBy:'钱七',uploadedAt:'2026-06-02 14:00'},
+      {id:'fl7',name:'白泽1000G拍摄方案.pptx',folderId:'df5',type:'ppt',size:2048576,version:1,isLatest:true,uploadedBy:'张摄',uploadedAt:'2026-06-06 09:30'},
+      {id:'fl8',name:'AK5pro拍摄脚本.png',folderId:'df5',type:'png',size:3145728,version:1,isLatest:true,uploadedBy:'陈影',uploadedAt:'2026-06-07 15:00'},
+      {id:'fl9',name:'06月第一批验收单.xlsx',folderId:'df6',type:'xlsx',size:256000,version:1,isLatest:true,uploadedBy:'王五',uploadedAt:'2026-06-10 17:00'},
+      {id:'fl10',name:'06月第二批验收单.xlsx',folderId:'df6',type:'xlsx',size:281600,version:1,isLatest:true,uploadedBy:'王五',uploadedAt:'2026-06-12 10:00'},
+      {id:'fl11',name:'美的年框报价单.xlsx',folderId:'df7',type:'xlsx',size:348160,version:1,isLatest:true,uploadedBy:'张三',uploadedAt:'2026-01-15 08:00'},
+      {id:'fl12',name:'项目启动会照片.jpg',folderId:'df8',type:'jpg',size:2097152,version:1,isLatest:true,uploadedBy:'张三',uploadedAt:'2026-01-05 10:00'},
+      {id:'fl13',name:'竞品分析报告.pdf',folderId:'df8',type:'pdf',size:765952,version:1,isLatest:true,uploadedBy:'赵六',uploadedAt:'2026-05-20 16:00'},
+      {id:'fl14',name:'拍摄素材打包.zip',folderId:'df8',type:'zip',size:52428800,version:1,isLatest:true,uploadedBy:'张摄',uploadedAt:'2026-06-08 18:00'}
+    ],
+    links:[
+      {id:'dl1',name:'需求文档在线版',folderId:'df4',url:'https://docs.qq.com/doc/xxxxx',addedBy:'赵六',addedAt:'2026-06-01'},
+      {id:'dl2',name:'竞品素材收集表',folderId:'df8',url:'https://docs.qq.com/sheet/yyyyy',addedBy:'钱七',addedAt:'2026-05-18'}
+    ]
+  }
+};
+for(let pid=2;pid<=5;pid++){
+  projDocData[pid]={folders:[{id:'df'+pid+'_1',name:'合同',pid:null},{id:'df'+pid+'_2',name:'brief',pid:null},{id:'df'+pid+'_3',name:'其他',pid:null}],files:[],links:[]};
+}
+
+let docCurrentFolder=null;
+let docViewMode='list';
+let docFileSeq=100;
+
+function getDocProjectFolders(){
+  const pid=currentPid||'1';
+  if(!projDocData[pid]) projDocData[pid]={folders:[],files:[],links:[]};
+  return projDocData[pid].folders;
+}
+function getDocProjectFiles(){
+  const pid=currentPid||'1';
+  if(!projDocData[pid]) projDocData[pid]={folders:[],files:[],links:[]};
+  return projDocData[pid].files;
+}
+function getDocProjectLinks(){
+  const pid=currentPid||'1';
+  if(!projDocData[pid]) projDocData[pid]={folders:[],files:[],links:[]};
+  return projDocData[pid].links;
+}
+
+function renderDocTree(){
+  const folders=getDocProjectFolders();
+  const files=getDocProjectFiles();
+  const rootFolders=folders.filter(f=>!f.pid);
+  const treeHtml=`
+    <div class="nav-sub" style="padding:6px 10px;margin-bottom:2px;${docCurrentFolder===null?'background:var(--blue-light);color:var(--blue);font-weight:600;border-radius:6px':''}" onclick="navigateDocFolder(null)">📁 全部文件</div>
+    ${rootFolders.map(f=>renderDocTreeNode(f,folders,files,0)).join('')}
+  `;
+  document.getElementById('doc-tree').innerHTML=treeHtml||'<div style="padding:10px;font-size:11px;color:var(--text-tertiary)">暂无文件夹</div>';
+}
+
+function renderDocTreeNode(folder,allFolders,allFiles,depth){
+  const children=allFolders.filter(f=>f.pid===folder.id);
+  const fileCount=allFiles.filter(f=>f.folderId===folder.id).length;
+  const isActive=docCurrentFolder===folder.id;
+  const indent=depth*14;
+  const prefix=depth>0?'├ ':'';
+  return `<div>
+    <div class="nav-sub" style="padding:5px 10px;padding-left:${10+indent}px;margin-bottom:1px;${isActive?'background:var(--blue-light);color:var(--blue);font-weight:600;border-radius:6px':''};font-size:12px" onclick="event.stopPropagation();navigateDocFolder('${folder.id}')">📁 ${prefix}${folder.name} <span style="font-size:10px;color:var(--text-tertiary);margin-left:auto">(${fileCount})</span></div>
+    ${children.map(c=>renderDocTreeNode(c,allFolders,allFiles,depth+1)).join('')}
+  </div>`;
+}
+
+function navigateDocFolder(folderId){
+  docCurrentFolder=folderId;
+  document.getElementById('doc-search').value='';
+  renderDocTree();
+  renderDocBreadcrumb();
+  renderDocList();
+}
+
+function renderDocBreadcrumb(){
+  if(docCurrentFolder===null){
+    document.getElementById('doc-breadcrumb').innerHTML='<span style="font-weight:600">📁 全部文件</span>';
+    return;
+  }
+  const folders=getDocProjectFolders();
+  const chain=[];
+  let cur=folders.find(f=>f.id===docCurrentFolder);
+  while(cur){
+    chain.unshift(cur);
+    cur=cur.pid?folders.find(f=>f.id===cur.pid):null;
+  }
+  document.getElementById('doc-breadcrumb').innerHTML=
+    '<span style="cursor:pointer;color:var(--blue)" onclick="navigateDocFolder(null)">📁 全部文件</span>'+
+    chain.map(f=>' <span style="color:var(--text-tertiary)">/</span> <span style="cursor:pointer;color:var(--blue)" onclick="navigateDocFolder(\''+f.id+'\')">'+f.name+'</span>').join('');
+}
+
+function renderDocList(){
+  const files=getDocProjectFiles();
+  const links=getDocProjectLinks();
+  const search=document.getElementById('doc-search')?.value?.toLowerCase()||'';
+  let filtered=files.filter(f=>{
+    if(docCurrentFolder!==null&&f.folderId!==docCurrentFolder) return false;
+    if(search&&!f.name.toLowerCase().includes(search)) return false;
+    return true;
+  });
+  let filteredLinks=[];
+  if(!search){
+    filteredLinks=links.filter(l=>{
+      if(docCurrentFolder!==null&&l.folderId!==docCurrentFolder) return false;
+      return true;
+    });
+  }else{
+    filteredLinks=links.filter(l=>l.name.toLowerCase().includes(search)&&(docCurrentFolder===null||l.folderId===docCurrentFolder));
+  }
+
+  const typeIcons={pdf:'📄',doc:'📝',xlsx:'📊',ppt:'📽️',jpg:'🖼️',png:'🖼️',zip:'📦'};
+  const typeColors={pdf:'var(--accent)',doc:'var(--blue)',xlsx:'var(--teal)',ppt:'var(--amber)',jpg:'var(--purple)',png:'var(--purple)',zip:'var(--text-tertiary)'};
+  const sizeFmt=s=>{if(s>=1048576) return (s/1048576).toFixed(1)+' MB';if(s>=1024) return (s/1024).toFixed(0)+' KB';return s+' B'};
+
+  if(docViewMode==='list'){
+    document.getElementById('doc-list-area').innerHTML=
+      (filtered.length===0&&filteredLinks.length===0?'<div style="text-align:center;padding:40px;color:var(--text-tertiary);font-size:13px">当前文件夹为空，点击上方按钮上传文件或添加链接</div>':'')+
+      '<div class="table-wrap"><table><thead><tr><th style="width:30px"></th><th>文件名</th><th style="width:80px">大小</th><th style="width:110px">上传时间</th><th style="width:60px">上传人</th><th style="width:100px">操作</th></tr></thead><tbody>'+
+      filteredLinks.map(l=>`<tr><td style="text-align:center;font-size:18px">🔗</td><td><a href="${l.url}" target="_blank" style="color:var(--blue);font-weight:500;text-decoration:none">${l.name}</a> <span style="font-size:9px;background:var(--purple-light);color:var(--purple);padding:1px 5px;border-radius:8px;margin-left:6px">外部链接</span></td><td class="code" style="color:var(--text-tertiary)">外部链接</td><td class="code">${l.addedAt}</td><td>${l.addedBy}</td><td><button class="btn btn-xs" onclick="window.open('${l.url}','_blank')">打开</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="deleteDocLink('${l.id}')">删除</button></td></tr>`).join('')+
+      filtered.map(f=>{
+        const versions=files.filter(ff=>ff.name.replace(/_v\d+/,'')===f.name.replace(/_v\d+/,'')&&ff.folderId===f.folderId).sort((a,b)=>b.version-a.version);
+        const hasVersions=versions.length>1;
+        const vTag=hasVersions?' <span style="font-size:9px;background:var(--blue-light);color:var(--blue);padding:1px 5px;border-radius:8px;margin-left:4px">v'+f.version+'</span>':'';
+        return `<tr id="doc-row-${f.id}">
+          <td style="text-align:center;font-size:18px;color:${typeColors[f.type]||'#666'}">${typeIcons[f.type]||'📄'}</td>
+          <td><span style="font-weight:500;${f.type==='pdf'||f.type==='jpg'||f.type==='png'?'cursor:pointer;color:var(--blue)':''}" onclick="${f.type==='pdf'||f.type==='jpg'||f.type==='png'?'previewDocFile(\''+f.id+'\')':'downloadDocFile(\''+f.id+'\')'}">${f.name}</span>${vTag}${hasVersions&&f.isLatest?` <span style="font-size:10px;color:var(--text-tertiary);cursor:pointer;margin-left:4px" onclick="event.stopPropagation();toggleDocVersions('${f.id}')">(${versions.length}版本)</span>`:''}</td>
+          <td class="code">${sizeFmt(f.size)}</td>
+          <td class="code">${f.uploadedAt}</td>
+          <td>${f.uploadedBy}</td>
+          <td><button class="btn btn-xs" onclick="${f.type==='pdf'?'previewDocFile(\''+f.id+'\')':f.type==='jpg'||f.type==='png'?'previewDocFile(\''+f.id+'\')':'downloadDocFile(\''+f.id+'\')'}">${f.type==='pdf'||f.type==='jpg'||f.type==='png'?'预览':'下载'}</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="uploadDocVersion('${f.name}','${f.folderId}')">新版本</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="deleteDocFile('${f.id}')">删除</button></td>
+        </tr>`;
+      }).join('')+
+      '</tbody></table></div>';
+  }else{
+    document.getElementById('doc-list-area').innerHTML=
+      '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px">'+
+      filteredLinks.map(l=>`<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 12px;text-align:center;cursor:pointer" onclick="window.open('${l.url}','_blank')"><div style="font-size:36px;margin-bottom:8px">🔗</div><div style="font-size:11.5px;font-weight:600;margin-bottom:4px;word-break:break-all">${l.name}</div><div style="font-size:10px;color:var(--text-tertiary)">外部链接</div></div>`).join('')+
+      filtered.map(f=>`<div style="background:#fff;border:1px solid var(--border);border-radius:8px;padding:16px 12px;text-align:center;cursor:pointer" onclick="${f.type==='pdf'||f.type==='jpg'||f.type==='png'?'previewDocFile(\''+f.id+'\')':'downloadDocFile(\''+f.id+'\')'}"><div style="font-size:36px;margin-bottom:8px;color:${typeColors[f.type]||'#666'}">${typeIcons[f.type]||'📄'}</div><div style="font-size:11.5px;font-weight:600;margin-bottom:4px;word-break:break-all">${f.name}</div><div style="font-size:10px;color:var(--text-tertiary)">${sizeFmt(f.size)} · ${f.uploadedAt}</div></div>`).join('')+
+      '</div>';
+  }
+  if(filtered.length===0&&filteredLinks.length===0&&!search){
+    document.getElementById('doc-list-area').innerHTML='<div style="text-align:center;padding:40px;color:var(--text-tertiary);font-size:13px">当前文件夹为空，点击上方按钮上传文件或添加链接</div>';
+  }
+}
+
+function switchDocView(mode){
+  docViewMode=mode;
+  document.getElementById('doc-view-list').classList.toggle('active',mode==='list');
+  document.getElementById('doc-view-grid').classList.toggle('active',mode==='grid');
+  renderDocList();
+}
+
+function previewDocFile(fileId){
+  const files=getDocProjectFiles();
+  const f=files.find(x=>x.id===fileId);
+  if(!f) return;
+  showToast('新标签页预览: '+f.name,'ok');
+  if(f.type==='pdf') window.open('data:application/pdf;base64,'+btoa('模拟PDF内容 - '+f.name),'_blank');
+  else window.open('https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&h=600&fit=crop','_blank');
+}
+
+function downloadDocFile(fileId){
+  const files=getDocProjectFiles();
+  const f=files.find(x=>x.id===fileId);
+  if(!f) return;
+  showToast('下载: '+f.name,'ok');
+}
+
+function toggleDocVersions(fileId){
+  showToast('版本列表: 点击「新版本」按钮可上传新版本','warn');
+}
+
+function uploadDocVersion(fileName,folderId){
+  docCurrentFolder=folderId;
+  document.getElementById('doc-upload-name').value=fileName;
+  document.getElementById('doc-upload-folder').textContent='📁 '+(folderId?getDocProjectFolders().find(f=>f.id===folderId)?.name||'未知':'全部文件');
+  openModal('modal-doc-upload');
+}
+
+function openDocUpload(){
+  const folderName=docCurrentFolder?getDocProjectFolders().find(f=>f.id===docCurrentFolder)?.name||'全部文件':'全部文件';
+  document.getElementById('doc-upload-name').value='';
+  document.getElementById('doc-upload-folder').textContent='📁 '+folderName;
+  openModal('modal-doc-upload');
+}
+
+function simulateDocUpload(){
+  const names=['美的2026年度合同.pdf','拍摄脚本v3.docx','验收单汇总.xlsx','产品图册.pptx','场景实拍.jpg'];
+  document.getElementById('doc-upload-name').value=names[Math.floor(Math.random()*names.length)];
+}
+
+function confirmDocUpload(){
+  let name=document.getElementById('doc-upload-name').value.trim();
+  const type=document.getElementById('doc-upload-type').value;
+  if(!name){showToast('请输入文件名','warn');return}
+  if(!name.includes('.')) name+='.'+type;
+  const files=getDocProjectFiles();
+  const existing=files.filter(f=>f.name===name&&f.folderId===docCurrentFolder);
+  let version=1;let isLatest=true;
+  if(existing.length>0){
+    existing.sort((a,b)=>b.version-a.version);
+    version=existing[0].version+1;
+    existing.forEach(f=>f.isLatest=false);
+  }
+  const id='fl'+(++docFileSeq);
+  files.push({id,name,folderId:docCurrentFolder,type,size:Math.floor(Math.random()*5000000)+100000,version,isLatest,uploadedBy:'张三',uploadedAt:new Date().toISOString().slice(0,16).replace('T',' ')});
+  closeModal('modal-doc-upload');
+  renderDocTree();
+  renderDocList();
+  showToast(version>1?`已上传新版本 v${version}: ${name}`:`文件已上传: ${name}`,'ok');
+}
+
+function openDocLink(){
+  const folderName=docCurrentFolder?getDocProjectFolders().find(f=>f.id===docCurrentFolder)?.name||'全部文件':'全部文件';
+  document.getElementById('doc-link-name').value='';
+  document.getElementById('doc-link-url').value='';
+  document.getElementById('doc-link-folder').textContent='📁 '+folderName;
+  openModal('modal-doc-link');
+}
+
+function confirmDocLink(){
+  const name=document.getElementById('doc-link-name').value.trim();
+  const url=document.getElementById('doc-link-url').value.trim();
+  if(!name){showToast('请输入链接名称','warn');return}
+  if(!url){showToast('请输入链接URL','warn');return}
+  const links=getDocProjectLinks();
+  links.push({id:'dl'+(links.length+10),name,folderId:docCurrentFolder,url,addedBy:'张三',addedAt:new Date().toISOString().slice(0,10)});
+  closeModal('modal-doc-link');
+  renderDocList();
+  showToast('链接已添加: '+name,'ok');
+}
+
+function deleteDocFile(fileId){
+  const files=getDocProjectFiles();
+  const idx=files.findIndex(f=>f.id===fileId);
+  if(idx>=0){const name=files[idx].name;files.splice(idx,1);renderDocTree();renderDocList();showToast('已删除: '+name,'ok')}
+}
+
+function deleteDocLink(linkId){
+  const links=getDocProjectLinks();
+  const idx=links.findIndex(l=>l.id===linkId);
+  if(idx>=0){const name=links[idx].name;links.splice(idx,1);renderDocList();showToast('已删除链接: '+name,'ok')}
+}
+
+function newDocFolder(){
+  const name=prompt('请输入文件夹名称：');
+  if(!name||!name.trim()) return;
+  const folders=getDocProjectFolders();
+  folders.push({id:'df'+(folders.length+10),name:name.trim(),pid:docCurrentFolder});
+  renderDocTree();
+  showToast('文件夹已创建: '+name,'ok');
+}
+
+// ------ Vendor Resource Management ------
 const vendors=[
   {id:'VEN-2026-001',name:'XX创意工作室',services:['script','shooting'],contact:'张工',phone:'138-0001-1234',wechat:'zhang_studio',prices:{script:15,shooting:25},rating:4,status:'active',priceDesc:'含基础拍摄+剪辑',remark:''},
   {id:'VEN-2026-002',name:'YY影视制作',services:['script','shooting','editing'],contact:'李导',phone:'139-0002-5678',wechat:'li_director',prices:{script:18,shooting:22,editing:30},rating:5,status:'active',priceDesc:'可承接全流程',remark:'长期合作，618大促优先' },
@@ -6781,28 +7143,127 @@ function saveAddMember(){
 }
 
 function removeMember(person){
-  const now=new Date();const curM=String(now.getMonth()+1).padStart(2,'0');
-  const monthStr='2026-'+curM;
-  const completedThis=pipeData.filter(t=>t.person===person&&t.month===monthStr&&(t.sub==='completed'||t.sub==='published'));
-  const inProgress=pipeData.filter(t=>t.person===person&&t.month===monthStr&&['in_progress','reviewing','returned'].includes(t.sub));
-  const weightedDone=completedThis.reduce((s,t)=>s+(parseFloat(t.coef)||1.0),0);
+  var now=new Date();var curM=String(now.getMonth()+1).padStart(2,'0');
+  var monthStr='2026-'+curM;
+  var completedThis=pipeData.filter(function(t){return t.person===person&&t.month===monthStr&&(t.sub==='completed'||t.sub==='published')});
+  var inProgress=pipeData.filter(function(t){return t.person===person&&t.month===monthStr&&['in_progress','reviewing','returned'].indexOf(t.sub)>=0});
+  var weightedDone=completedThis.reduce(function(s,t){return s+(parseFloat(t.coef)||1.0)},0);
+
+  var member=projectMembers.find(function(m){return m.person===person&&m.active});
+  var personRole=member?member.role:'script';
 
   if(inProgress.length>0){
-    alert('🔴 无法移除\n\n'+person+' 尚有 '+inProgress.length+' 个进行中/待审核任务。\n请先将任务重新指派给他人后重试。');
+    // Scene C: Show reassignment modal
+    currentRemovePerson = person;
+    currentRemoveMember = member;
+    currentRemoveInProgress = inProgress;
+    currentRemovePersonRole = personRole;
+    openReassignModal(person, personRole, inProgress);
     return;
   }
 
   if(completedThis.length>0){
-    if(!confirm('⚠️ 确认移除\n\n'+person+' 在 '+parseInt(curM)+'月已完成 '+completedThis.length+' 条任务（'+weightedDone+' 加权条）。\n\n这些已完成任务的提成仍归属于本项目。\n本月底薪/绩效的分摊将按截至移除日的产出比计算。\n\n确认移除？')) return;
+    var peers=projectMembers.filter(function(m){return m.active&&m.role===personRole&&m.person!==person}).map(function(m){return m.person;});
+    var msg='⚠️ 确认移除' + String.fromCharCode(10) + String.fromCharCode(10) + person + ' 在 ' + parseInt(curM) + '月已完成 ' + completedThis.length + ' 条任务（' + weightedDone + ' 加权条）。' + String.fromCharCode(10) + String.fromCharCode(10) + '这些已完成任务的提成仍归属于本项目。' + String.fromCharCode(10) + '本月底薪/绩效的分摊将按截至移除日的产出比计算。';
+    if(peers.length>0){
+      msg += String.fromCharCode(10) + String.fromCharCode(10) + '💡 推荐接替人选（同岗在职）：';
+      peers.forEach(function(p,i){ msg += String.fromCharCode(10) + '  ○ ' + p; if(i===0) msg += ' ← 推荐'; });
+      msg += String.fromCharCode(10) + String.fromCharCode(10) + '可稍后在项目人员管理中手动添加接替人。';
+    }
+    msg += String.fromCharCode(10) + String.fromCharCode(10) + '确认移除？';
+    if(!confirm(msg)) return;
   } else {
-    if(!confirm('确认将 '+person+' 移出项目组？')) return;
+    if(!confirm('确认将 ' + person + ' 移出项目组？')) return;
   }
 
-  const member=projectMembers.find(m=>m.person===person&&m.active);
   if(member){member.active=false;member.removeDate=formatDate(now);}
   document.getElementById('pers-action-msg').textContent='🚫 '+person+' 已移出项目组';
-  setTimeout(()=>{document.getElementById('pers-action-msg').textContent=''},2500);
+  setTimeout(function(){document.getElementById('pers-action-msg').textContent=''},2500);
   renderPersonnel();
+}
+
+var currentRemovePerson = null;
+var currentRemoveMember = null;
+var currentRemoveInProgress = null;
+var currentRemovePersonRole = null;
+
+function openReassignModal(person, role, tasks){
+  document.getElementById('reassign-title').textContent = '任务重新指派：' + person + '（HR发起离职/转岗）';
+  document.getElementById('reassign-info').innerHTML = '⚠️ ' + person + ' 尚有 <b>' + tasks.length + '</b> 个进行中/待审核任务，必须全部处理后才能移除。';
+
+  var subNames = {in_progress:'进行中',reviewing:'审核中',returned:'待修改'};
+
+  var peers = projectMembers.filter(function(m){return m.active&&m.role===role&&m.person!==person}).map(function(m){return m.person;});
+  if(peers.length===0) peers = ['（无同岗人员，请先添加成员）'];
+
+  var batchOpts = peers.map(function(p){return '<option value="'+p+'">'+p+'</option>';}).join('');
+  document.getElementById('batch-assign-target').innerHTML = '<option value="">-- 批量指派给 --</option>' + batchOpts;
+
+  var html = '<table style="width:100%;font-size:11px"><thead><tr><th style="width:28px;text-align:center"><input type="checkbox" onclick="toggleCheckAllReassign()" id="reassign-check-all-hdr"></th><th style="text-align:left">任务</th><th style="text-align:left">状态</th><th style="text-align:left">接替人</th></tr></thead><tbody>';
+  tasks.forEach(function(t,i){
+    var subName = subNames[t.sub] || t.sub;
+    var perOpts = '';
+    if(peers.length>0 && peers[0].indexOf('无同岗')<0){
+      perOpts = '<option value="">-- 关闭 --</option>';
+      peers.forEach(function(p,i2){ perOpts += '<option value="'+p+'"'+(i2===0?' selected':'')+'>'+p+'</option>'; });
+    } else {
+      perOpts = '<option value="">-- 关闭 --</option>';
+      peers.forEach(function(p){ perOpts += '<option value="'+p+'">'+p+'</option>'; });
+    }
+    html += '<tr><td style="padding:4px 4px;text-align:center"><input type="checkbox" class="reassign-check" id="reassign-check-' + i + '" onchange="updateBatchCount()"></td><td style="padding:4px 4px">TSK-' + (2026000 + i + 1) + ' ' + t.title + '</td><td style="padding:4px 4px">' + subName + '</td><td style="padding:4px 4px"><select class="form-select reassign-select" id="reassign-select-' + i + '" style="font-size:11px;padding:2px 4px">' + perOpts + '</select></td></tr>';
+  });
+  html += '</tbody></table>';
+
+  document.getElementById('reassign-task-list').innerHTML = html;
+  document.getElementById('reassign-hint').textContent = '';
+  document.getElementById('batch-count').style.display = 'none';
+  document.getElementById('batch-assign-target').style.display = 'none';
+  document.getElementById('batch-assign-btn').style.display = 'none';
+  openModal('modal-reassign');
+}
+
+function toggleCheckAllReassign(){
+  var allCb = document.getElementById('reassign-check-all-hdr');
+  if(!allCb) return;
+  var checked = allCb.checked;
+  document.querySelectorAll('.reassign-check').forEach(function(cb){cb.checked = checked;});
+  updateBatchCount();
+}
+
+function updateBatchCount(){
+  var checked = document.querySelectorAll('.reassign-check:checked');
+  var count = checked.length;
+  var countEl = document.getElementById('batch-count');
+  var targetEl = document.getElementById('batch-assign-target');
+  var btnEl = document.getElementById('batch-assign-btn');
+  if(count > 0){
+    countEl.style.display = 'inline';
+    countEl.innerHTML = '已选 <b>' + count + '</b> 条';
+    targetEl.style.display = 'inline-block';
+    btnEl.style.display = 'inline-block';
+  } else {
+    countEl.style.display = 'none';
+    targetEl.style.display = 'none';
+    btnEl.style.display = 'none';
+  }
+}
+
+function batchReassign(){
+  var target = document.getElementById('batch-assign-target').value;
+  if(!target){ alert('请先选择批量指派的接替人'); return; }
+  var checkboxes = document.querySelectorAll('.reassign-check:checked');
+  var count = checkboxes.length;
+  checkboxes.forEach(function(cb){
+    var idx = cb.id.replace('reassign-check-','');
+    var sel = document.getElementById('reassign-select-'+idx);
+    if(sel) sel.value = target;
+  });
+  document.querySelectorAll('.reassign-check').forEach(function(cb){cb.checked = false;});
+  var hdr = document.getElementById('reassign-check-all-hdr');
+  if(hdr) hdr.checked = false;
+  updateBatchCount();
+  document.getElementById('reassign-hint').textContent = '✅ 已批量指派 ' + count + ' 条任务给 ' + target;
+  document.getElementById('reassign-hint').style.color = 'var(--teal)';
 }
 
 function renderPersonnel(){
