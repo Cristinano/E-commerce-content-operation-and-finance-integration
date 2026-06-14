@@ -1,0 +1,2533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TaiChu AI 企业级 Agent 平台能力说明</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --body: #344256;
+      --muted: #66758a;
+      --paper: #f7f8fb;
+      --panel: #ffffff;
+      --line: #dbe3ef;
+      --blue: #255fe8;
+      --blue-soft: #e8f0ff;
+      --green: #13945f;
+      --green-soft: #e3f6ed;
+      --orange: #ef7424;
+      --orange-soft: #fff0e3;
+      --red: #dc2f55;
+      --red-soft: #ffe8ee;
+      --violet: #7148d6;
+      --violet-soft: #efeaff;
+      --cyan: #0d8d9a;
+      --cyan-soft: #e2f7fa;
+      --slate: #202b3f;
+      --max: 1280px;
+      --radius: 8px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--body);
+      background:
+        linear-gradient(90deg, rgba(219, 227, 239, .35) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(219, 227, 239, .35) 1px, transparent 1px),
+        var(--paper);
+      background-size: 32px 32px;
+      font-family: "Avenir Next", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.68;
+      letter-spacing: 0;
+    }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+
+    .progress {
+      position: fixed;
+      inset: 0 auto auto 0;
+      z-index: 80;
+      height: 3px;
+      width: 100%;
+      background: transparent;
+    }
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--blue), var(--green), var(--orange), var(--violet));
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 60;
+      background: rgba(247, 248, 251, .9);
+      border-bottom: 1px solid rgba(219, 227, 239, .9);
+      backdrop-filter: blur(18px);
+    }
+    .nav {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      background: var(--slate);
+      color: #fff;
+      border-radius: 6px;
+    }
+    .brand-mark svg { width: 21px; height: 21px; }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      padding: 9px 11px;
+      border: 1px solid transparent;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      transition: color .2s ease, border-color .2s ease, background .2s ease;
+    }
+    .nav-links a:hover,
+    .nav-links a:focus-visible {
+      color: var(--blue);
+      background: var(--panel);
+      border-color: var(--line);
+      outline: none;
+    }
+
+    .hero {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 76px 0 54px;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(390px, .72fr);
+      gap: 48px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 10px;
+      height: 10px;
+      background: currentColor;
+      display: inline-block;
+    }
+    h1, h2, h3, p { margin: 0; }
+    h1 {
+      margin-top: 26px;
+      color: var(--ink);
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+    .hero-copy {
+      max-width: 760px;
+      margin-top: 26px;
+      color: #46566c;
+      font-size: 20px;
+      line-height: 1.8;
+    }
+    .hero-actions {
+      margin-top: 34px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      min-height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 18px;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 900;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .btn:hover,
+    .btn:focus-visible {
+      transform: translateY(-1px);
+      border-color: var(--blue);
+      outline: none;
+    }
+    .btn.primary {
+      background: var(--slate);
+      border-color: var(--slate);
+      color: #fff;
+    }
+    .btn svg { width: 18px; height: 18px; }
+
+    .hero-panel {
+      background: var(--slate);
+      color: #dce8f8;
+      border-radius: var(--radius);
+      padding: 28px;
+      min-height: 430px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #303d55;
+    }
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 24px;
+      border: 1px solid rgba(255,255,255,.12);
+      pointer-events: none;
+    }
+    .system-map {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .map-row {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+    .map-row b {
+      color: #fff;
+      font-size: 15px;
+    }
+    .map-row span {
+      display: block;
+      padding: 12px;
+      background: rgba(255,255,255,.08);
+      border-left: 4px solid var(--accent);
+      font-size: 13px;
+      color: #c2d0e2;
+    }
+    .hero-panel h2 {
+      position: relative;
+      z-index: 1;
+      color: #fff;
+      font-size: 28px;
+      line-height: 1.2;
+    }
+    .hero-panel p {
+      position: relative;
+      z-index: 1;
+      margin-top: 14px;
+      color: #b9c7d9;
+      font-size: 14px;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 72px;
+      z-index: 40;
+      background: rgba(247, 248, 251, .94);
+      border-block: 1px solid rgba(219, 227, 239, .86);
+      backdrop-filter: blur(16px);
+    }
+    .toolbar-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      padding: 14px 0;
+      display: grid;
+      grid-template-columns: minmax(220px, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+    }
+    .search {
+      min-height: 44px;
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--ink);
+      outline: none;
+    }
+    .search:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(37,95,232,.12);
+    }
+    .filters {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .filters button {
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 9px 12px;
+      background: var(--panel);
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 900;
+      transition: color .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .filters button[aria-pressed="true"] {
+      color: #fff;
+      background: var(--slate);
+      border-color: var(--slate);
+    }
+
+    section { padding: 72px 0; }
+    .section-inner {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+    }
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(280px, .45fr);
+      gap: 36px;
+      align-items: end;
+      margin-bottom: 30px;
+    }
+    .section-head h2 {
+      margin-top: 12px;
+      color: var(--ink);
+      font-size: clamp(30px, 4vw, 46px);
+      line-height: 1.18;
+    }
+    .section-head p {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .chapter-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+    .chapter-card {
+      min-height: 130px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--accent);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+    .chapter-card small {
+      color: var(--muted);
+      font-weight: 900;
+    }
+    .chapter-card b {
+      display: block;
+      margin-top: 10px;
+      color: var(--ink);
+      line-height: 1.25;
+    }
+    .chapter-card span {
+      display: block;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .mechanisms {
+      background: rgba(255,255,255,.54);
+      border-block: 1px solid rgba(219, 227, 239, .72);
+    }
+    .mechanism-list {
+      display: grid;
+      gap: 22px;
+    }
+    .mechanism-card {
+      display: grid;
+      grid-template-columns: minmax(300px, .46fr) minmax(0, .54fr);
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+    }
+    .mechanism-copy {
+      padding: 28px;
+      border-left: 6px solid var(--accent);
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid color-mix(in srgb, var(--accent) 42%, var(--line));
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .mechanism-copy h3 {
+      margin-top: 16px;
+      color: var(--ink);
+      font-size: clamp(24px, 3vw, 34px);
+      line-height: 1.2;
+    }
+    .mechanism-copy p {
+      margin-top: 14px;
+      color: var(--body);
+      font-size: 16px;
+    }
+    .mechanism-copy ul {
+      margin: 16px 0 0;
+      padding-left: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .mechanism-copy li + li { margin-top: 7px; }
+    .diagram {
+      min-height: 360px;
+      padding: 26px;
+      display: grid;
+      align-content: center;
+      gap: 16px;
+      background:
+        linear-gradient(90deg, rgba(219, 227, 239, .55) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(219, 227, 239, .55) 1px, transparent 1px),
+        linear-gradient(180deg, #fbfdff, var(--soft));
+      background-size: 24px 24px, 24px 24px, auto;
+    }
+    .lane {
+      display: grid;
+      gap: 12px;
+    }
+    .lane b {
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .node-row {
+      display: grid;
+      gap: 10px;
+      align-items: stretch;
+    }
+    .node-row.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .node-row.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .node {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      line-height: 1.35;
+      text-align: center;
+    }
+    .node.primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .node.strong {
+      border-width: 2px;
+      color: var(--accent);
+    }
+    .node.result {
+      background: #fff;
+      color: var(--accent);
+    }
+    .node.wide {
+      min-height: 68px;
+      font-size: 16px;
+    }
+    .connector-line {
+      width: 2px;
+      height: 24px;
+      margin: -2px auto;
+      background: var(--accent);
+      opacity: .68;
+    }
+    .flow-strip,
+    .pipeline {
+      display: grid;
+      grid-template-columns: minmax(110px, 1fr) 24px minmax(110px, 1fr) 24px minmax(110px, 1fr) 24px minmax(110px, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+    .pipeline {
+      grid-template-columns: minmax(96px, 1fr) 20px minmax(96px, 1fr) 20px minmax(96px, 1fr) 20px minmax(96px, 1fr) 20px minmax(96px, 1fr);
+    }
+    .flow-arrow {
+      height: 2px;
+      background: var(--accent);
+      position: relative;
+      opacity: .75;
+    }
+    .flow-arrow::after {
+      content: "";
+      position: absolute;
+      right: -1px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      border-top: 2px solid var(--accent);
+      border-right: 2px solid var(--accent);
+      transform: translateY(-50%) rotate(45deg);
+    }
+    .cache-grid,
+    .answer-grid,
+    .decision-grid,
+    .branch-grid {
+      display: grid;
+      gap: 10px;
+    }
+    .cache-grid,
+    .branch-grid,
+    .decision-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .answer-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    .cache-grid div,
+    .answer-grid div,
+    .decision-grid div,
+    .branch-grid div {
+      padding: 14px;
+      border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.86);
+    }
+    .cache-grid b,
+    .answer-grid b,
+    .decision-grid b,
+    .branch-grid b {
+      display: block;
+      color: var(--accent);
+      font-size: 14px;
+    }
+    .cache-grid span,
+    .answer-grid span,
+    .decision-grid span,
+    .branch-grid span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .branch-grid span {
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(219, 227, 239, .8);
+      color: var(--body);
+      font-weight: 800;
+    }
+    .branch-grid span:last-child { border-bottom: 0; }
+    .caption {
+      padding: 12px 14px;
+      border-left: 4px solid var(--accent);
+      background: rgba(255,255,255,.8);
+      color: var(--body);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .memory-stack {
+      display: grid;
+      gap: 12px;
+    }
+    .memory-input,
+    .memory-output {
+      padding: 16px;
+      border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+    }
+    .memory-input b,
+    .memory-output b {
+      display: block;
+      color: var(--accent);
+    }
+    .memory-input span,
+    .memory-output span {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .memory-process {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .memory-process span {
+      padding: 10px;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #fff;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .memory-levels {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .memory-levels div {
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+      text-align: center;
+    }
+    .memory-levels b {
+      color: var(--accent);
+      font-size: 22px;
+    }
+    .memory-levels span {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .question-bubble {
+      width: fit-content;
+      max-width: 100%;
+      padding: 12px 16px;
+      border-radius: 8px 8px 8px 0;
+      background: var(--slate);
+      color: #fff;
+      font-weight: 900;
+    }
+    .guard-ring {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .guard-ring span {
+      min-height: 58px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 1px solid color-mix(in srgb, var(--accent) 34%, var(--line));
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 900;
+      text-align: center;
+    }
+    .phase-track {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .phase-track div {
+      min-height: 120px;
+      padding: 14px;
+      border: 1px solid color-mix(in srgb, var(--accent) 36%, var(--line));
+      border-top: 5px solid var(--accent);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.9);
+    }
+    .phase-track b {
+      display: block;
+      color: var(--accent);
+      font-size: 13px;
+    }
+    .phase-track span {
+      display: block;
+      margin-top: 18px;
+      color: var(--ink);
+      font-weight: 900;
+      line-height: 1.35;
+    }
+
+    .deck-layout {
+      display: grid;
+      grid-template-columns: 210px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky;
+      top: 152px;
+      max-height: calc(100vh - 180px);
+      overflow: auto;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.86);
+    }
+    .toc a {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 8px;
+      padding: 8px 7px;
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.35;
+      transition: background .18s ease, color .18s ease;
+    }
+    .toc a:hover,
+    .toc a:focus-visible {
+      background: var(--blue-soft);
+      color: var(--blue);
+      outline: none;
+    }
+    .toc b { color: currentColor; }
+
+    .slide-list {
+      display: grid;
+      gap: 18px;
+    }
+    .slide-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+    }
+    .slide-card-detail {
+      border-color: color-mix(in srgb, var(--accent) 44%, var(--line));
+    }
+    .slide-card[hidden] { display: none; }
+    .slide-top {
+      display: grid;
+      grid-template-columns: 112px minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      padding: 20px;
+      border-bottom: 1px solid var(--line);
+      background: linear-gradient(90deg, var(--soft), #fff 70%);
+    }
+    .page-no {
+      width: 86px;
+      height: 64px;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      background: #fff;
+      font-size: 24px;
+      font-weight: 900;
+    }
+    .slide-title h3 {
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.25;
+    }
+    .slide-title p {
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .tag {
+      min-height: 32px;
+      display: inline-flex;
+      align-items: center;
+      padding: 6px 10px;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .slide-body {
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(310px, .62fr);
+      gap: 0;
+    }
+    .explain {
+      padding: 24px;
+      border-right: 1px solid var(--line);
+    }
+    .scenario {
+      padding: 24px;
+      background: #fbfcff;
+    }
+    .block {
+      margin-bottom: 20px;
+    }
+    .block:last-child { margin-bottom: 0; }
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .label::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: currentColor;
+    }
+    .block p {
+      margin-top: 10px;
+      color: var(--body);
+      font-size: 15px;
+    }
+    .block ul {
+      margin: 10px 0 0;
+      padding-left: 18px;
+      color: var(--body);
+      font-size: 14px;
+    }
+    .scene-box {
+      padding: 16px;
+      border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--line));
+      border-left: 5px solid var(--accent);
+      background: var(--soft);
+      border-radius: var(--radius);
+    }
+    .scene-box b {
+      display: block;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .talk {
+      margin-top: 18px;
+      padding: 16px;
+      background: var(--slate);
+      color: #dce8f8;
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+    .talk b {
+      color: #fff;
+    }
+    .mini-flow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .mini-flow span {
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .detail-layout {
+      display: grid;
+      grid-template-columns: minmax(230px, .27fr) minmax(0, .73fr);
+      gap: 18px;
+      padding: 22px;
+      align-items: start;
+      background: #fbfcff;
+    }
+    .detail-copy {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+    }
+    .detail-copy .block {
+      margin-bottom: 0;
+      padding: 16px;
+      border: 1px solid color-mix(in srgb, var(--accent) 22%, var(--line));
+      border-left: 5px solid var(--accent);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.88);
+    }
+    .detail-copy .block p {
+      font-size: 16px;
+      line-height: 1.86;
+    }
+    .detail-copy .label {
+      font-size: 13px;
+    }
+    .detail-copy .mini-flow {
+      margin-top: 12px;
+    }
+    .detail-copy .mini-flow span {
+      background: var(--soft);
+      border-color: color-mix(in srgb, var(--accent) 25%, var(--line));
+    }
+    .detail-flow {
+      width: 100%;
+      min-width: 0;
+      display: grid;
+      align-content: start;
+      grid-auto-rows: min-content;
+      gap: 14px;
+      padding: 18px;
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--line));
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, rgba(219, 227, 239, .5) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(219, 227, 239, .5) 1px, transparent 1px),
+        #fff;
+      background-size: 22px 22px, 22px 22px, auto;
+    }
+    .detail-right {
+      display: grid;
+      gap: 12px;
+      align-content: start;
+      min-width: 0;
+    }
+    .detail-right .scene-box,
+    .detail-right .talk {
+      margin-top: 0;
+    }
+    .detail-side-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr);
+      gap: 12px;
+      align-items: stretch;
+    }
+    .detail-side-grid .scene-box,
+    .detail-side-grid .talk {
+      height: 100%;
+    }
+    .detail-flow h4 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 19px;
+      line-height: 1.25;
+    }
+    .detail-flow p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      max-width: 760px;
+    }
+    .detail-flow h4 + p {
+      margin-top: -4px;
+    }
+    .detail-flow p + .process-chain,
+    .detail-flow p + .decision-flow {
+      margin-top: 2px;
+    }
+    .process-chain {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 12px;
+      width: 100%;
+    }
+    .process-step {
+      min-height: 176px;
+      padding: 14px;
+      border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--line));
+      border-top: 5px solid var(--accent);
+      border-radius: var(--radius);
+      background: rgba(255,255,255,.92);
+      position: relative;
+    }
+    .process-step::after {
+      content: "";
+      position: absolute;
+      top: 34px;
+      right: -14px;
+      width: 14px;
+      height: 2px;
+      background: var(--accent);
+      opacity: .65;
+    }
+    .process-step:nth-child(4n)::after,
+    .process-step:last-child::after {
+      display: none;
+    }
+    .process-step b {
+      display: block;
+      color: var(--accent);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    .process-step em {
+      display: block;
+      margin-top: 7px;
+      color: var(--ink);
+      font-style: normal;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .process-step span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+    .action-grid,
+    .action-grid-inline {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(150px, 1fr));
+      gap: 10px;
+    }
+    .action-grid div,
+    .action-grid-inline div {
+      padding: 13px;
+      border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+      border-radius: var(--radius);
+      background: var(--soft);
+    }
+    .action-grid b,
+    .action-grid-inline b {
+      display: block;
+      color: var(--accent);
+      font-size: 13px;
+    }
+    .action-grid span,
+    .action-grid-inline span {
+      display: block;
+      margin-top: 6px;
+      color: var(--body);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .decision-flow {
+      display: grid;
+      gap: 12px;
+      width: 100%;
+      align-content: start;
+    }
+    .decision-row {
+      display: grid;
+      grid-template-columns: minmax(120px, .18fr) minmax(0, .82fr);
+      gap: 12px;
+      align-items: stretch;
+      width: 100%;
+    }
+    .decision-row .trigger {
+      display: grid;
+      place-items: center;
+      min-height: 118px;
+      padding: 14px;
+      border-radius: var(--radius);
+      background: var(--accent);
+      color: #fff;
+      font-weight: 900;
+      text-align: center;
+      line-height: 1.35;
+    }
+    .decision-row .routes {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(145px, 1fr));
+      gap: 10px;
+      min-width: 0;
+    }
+    .decision-row .routes div {
+      min-height: 118px;
+      padding: 13px;
+      border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--line));
+      border-radius: var(--radius);
+      background: #fff;
+    }
+    .decision-row .routes b {
+      display: block;
+      color: var(--ink);
+      font-size: 13px;
+    }
+    .decision-row .routes span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .final {
+      background: var(--slate);
+      color: #dce8f8;
+      padding: 92px 0;
+    }
+    .final-grid {
+      width: min(var(--max), calc(100% - 40px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, .9fr) minmax(340px, .65fr);
+      gap: 48px;
+      align-items: center;
+    }
+    .final h2 {
+      color: #fff;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.15;
+    }
+    .final p {
+      margin-top: 18px;
+      color: #b9c7d9;
+      font-size: 18px;
+    }
+    .summary-list {
+      display: grid;
+      gap: 12px;
+    }
+    .summary-list div {
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-left: 5px solid var(--accent);
+      background: rgba(255,255,255,.07);
+      border-radius: var(--radius);
+    }
+    .summary-list b { color: #fff; }
+    .summary-list span {
+      display: block;
+      margin-top: 7px;
+      color: #b9c7d9;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1080px) {
+      .hero, .section-head, .deck-layout, .slide-body, .final-grid, .mechanism-card, .detail-layout {
+        grid-template-columns: 1fr;
+      }
+      .mechanism-copy {
+        border-left: 0;
+        border-top: 6px solid var(--accent);
+      }
+      .chapter-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .toc {
+        position: static;
+        max-height: none;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 4px;
+      }
+      .explain { border-right: 0; border-bottom: 1px solid var(--line); }
+      .flow-strip,
+      .pipeline {
+        grid-template-columns: 1fr;
+      }
+      .flow-arrow {
+        width: 2px;
+        height: 20px;
+        margin: 0 auto;
+      }
+      .flow-arrow::after {
+        right: 50%;
+        top: auto;
+        bottom: 0;
+        transform: translateX(50%) rotate(135deg);
+      }
+      .process-chain {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .process-step:nth-child(4n)::after {
+        display: block;
+      }
+      .process-step:nth-child(2n)::after,
+      .process-step:last-child::after {
+        display: none;
+      }
+    }
+    @media (max-width: 720px) {
+      .nav {
+        width: min(var(--max), calc(100% - 28px));
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 14px 0;
+      }
+      .nav-links { justify-content: flex-start; }
+      .hero, .section-inner, .final-grid, .toolbar-inner {
+        width: min(var(--max), calc(100% - 28px));
+      }
+      .hero {
+        grid-template-columns: 1fr;
+        padding-top: 46px;
+      }
+      .toolbar { top: 116px; }
+      .toolbar-inner {
+        grid-template-columns: 1fr;
+      }
+      .filters { justify-content: flex-start; }
+      .chapter-grid, .toc, .node-row.three, .node-row.four, .cache-grid, .answer-grid, .decision-grid, .branch-grid, .memory-process, .memory-levels, .guard-ring, .phase-track, .process-chain, .action-grid, .action-grid-inline, .detail-side-grid, .decision-row, .decision-row .routes {
+        grid-template-columns: 1fr;
+      }
+      .process-step::after {
+        display: none !important;
+      }
+      .diagram {
+        min-height: auto;
+        padding: 18px;
+      }
+      .detail-layout {
+        padding: 16px;
+      }
+      .detail-flow {
+        padding: 14px;
+      }
+      .mechanism-copy {
+        padding: 22px;
+      }
+      .slide-top {
+        grid-template-columns: 1fr;
+      }
+      .tag {
+        width: fit-content;
+      }
+      .hero-panel {
+        min-height: auto;
+      }
+      h1 { font-size: 42px; }
+      section { padding: 58px 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
+  <header class="topbar">
+    <nav class="nav" aria-label="主导航">
+      <a class="brand" href="#top" aria-label="TaiChu AI 企业级 Agent 平台能力说明">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 16V8l6-4 6 4v8l-6 4-6-4Z" stroke="currentColor" stroke-width="2"/>
+            <path d="M9 10h6M9 14h6" stroke="#73d6a0" stroke-width="2"/>
+          </svg>
+        </span>
+        <span>TaiChu AI 能力说明</span>
+      </a>
+      <div class="nav-links">
+        <a href="#overview">结构总览</a>
+        <a href="#mechanisms">机制图解</a>
+        <a href="#slides">能力详解</a>
+        <a href="#summary">落地结论</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div>
+        <span class="eyebrow">Enterprise Agent Guide</span>
+        <h1>讲清企业级 Agent 如何落地业财一体化</h1>
+        <p class="hero-copy">TaiChu AI 将大模型、Skill、记忆、Data Agent、工作流与安全治理组合成企业级 Agent 平台，帮助业财一体化系统实现从客户合同、项目交付、薪酬成本到对账回款、利润分析和 AI 问数的智能闭环。</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#slides">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            查看能力详解
+          </a>
+          <a class="btn" href="#mechanisms">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 5h16M4 12h16M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            先看图解
+          </a>
+        </div>
+      </div>
+      <aside class="hero-panel">
+        <h2>能力导航</h2>
+        <p>从平台能力、业务价值和业财应用三个层面，说明企业级 Agent 如何进入真实经营流程。</p>
+        <div class="system-map">
+          <div class="map-row" style="--accent: var(--blue)"><b>平台能力</b><span>覆盖 Skill、记忆、Data Agent、工作流、安全与生产保障。</span></div>
+          <div class="map-row" style="--accent: var(--green)"><b>业务理解</b><span>把设计模式、缓存、状态机、DAG 等概念转化为经营管理可理解的语言。</span></div>
+          <div class="map-row" style="--accent: var(--orange)"><b>业财场景</b><span>用合同、项目、产出、薪酬、对账、应收、利润、AI 问数举例。</span></div>
+          <div class="map-row" style="--accent: var(--violet)"><b>客户价值</b><span>每个能力点都对应清晰的业务价值和落地收益。</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="overview">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Capability structure</span>
+            <h2>6 大能力章节，完整覆盖企业级 Agent 落地路径</h2>
+          </div>
+          <p>从工程挑战到生产保障，系统呈现企业级 Agent 从能力建设到业务应用的完整路径。</p>
+        </div>
+        <div class="chapter-grid" id="chapterGrid"></div>
+      </div>
+    </section>
+
+    <section id="mechanisms" class="mechanisms">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Visual walkthrough</span>
+            <h2>把关键技术机制画成客户能看懂的经营流程</h2>
+          </div>
+          <p>企业级 Agent 的复杂性不只在模型，而在能力治理、记忆、数据、工作流和安全如何协同。下面用图解把 TaiChu AI 的平台能力落到业财一体化场景里。</p>
+        </div>
+
+        <div class="mechanism-list">
+          <article class="mechanism-card" style="--accent: var(--blue); --soft: var(--blue-soft)">
+            <div class="mechanism-copy">
+              <span class="pill">01 · 总架构</span>
+              <h3>AI 不是外挂，而是业财数据之上的经营智能层</h3>
+              <p>CRM、PM、HR、FM 先把客户、合同、项目、产出、薪酬、成本、对账、应收和利润沉淀成统一经营数据。TaiChu AI 再把这些数据转成可追问、可解释、可行动的经营答案。</p>
+              <ul>
+                <li>业务系统负责沉淀真实数据。</li>
+                <li>Agent 平台负责理解问题、调用能力、生成答案。</li>
+                <li>经营驾驶舱、预警、简报和问数共用同一套数据底账。</li>
+              </ul>
+            </div>
+            <div class="diagram architecture-diagram" aria-label="AI能力融合总架构图">
+              <div class="lane">
+                <b>业务数据底座</b>
+                <div class="node-row four">
+                  <span class="node">CRM<br>客户合同</span>
+                  <span class="node">PM<br>项目产出</span>
+                  <span class="node">HR<br>薪酬人效</span>
+                  <span class="node">FM<br>对账回款</span>
+                </div>
+              </div>
+              <div class="connector-line"></div>
+              <div class="node wide primary">统一经营数据层</div>
+              <div class="connector-line"></div>
+              <div class="node-row three">
+                <span class="node strong">Data Agent<br>经营问数</span>
+                <span class="node strong">Workflow<br>自动流程</span>
+                <span class="node strong">Memory<br>业务记忆</span>
+              </div>
+              <div class="connector-line"></div>
+              <div class="node-row four">
+                <span class="node result">中文问数</span>
+                <span class="node result">图表报告</span>
+                <span class="node result">异常归因</span>
+                <span class="node result">行动建议</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: var(--orange); --soft: var(--orange-soft)">
+            <div class="mechanism-copy">
+              <span class="pill">02 · Skill 治理</span>
+              <h3>把零散能力变成可审核、可复用、可更新的平台资产</h3>
+              <p>Skill 是 Agent 的标准工具箱。对客户来说，它意味着 AI 不是临时发挥，而是按企业认可的能力去查询数据、生成报表、发起提醒和执行流程。</p>
+              <ul>
+                <li>生命周期控制：草稿、审核、发布、下线都有规则。</li>
+                <li>三级缓存保障：常用能力可快速加载，网络波动不影响核心体验。</li>
+                <li>双写一致性：配置中心做权威源，本地库做快速读取。</li>
+              </ul>
+            </div>
+            <div class="diagram">
+              <div class="flow-strip">
+                <span class="node">能力需求<br>项目毛利分析</span>
+                <span class="flow-arrow"></span>
+                <span class="node">封装 Skill<br>输入输出说明</span>
+                <span class="flow-arrow"></span>
+                <span class="node">审核发布<br>权限与版本</span>
+                <span class="flow-arrow"></span>
+                <span class="node primary">Agent 调用<br>稳定执行</span>
+              </div>
+              <div class="cache-grid">
+                <div><b>L1 启动缓存</b><span>收入、成本、回款等高频能力预加载</span></div>
+                <div><b>L2 按需安装</b><span>新增分析能力随用随装</span></div>
+                <div><b>L3 定时轮询</b><span>规则更新后自动同步版本</span></div>
+              </div>
+              <div class="caption">业财例子：计算项目毛利、生成月度对账单、识别逾期应收，都可以沉淀为可治理的 Skill。</div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: var(--green); --soft: var(--green-soft)">
+            <div class="mechanism-copy">
+              <span class="pill">03 · 记忆引擎</span>
+              <h3>让 Agent 记住业务口径，而不是每次重新解释</h3>
+              <p>企业问数最怕口径不一致。记忆引擎把客户规则、财务口径、项目 SOP、历史复盘和用户偏好沉淀下来，下一次问数时自动带入上下文。</p>
+              <ul>
+                <li>L0 摘要用于快速匹配，L1 概览用于判断相关性，L2 详情用于深度解释。</li>
+                <li>去重机制会判断 SKIP、CREATE、MERGE，避免把相似但相反的规则混在一起。</li>
+                <li>会话压缩让连续追问成本更低，也不丢重点。</li>
+              </ul>
+            </div>
+            <div class="diagram">
+              <div class="memory-stack">
+                <div class="memory-input">
+                  <b>业务输入</b>
+                  <span>客户结算口径、薪酬规则、项目复盘、管理层偏好</span>
+                </div>
+                <div class="memory-process">
+                  <span>抽取</span>
+                  <span>分类</span>
+                  <span>去重</span>
+                  <span>压缩</span>
+                </div>
+                <div class="memory-levels">
+                  <div><b>L0</b><span>一句话摘要</span></div>
+                  <div><b>L1</b><span>关键背景</span></div>
+                  <div><b>L2</b><span>完整细节</span></div>
+                </div>
+                <div class="memory-output">
+                  <b>注入问数上下文</b>
+                  <span>回答时自动带上客户规则和经营口径</span>
+                </div>
+              </div>
+              <div class="caption">业财例子：某客户只认可已验收视频进入对账，AI 在生成收入分析时会自动遵守这个口径。</div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: var(--cyan); --soft: var(--cyan-soft)">
+            <div class="mechanism-copy">
+              <span class="pill">04 · Data Agent</span>
+              <h3>管理层问一句话，系统要走完一条可信的数据链路</h3>
+              <p>Data Agent 不是把问题直接交给大模型回答，而是把问题拆成意图识别、口径匹配、权限校验、查询分析、图表报告和追问下钻。</p>
+              <ul>
+                <li>先确认“收入、成本、利润、回款、人效”的业务口径。</li>
+                <li>再查询 CRM、PM、HR、FM 中的真实数据。</li>
+                <li>最后输出答案、图表、异常解释和建议动作。</li>
+              </ul>
+            </div>
+            <div class="diagram question-diagram">
+              <div class="question-bubble">本月哪些项目毛利低于 30%？</div>
+              <div class="pipeline">
+                <span class="node">理解问题</span>
+                <span class="flow-arrow"></span>
+                <span class="node">匹配口径</span>
+                <span class="flow-arrow"></span>
+                <span class="node">权限校验</span>
+                <span class="flow-arrow"></span>
+                <span class="node">查询数据</span>
+                <span class="flow-arrow"></span>
+                <span class="node primary">生成报告</span>
+              </div>
+              <div class="answer-grid">
+                <div><b>经营答案</b><span>低毛利项目排行</span></div>
+                <div><b>图表分析</b><span>收入、薪酬、外包、费用明细</span></div>
+                <div><b>异常归因</b><span>报价偏低、返工增加或成本超支</span></div>
+                <div><b>建议动作</b><span>调整报价、排期或成本控制</span></div>
+              </div>
+              <div class="caption">继续追问时，系统会沿着相同数据链路下钻到客户、项目、人员、月份和内容类型。</div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: var(--red); --soft: var(--red-soft)">
+            <div class="mechanism-copy">
+              <span class="pill">05 · 毛利归因</span>
+              <h3>复杂经营问题要拆成收入、成本、交付三条证据链</h3>
+              <p>项目毛利偏低不是一个数字问题，而是经营归因问题。AI 要同时看合同单价、产出验收、薪酬分摊、外包费用、返工记录和对账金额。</p>
+              <ul>
+                <li>收入链判断是否单价低、产出未确认或对账滞后。</li>
+                <li>成本链判断内部薪酬、外包和费用是否异常。</li>
+                <li>交付链判断逾期、返工和审核记录是否拉低效率。</li>
+              </ul>
+            </div>
+            <div class="diagram">
+              <div class="branch-grid">
+                <div>
+                  <b>收入链</b>
+                  <span>合同单价</span>
+                  <span>已验收产出</span>
+                  <span>对账确认金额</span>
+                </div>
+                <div>
+                  <b>成本链</b>
+                  <span>内部薪酬</span>
+                  <span>外包成本</span>
+                  <span>场地物料费用</span>
+                </div>
+                <div>
+                  <b>交付链</b>
+                  <span>返工次数</span>
+                  <span>逾期任务</span>
+                  <span>脚本审核记录</span>
+                </div>
+              </div>
+              <div class="connector-line"></div>
+              <div class="node wide primary">项目毛利归因报告</div>
+              <div class="node-row three">
+                <span class="node result">报价调整建议</span>
+                <span class="node result">排期优化建议</span>
+                <span class="node result">成本控制建议</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: var(--violet); --soft: var(--violet-soft)">
+            <div class="mechanism-copy">
+              <span class="pill">06 · 工作流</span>
+              <h3>让 AI 从“回答问题”升级为“按流程持续办事”</h3>
+              <p>工作流引擎把 LLM、数据库、HTTP、NL2SQL、条件判断和结束节点连接起来。复杂场景里，AI 不只是输出文字，还能触发提醒、生成简报、转人工确认。</p>
+              <ul>
+                <li>变量插值让上一步结果传给下一步。</li>
+                <li>条件分支让高风险、低置信度和正常情况走不同路径。</li>
+                <li>人工确认保留关键决策边界。</li>
+              </ul>
+            </div>
+            <div class="diagram workflow-diagram">
+              <div class="flow-strip">
+                <span class="node">定时触发<br>月度复盘</span>
+                <span class="flow-arrow"></span>
+                <span class="node">NL2SQL<br>查询业财数据</span>
+                <span class="flow-arrow"></span>
+                <span class="node">LLM<br>生成分析</span>
+                <span class="flow-arrow"></span>
+                <span class="node primary">Condition<br>风险判断</span>
+              </div>
+              <div class="decision-grid">
+                <div><b>正常</b><span>生成经营简报</span></div>
+                <div><b>高风险</b><span>推送管理层关注</span></div>
+                <div><b>低置信度</b><span>转财务或项目负责人确认</span></div>
+              </div>
+              <div class="caption">业财例子：回款风险高且金额超过 10 万时，流程自动提醒客户经理并推送管理层。</div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: #52627a; --soft: #edf1f7">
+            <div class="mechanism-copy">
+              <span class="pill">07 · 安全与生产保障</span>
+              <h3>企业敢把 AI 接进核心数据，前提是可控、可查、可降级</h3>
+              <p>能查真实经营数据的 AI，必须有权限、审计、脱敏、沙箱、限流、隔离和降级。否则越聪明，风险越高。</p>
+              <ul>
+                <li>权限控制决定谁能查哪些客户、项目和财务字段。</li>
+                <li>审计日志记录每次 SQL、工具调用和模型调用。</li>
+                <li>限流降级保证高峰期不拖垮核心系统。</li>
+              </ul>
+            </div>
+            <div class="diagram safety-diagram">
+              <div class="guard-ring">
+                <span>权限控制</span>
+                <span>SQL 审计</span>
+                <span>结果脱敏</span>
+                <span>Python 沙箱</span>
+                <span>租户隔离</span>
+                <span>限流降级</span>
+              </div>
+              <div class="node wide primary">可信 Agent 运行环境</div>
+              <div class="caption">客户价值：AI 可以进入收入、成本、利润、回款等核心数据场景，但每一步都有边界和记录。</div>
+            </div>
+          </article>
+
+          <article class="mechanism-card" style="--accent: #13945f; --soft: #e3f6ed">
+            <div class="mechanism-copy">
+              <span class="pill">08 · 落地路径</span>
+              <h3>先让数据真实，再让 AI 可问、可解释、可预警</h3>
+              <p>AI 不适合第一天就大而全上线。更稳妥的路径，是跟随业财数据成熟度逐步落地：先建立底账，再跑通闭环，再做驾驶舱，最后上线问数和自动化。</p>
+              <ul>
+                <li>先选一个年框客户跑通合同、项目、产出、对账、应收、回款和利润。</li>
+                <li>再围绕月度复盘、项目毛利、预算消耗、回款风险、人效分析配置高频问数。</li>
+                <li>最后扩展知识库、经营简报和自动化预警。</li>
+              </ul>
+            </div>
+            <div class="diagram phase-diagram">
+              <div class="phase-track">
+                <div><b>Phase 01</b><span>数据底账</span></div>
+                <div><b>Phase 02</b><span>业务闭环</span></div>
+                <div><b>Phase 03</b><span>经营驾驶舱</span></div>
+                <div><b>Phase 04</b><span>AI 问数</span></div>
+                <div><b>Phase 05</b><span>自动化工作流</span></div>
+              </div>
+              <div class="caption">这条路径把 AI 从展示能力变成经营能力：收入从哪里来、成本花到哪里、利润为什么变动、回款风险在哪里，都能被系统持续回答。</div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <div class="toolbar" aria-label="筛选和搜索">
+      <div class="toolbar-inner">
+        <input class="search" id="searchInput" type="search" placeholder="搜索：Skill、记忆、Data Agent、对账、回款、薪酬、利润..." aria-label="搜索能力说明内容" />
+        <div class="filters" id="filters" aria-label="章节筛选"></div>
+      </div>
+    </div>
+
+    <section id="slides">
+      <div class="section-inner">
+        <div class="section-head">
+          <div>
+            <span class="eyebrow">Capability guide</span>
+            <h2>能力体系详解</h2>
+          </div>
+          <p>每个能力点都进一步展开为流程拆解、业务落点和客户价值说明；能画清楚的机制用流程图呈现，不能拆成流程的部分也补充为可讲解的落地说明。</p>
+        </div>
+        <div class="deck-layout">
+          <aside class="toc" id="toc" aria-label="页码目录"></aside>
+          <div class="slide-list" id="slideList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" id="summary">
+      <div class="final-grid">
+        <div>
+          <span class="eyebrow">Final takeaway</span>
+          <h2>企业级 Agent 的价值，是把 AI 放进可治理的经营闭环。</h2>
+          <p>对业财一体化系统来说，Agent 不是一个单独聊天入口，而是连接客户合同、项目交付、产出薪酬、成本利润、对账回款和经营问数的智能执行层。</p>
+        </div>
+        <div class="summary-list">
+          <div style="--accent:#7aa4ff"><b>先有可信数据</b><span>CRM、PM、HR、FM 把经营过程沉淀为统一底账。</span></div>
+          <div style="--accent:#73d6a0"><b>再有智能问数</b><span>Data Agent 把自然语言问题变成可审计的数据分析流程。</span></div>
+          <div style="--accent:#ffb16f"><b>最后形成数字员工</b><span>Skill、记忆、工作流和安全护栏把 AI 变成可执行、可追责的业务助手。</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const chapters = [
+      { id: "challenge", no: "01", name: "企业级 AI 落地的工程挑战", range: "01-05", color: "var(--blue)" },
+      { id: "skill", no: "02", name: "Skill 治理与三级缓存架构", range: "06-12", color: "var(--orange)" },
+      { id: "memory", no: "03", name: "Harness 记忆引擎设计", range: "13-19", color: "var(--green)" },
+      { id: "data", no: "04", name: "Data Agent 图编排架构", range: "20-23", color: "var(--cyan)" },
+      { id: "workflow", no: "05", name: "数字员工与工作流引擎", range: "24-31", color: "var(--violet)" },
+      { id: "ops", no: "06", name: "生产环境工程保障", range: "32-36", color: "var(--red)" }
+    ];
+
+    const slides = [
+      {
+        no: "01", chapter: "challenge", title: "TaiChu AI 企业级 Agent 平台架构设计", source: "平台定位很清晰：企业需要的不是单个 Agent，而是一套可治理、可复用、可协作的 Agent 平台。",
+        explain: "普通 AI 像一个聪明助手，企业级 Agent 平台则像一套组织操作系统。它不只回答问题，还要接入业务系统、调用工具、记住上下文、遵守权限、完成流程。",
+        scene: "在业财一体化系统里，AI 不是悬浮在外面的聊天框，而是进入客户合同、项目交付、产出登记、薪酬计算、对账回款和经营利润分析的全链路。",
+        flow: ["CRM 客户合同", "PM 项目交付", "HR 薪酬人效", "FM 对账回款", "AI 问数"],
+        talk: "这套架构的核心，是让 AI 从“能聊”变成“能在企业系统里安全办事”。"
+      },
+      {
+        no: "02", chapter: "challenge", title: "目录", source: "平台能力体系分成六个部分：工程挑战、Skill、记忆、Data Agent、数字员工和生产保障。",
+        explain: "目录其实就是企业级 Agent 平台的能力地图：先说明为什么难落地，再讲如何把能力标准化、如何让 AI 记得住、如何查数据、如何串流程，最后讲生产环境能不能稳定运行。",
+        scene: "对应业财体系，主流程是：客户签约形成合同与预算，项目立项承接交付，产出验收进入薪酬与成本，月度对账生成应收，回款核销后形成利润复盘，AI 再基于这条链路做问数、预警和动作编排。",
+        flow: ["合同预算", "项目交付", "产出薪酬", "对账应收", "回款利润", "AI 动作"],
+        talk: "沿着这六个部分，可以完整理解 Agent 平台从技术底座到业务落地的闭环。"
+      },
+      {
+        no: "02A", chapter: "challenge", title: "业财一体化主流程：从客户合同到经营利润", source: "这页把业财体系本身的业务闭环画清楚：AI 能发挥作用的前提，是客户、合同、项目、产出、薪酬、对账、应收、回款和利润先形成连续数据链。",
+        explain: "客户真正关心的是系统怎么跑起来。主流程不是从 AI 开始，而是先让每个经营动作都留下可信数据：合同决定预算和单价，项目承接交付过程，产出进入薪酬和成本，对账生成应收，回款核销后形成利润复盘。",
+        scene: "例如一个年框客户从签约开始，系统会记录合同预算、项目立项、任务交付、产出验收、薪酬分摊、月度对账、应收账龄、回款核销，最终沉淀成客户、项目和团队维度的经营利润。",
+        flow: ["客户合同", "项目交付", "产出薪酬", "对账应收", "回款利润", "AI 问数"],
+        talk: "先把业务闭环跑顺，AI 才能基于真实经营数据给出可信答案。",
+        detail: {
+          type: "process",
+          title: "业财闭环主流程",
+          intro: "每一步都不是孤立模块，而是在为下一步沉淀数据。最后 AI 问数读取的是同一条经营链路上的事实。",
+          steps: [
+            { title: "01 客户与合同", action: "CRM 建档、商机、报价、签约", data: "沉淀客户主体、合同金额、年框预算、单价规则、KPI 和结算口径。" },
+            { title: "02 项目立项", action: "PM 承接合同预算并创建项目", data: "沉淀项目负责人、交付周期、任务节点、预算占用和项目目标。" },
+            { title: "03 任务交付", action: "脚本、拍摄、剪辑、发布、审核", data: "沉淀任务状态、交付物、逾期记录、返工记录和验收结果。" },
+            { title: "04 产出登记", action: "按人员、项目、内容类型登记产出", data: "沉淀产出数量、系数、验收状态和可进入薪酬/对账的产出明细。" },
+            { title: "05 薪酬与成本", action: "HR 计算薪酬，FM 归集成本", data: "沉淀内部薪酬、外包成本、项目费用和成本分摊口径。" },
+            { title: "06 月度对账", action: "按客户口径确认收入", data: "沉淀对账金额、开票状态、应收金额、客户确认记录。" },
+            { title: "07 回款核销", action: "跟进入账、核销应收、计算账龄", data: "沉淀回款时间、逾期天数、责任人和现金流风险。" },
+            { title: "08 利润复盘", action: "按客户、项目、团队分析毛利", data: "沉淀收入、成本、毛利、人效、预算消耗和经营风险。" }
+          ],
+          actions: [
+            { title: "AI 读取", text: "读取同一条链路上的合同、项目、产出、成本、应收、回款和利润数据。" },
+            { title: "AI 解释", text: "解释收入为什么变化、成本高在哪里、项目毛利为什么偏低。" },
+            { title: "AI 推动", text: "把复盘、提醒、对账、催收等动作重新推回 CRM、PM、HR、FM 流程。" }
+          ]
+        }
+      },
+      {
+        no: "02B", chapter: "challenge", title: "AI 问数与动作编排：从经营问题到业务动作", source: "这页说明 AI 如何接入业财闭环：它不是只回答一句话，而是先识别问题，再查数据、做归因、判断风险，并把结果编排成可执行动作。",
+        explain: "当管理层提问或系统自动发现异常时，Data Agent 负责查数和分析，工作流负责判断下一步动作。正常情况生成简报，异常情况发起复盘或提醒，低置信度情况转人工确认。",
+        scene: "例如系统发现某客户回款临近逾期，AI 会先查对账、开票、应收账龄和历史回款，再判断风险等级，最后提醒客户经理、生成跟进建议，并把高风险事项推送管理层。",
+        flow: ["提问/触发", "识别意图", "查询数据", "分析归因", "条件判断", "动作落地"],
+        talk: "AI 的价值不止是回答经营问题，而是把问题变成下一步动作。",
+        detail: {
+          type: "decision",
+          title: "AI 接入业财闭环后的动作编排",
+          intro: "同一个 AI 问数入口，可以同时服务经营复盘、低毛利预警、预算监控、应收催收和团队人效分析。",
+          rows: [
+            {
+              trigger: "管理层提问：本月经营情况怎么样？",
+              routes: [
+                { title: "Data Agent 查数", text: "汇总收入、成本、毛利、回款、人效和风险指标。" },
+                { title: "生成经营简报", text: "输出图表、异常解释和下月关注事项。" },
+                { title: "推送经营会", text: "把简报推送给管理层，作为经营会底稿。" }
+              ]
+            },
+            {
+              trigger: "系统发现：项目毛利低于目标",
+              routes: [
+                { title: "拆收入", text: "检查合同单价、已验收产出和对账确认金额。" },
+                { title: "拆成本", text: "检查薪酬、外包、费用、返工和逾期任务。" },
+                { title: "发起复盘", text: "生成毛利归因报告，推送项目、财务和负责人确认。" }
+              ]
+            },
+            {
+              trigger: "系统发现：年框预算接近阈值",
+              routes: [
+                { title: "查预算消耗", text: "按月份、项目和内容类型拆分预算使用情况。" },
+                { title: "预测可用周期", text: "根据当前执行速度判断预算还能支撑多久。" },
+                { title: "提醒续签", text: "提醒客户经理准备补充协议或续签沟通。" }
+              ]
+            },
+            {
+              trigger: "系统发现：应收临期或逾期",
+              routes: [
+                { title: "查账龄", text: "结合对账、开票、回款记录和客户历史表现。" },
+                { title: "判断风险", text: "区分正常跟进、临近到期、已逾期和高风险客户。" },
+                { title: "催收建议", text: "生成跟进话术、责任人提醒和管理层关注事项。" }
+              ]
+            },
+            {
+              trigger: "AI 置信度不足或权限不明确",
+              routes: [
+                { title: "暂停自动动作", text: "不直接发送提醒或修改业务状态。" },
+                { title: "转人工确认", text: "请财务、项目负责人或管理员确认口径。" },
+                { title: "沉淀规则", text: "确认后的规则进入知识库或记忆，供后续复用。" }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        no: "03", chapter: "challenge", title: "企业级 AI 落地的工程挑战", source: "第一部分回答一个核心问题：为什么企业不能只靠单次大模型调用来建设 AI 能力。",
+        explain: "企业场景复杂，不只是问答。AI 要访问真实数据、执行流程、调用系统、生成报告，还要留下审计记录。所以难点从“模型聪不聪明”转成“工程体系稳不稳”。",
+        scene: "比如管理层问“本月哪个客户毛利低”，系统不能凭空回答。它要知道合同单价、已验收产出、内部薪酬、外包成本、费用、对账金额和回款状态。",
+        flow: ["自然语言问题", "业务口径", "系统数据", "可追溯答案"],
+        talk: "企业级 AI 的第一道门槛，是把 AI 接进真实业务，而不是停留在基础问答。"
+      },
+      {
+        no: "04", chapter: "challenge", title: "四个核心工程矛盾", source: "企业级 AI 落地通常会遇到四个矛盾：能力碎片化、记忆断裂、安全不可控、协作孤岛。",
+        explain: "普通 AI 往往只能完成单点问答，企业级 Agent 平台则要解决能力复用、上下文记忆、工具安全和多 Agent 协作四类问题。",
+        scene: "业财系统里同样如此：如果 AI 问数、对账助手、薪酬助手、回款提醒各做各的，就会口径不一。必须把能力、数据、权限和流程统一起来。",
+        flow: ["能力复用", "上下文记忆", "权限审计", "流程协作"],
+        talk: "企业真正需要的不是更多 AI 小工具，而是一套能统一管理能力和风险的平台。"
+      },
+      {
+        no: "05", chapter: "challenge", title: "四层抽象架构", source: "平台通过工作流引擎、数字员工层、Skill 治理层、Harness 记忆引擎和安全沙箱层形成分层架构。",
+        explain: "这页是全稿总架构：上层是业务能感知的数字员工，中间是可复用 Skill 和记忆引擎，底层是安全沙箱。工作流把这些能力串成完整任务。",
+        scene: "例如“月度经营复盘数字员工”：先用 Data Agent 查经营数据，再用记忆引擎读取客户规则和财务口径，调用报表 Skill 生成复盘，最后走审批或推送流程。",
+        flow: ["数字员工", "工作流", "Skill", "记忆", "安全沙箱"],
+        talk: "四层架构的作用，是让 AI 既懂业务、能调用工具，又能被企业管住。"
+      },
+      {
+        no: "06", chapter: "skill", title: "Skill 治理与三级缓存架构", source: "Skill 治理负责把零散能力沉淀为可注册、可审核、可调用、可更新的平台资产。",
+        explain: "Skill 可以理解为企业给 AI 准备的“标准工具箱”。没有 Skill，AI 每次都临时发挥；有 Skill，AI 可以按企业批准过的能力做事。",
+        scene: "业财平台可沉淀“生成月度对账单”“计算项目毛利”“查询逾期应收”“统计员工加权产出”等 Skill，由平台统一发布和管理。",
+        flow: ["能力封装", "审核发布", "版本更新", "运行缓存"],
+        talk: "Skill 治理让 AI 能力从个人经验变成企业资产。"
+      },
+      {
+        no: "07", chapter: "skill", title: "Skill Registry 设计问题", source: "Skill Registry 要解决注册中心切换困难、流程重复、新增实现容易复制粘贴等问题。",
+        explain: "Registry 是 Skill 的登记处。问题在于不同存储方式都要做校验、注册、缓存、状态管理，如果每种实现都重写一遍，后面就难维护。",
+        scene: "业财系统未来可能先用本地配置管理 AI 能力，后续再接 Nacos 或数据库。如果 Registry 设计好，“薪酬计算 Skill”存在哪里变化，业务代码不用大改。",
+        flow: ["校验", "注册", "缓存", "状态管理"],
+        talk: "好的注册中心设计，让 AI 能力的存储方式可以变，但企业流程不被牵着改。"
+      },
+      {
+        no: "08", chapter: "skill", title: "策略模式 + 模板方法", source: "策略模式和模板方法让不同注册中心可以共用标准流程，同时保留各自实现差异。",
+        explain: "白话说：固定流程放在公共骨架里，差异部分交给不同实现。这样既保证规则统一，又允许本地文件、Nacos、MySQL 等实现灵活切换。",
+        scene: "例如所有 Skill 上线都必须检查权限、版本号、输入输出说明；但具体是写数据库、写配置中心还是写本地文件，可以根据部署环境切换。",
+        flow: ["统一骨架", "差异实现", "配置切换"],
+        talk: "这类设计的业务价值，是让平台可扩展，但核心流程不失控。"
+      },
+      {
+        no: "09", chapter: "skill", title: "Skill 生命周期状态机", source: "Skill 生命周期覆盖草稿、审核中、已发布、已下线、已删除、审核拒绝和强制发布。",
+        explain: "状态机就是 Skill 的上架规则。企业不会允许一个未经审核的能力直接查财务数据或执行操作，必须有创建、审核、发布、下线和删除流程。",
+        scene: "“自动催收提醒 Skill”如果要读取应收账龄和客户联系人，就必须先审核权限范围；如果话术或规则过期，也要下线或更新版本。",
+        flow: ["草稿", "审核", "发布", "下线", "删除"],
+        talk: "生命周期管理让 AI 能力像企业制度一样可控，而不是谁写了就能上线。"
+      },
+      {
+        no: "10", chapter: "skill", title: "三级缓存架构", source: "三级缓存用于降低远程拉取带来的网络延迟、服务压力和可用性风险。",
+        explain: "缓存的意义是让 Agent 调用 Skill 时不用每次都去远程中心查。高频能力本地化，速度更快，也减少远程服务不可用时的影响。",
+        scene: "经营复盘时如果 AI 每次都远程拉取“项目毛利分析 Skill”，响应会慢。三级缓存能让常用 Skill 本地可读，保障经营问数体验。",
+        flow: ["L1 启动缓存", "L2 按需安装", "L3 定时更新"],
+        talk: "缓存不是技术细节，它直接决定 AI 助手是否足够快、足够稳。"
+      },
+      {
+        no: "11", chapter: "skill", title: "三级缓存核心实现", source: "三级缓存通过 L1 启动全量缓存、L2 按需安装、L3 定时轮询实现速度与稳定性的平衡。",
+        explain: "可以把它讲成三种获取能力的方式：启动时先把常用能力准备好；用户安装某个能力时拉最新版；后台定期检查有没有新版本。",
+        scene: "业财系统上线初期可把“收入查询、成本分析、对账生成、回款预警”作为 L1 常用能力。新增“供应商成本对比 Skill”时通过 L2 安装，规则变化则由 L3 自动更新。",
+        flow: ["启动准备", "用户安装", "后台巡检"],
+        talk: "三级缓存让平台既能快速响应，也能持续更新。"
+      },
+      {
+        no: "12", chapter: "skill", title: "双写一致性设计", source: "双写一致性通过 Nacos 优先、本地 DB 快速读取、定时轮询兜底，让能力配置既能统一管理，也能快速读取。",
+        explain: "双写一致性解决的是“权威在哪里、读取怎么快、出错怎么修”。权威源保证规则正确，本地库保证读取速度，定时任务修复差异。",
+        scene: "合同单价查询 Skill 的版本如果以平台配置中心为准，本地数据库可缓存用于快速响应。若配置中心更新了客户 KPI 口径，定时任务要把本地缓存修正过来。",
+        flow: ["权威源写入", "本地快速读", "定时修复"],
+        talk: "一致性设计保证 AI 用的是正确能力，而不是过期规则。"
+      },
+      {
+        no: "13", chapter: "memory", title: "Harness 记忆引擎设计", source: "记忆引擎让 Agent 能持续理解用户、业务对象和历史上下文，而不是每次都从零开始。",
+        explain: "记忆引擎解决 Agent 的长期上下文问题。没有记忆，AI 每次都要重新解释业务背景；有记忆，AI 才能逐步理解企业规则和用户偏好。",
+        scene: "业财系统中，AI 应记住客户合同口径、项目 SOP、薪酬规则、财务确认口径，以及管理层常问的经营指标。",
+        flow: ["抽取", "压缩", "分类", "检索", "注入上下文"],
+        talk: "记忆让 AI 不只是一次性回答，而是越来越懂企业。"
+      },
+      {
+        no: "14", chapter: "memory", title: "记忆引擎设计问题", source: "记忆引擎需要回答三个问题：记住什么、怎么存、怎么用。",
+        explain: "记忆不是越多越好。平台要判断哪些信息值得长期保留，如何结构化存储，下一次对话如何检索出来并放回上下文。",
+        scene: "例如“某客户对账只认已验收视频，不认草稿版本”就是值得长期保存的业务规则；“今天下午随口讨论的临时想法”可能不该进入长期记忆。",
+        flow: ["记什么", "怎么存", "何时用"],
+        talk: "真正有用的记忆，是能在下一次业务判断中帮 AI 少问、少错。"
+      },
+      {
+        no: "15", chapter: "memory", title: "三级记忆体系", source: "三级记忆体系把信息拆成 L0 摘要、L1 概览、L2 详情，并配套标准写入流程。",
+        explain: "三级记忆像三种粒度：L0 用一句话快速匹配，L1 记录关键背景，L2 保留完整细节。检索时先粗筛，再深挖。",
+        scene: "对“项目毛利偏低”这类问题，L0 可能记“美的项目采用季度包结算”；L1 记合同和 KPI 口径；L2 保留历史复盘和成本分析记录。",
+        flow: ["L0 快速匹配", "L1 判断相关", "L2 深度理解"],
+        talk: "分层记忆让 AI 既能快速找到方向，又能在需要时查到细节。"
+      },
+      {
+        no: "16", chapter: "memory", title: "记忆去重机制", source: "记忆去重不能只看向量相似度，还要用 LLM 判断 SKIP、CREATE、MERGE，避免重复或误合并。",
+        explain: "两个句子看起来相似，含义可能相反。平台先用向量找相似记忆，再让模型判断是跳过、新建还是合并。",
+        scene: "“客户喜欢按月对账”和“客户不接受按月对账”向量可能接近，但业务含义完全相反。AI 如果误合并，会直接影响对账和回款流程。",
+        flow: ["相似检索", "语义判断", "跳过/新建/合并"],
+        talk: "记忆去重的关键，是避免 AI 把相似的话当成相同的规则。"
+      },
+      {
+        no: "17", chapter: "memory", title: "10 维记忆分类", source: "记忆分类覆盖 PROFILE、PREFERENCES、ENTITIES、EVENTS、CASES、PATTERNS、TOOLS、SKILLS、SOUL、IDENTITY。",
+        explain: "分类是为了让记忆可管理。用户画像、偏好、实体、事件、案例、模式、工具、技能等信息，应该放在不同抽屉里。",
+        scene: "业财体系可映射为：客户主体和合同属于 ENTITIES；月度经营会属于 EVENTS；低毛利项目复盘属于 CASES；每月 5 号生成对账属于 PATTERNS；薪酬规则属于业务知识类记忆。",
+        flow: ["客户实体", "业务事件", "案例经验", "规则模式"],
+        talk: "分类越清楚，AI 调用记忆时越不容易混乱。"
+      },
+      {
+        no: "18", chapter: "memory", title: "ReAct 记忆提取循环", source: "ReAct 记忆提取让 LLM 先浏览、读取、判断，再输出 JSON 指令，并通过轮次限制控制成本。",
+        explain: "ReAct 不是让模型凭感觉写记忆，而是让它先看已有记忆，再判断要不要新增或更新，最后用结构化指令执行。",
+        scene: "当项目经理更新“长虹项目拍摄验收口径”时，AI 先查是否已有长虹相关记忆，再决定是合并到客户规则，还是新建项目事件。",
+        flow: ["先看", "再判断", "结构化写入"],
+        talk: "先看后写，能避免 AI 把旧规则覆盖错或重复写一堆无效记忆。"
+      },
+      {
+        no: "19", chapter: "memory", title: "会话压缩机制", source: "会话压缩通过保留最近 5 条原文、压缩前 15 条为摘要，让 Token 消耗降低 60-80%。",
+        explain: "长对话会越来越贵，也容易超出上下文。会话压缩就是保留最近细节，把更早内容压成摘要，让 AI 继续理解重点。",
+        scene: "经营复盘连续追问十几轮后，系统不必把所有聊天逐字塞给模型，只保留最近问题，并把前面的收入、成本、回款结论压成摘要。",
+        flow: ["最近原文", "历史摘要", "上下文注入"],
+        talk: "会话压缩让 AI 问数可以连续追问，同时控制成本和上下文长度。"
+      },
+      {
+        no: "20", chapter: "data", title: "Data Agent 图编排架构", source: "Data Agent 负责把自然语言问题转化为可执行、可审计、可解释的数据分析流程。",
+        explain: "Data Agent 是企业经营问数的核心。它把自然语言问题拆成理解意图、查数据、分析、画图、生成报告等步骤。",
+        scene: "管理层问“本月哪些项目毛利异常”，Data Agent 要从 CRM 合同、PM 产出、HR 薪酬、FM 成本和对账数据里组合答案。",
+        flow: ["问经营问题", "查业财数据", "分析归因", "生成报告"],
+        talk: "Data Agent 的价值，是让经营数据从报表里走出来，变成可以追问的答案。"
+      },
+      {
+        no: "21", chapter: "data", title: "Data Agent 设计问题", source: "Data Agent 的关键链路包括理解意图、生成 SQL、执行 SQL、分析数据、生成图表、输出报告六步。",
+        explain: "问数不是把问题丢给模型就完事。系统要理解口径、找到表和字段、生成正确 SQL、校验权限、分析结果，再组织成报告。",
+        scene: "“销售趋势”在业财系统里可能指对账收入、合同金额、已回款金额或利润趋势。Data Agent 必须先确定口径，否则答案会误导经营判断。",
+        flow: ["意图", "SQL", "执行", "分析", "图表", "报告"],
+        talk: "经营问数的难点，不是生成文字，而是把问题转化为正确的数据口径。"
+      },
+      {
+        no: "22", chapter: "data", title: "图编排流水线", source: "图编排流水线把用户输入、意图识别、NL2SQL、SQL 执行、Python 分析、图表渲染、报告生成串成一条链路。",
+        explain: "图编排就是把复杂问数流程画成 DAG，每个节点负责一步，必要时根据条件分支决定是否做进一步分析。",
+        scene: "用户问“上个月哪些客户回款风险最高”，流程先识别为财务风险问题，再查应收账龄、对账状态、开票状态、回款记录，最后输出风险排行和建议动作。",
+        flow: ["识别问题", "查询数据", "脱敏执行", "统计分析", "图表报告"],
+        talk: "DAG 编排让 AI 分析过程可分析、可控制、可复盘。"
+      },
+      {
+        no: "23", chapter: "data", title: "多层安全机制", source: "多层安全机制覆盖 SQL 审计、权限控制、结果脱敏、执行超时和 Python 沙箱。",
+        explain: "Data Agent 能查真实数据，所以安全必须在流程里。谁能查、查了什么、结果是否脱敏、代码能不能执行危险操作，都要被限制。",
+        scene: "财务人员可查客户应收和回款，普通项目成员可能只能看自己项目的交付状态；手机号、银行卡、身份证等字段必须自动打码。",
+        flow: ["权限", "审计", "脱敏", "超时", "沙箱"],
+        talk: "能接真实数据的 AI，必须先让企业放心。"
+      },
+      {
+        no: "24", chapter: "workflow", title: "数字员工与工作流引擎", source: "数字员工与工作流引擎把 Agent 能力从“能回答”推进到“能按流程办事”。",
+        explain: "数字员工不是一个聊天机器人，而是 Agent、Skill、记忆和工作流组合出来的业务角色。",
+        scene: "业财平台可以定义“经营复盘数字员工”“对账数字员工”“回款预警数字员工”“薪酬核算数字员工”，每个都有自己的工具、记忆和流程。",
+        flow: ["角色", "能力", "记忆", "流程"],
+        talk: "数字员工的重点，是把 AI 变成可分工的业务角色。"
+      },
+      {
+        no: "25", chapter: "workflow", title: "数字员工核心公式", source: "数字员工可以理解为 Agent、Skill、工作流和记忆的组合。",
+        explain: "Agent 像大脑，Skill 是手，工作流是公司制度，记忆是经验。四者组合起来，AI 才能从对话交互升级为任务执行。",
+        scene: "“对账数字员工”需要理解客户需求，调用产出查询和对账生成 Skill，记住客户确认口径，并按流程提交财务复核。",
+        flow: ["Agent", "Skill", "Workflow", "Memory"],
+        talk: "数字员工不是替代人，而是把重复、跨系统、多步骤的工作交给可控的 AI 执行。"
+      },
+      {
+        no: "26", chapter: "workflow", title: "四个数字员工能力映射", source: "数字员工可以映射到招聘、财务、会议、运营等不同业务角色和能力组合。",
+        explain: "这页说明数字员工可以面向不同岗位场景定制。每类员工都复用平台底座，但调用的 Skill、记忆和工作流不同。",
+        scene: "映射到业财体系：财务员工负责智能记账、报表、异常检测；运营员工负责数据监控和策略建议；会议员工负责经营会纪要和待办；招聘员工可用于内容团队人员筛选。",
+        flow: ["财务", "运营", "会议", "招聘"],
+        talk: "同一套 Agent 平台，可以长出多个面向业务岗位的数字员工。"
+      },
+      {
+        no: "27", chapter: "workflow", title: "多数字员工协作网络", source: "多数字员工协作网络让不同角色的 Agent 可以发现问题、核对数据、安排协同并等待人工确认。",
+        explain: "复杂任务往往不是一个 Agent 能完成的。一个 Agent 发现问题，另一个查财务原因，第三个安排会议或生成纪要，人类在关键处确认。",
+        scene: "业财场景中，运营 Agent 发现某客户内容发布量下降，财务 Agent 确认退款率上升，会议 Agent 组织 PM、AE、财务开复盘会，负责人确认行动计划。",
+        flow: ["发现异常", "财务归因", "组织协同", "人工确认"],
+        talk: "多 Agent 协作的价值，是把发现问题到推动处理连成一条链。"
+      },
+      {
+        no: "28", chapter: "workflow", title: "人机协作四模式", source: "人机协作可以分为 AI 辅助、AI 执行、AI 代理、人机共创四种模式。",
+        explain: "企业不应一上来就让 AI 全权代理。不同风险等级适合不同模式：低风险可自动执行，高风险要人工决策，共创任务则持续协作。",
+        scene: "日报生成适合 AI 执行；回款催收建议适合 AI 辅助；固定时间发送经营简报可 AI 代理；年度经营策略分析适合人机共创。",
+        flow: ["辅助", "执行", "代理", "共创"],
+        talk: "成熟的人机协作，不是人退出流程，而是人在关键决策处介入。"
+      },
+      {
+        no: "29", chapter: "workflow", title: "工作流引擎设计", source: "工作流引擎通过 START、LLM、HTTP、Database、NL2SQL、Condition、END 等节点承载业务流程。",
+        explain: "工作流引擎把 AI 能力变成可拖拽、可配置、可审计的流程节点。业务人员不用写代码，也能组合自动化流程。",
+        scene: "“月度经营复盘流程”可以由 START 定时触发，NL2SQL 查询业财数据，LLM 生成分析，Condition 判断是否有风险，HTTP 推送到飞书或邮件，END 输出报告。",
+        flow: ["触发", "问数", "分析", "判断", "推送", "结束"],
+        talk: "工作流让 AI 不只是回答问题，而是按企业流程持续办事。"
+      },
+      {
+        no: "30", chapter: "workflow", title: "变量插值传递机制", source: "变量插值通过 {{start_node.user_query}}、{{nl2sql_1.result}} 等方式，把上一步结果传给下一步。",
+        explain: "变量插值就是把上一步结果传给下一步。没有它，每个节点都是孤岛；有了它，数据才能在流程中流转。",
+        scene: "用户输入“分析本月利润”，start_node 把问题传给 NL2SQL，NL2SQL 的结果传给 LLM 生成报告，报告再传给 HTTP 节点发送给管理层。",
+        flow: ["用户问题", "SQL 结果", "分析报告", "消息推送"],
+        talk: "变量传递让工作流从一堆节点变成真正连续的数据链路。"
+      },
+      {
+        no: "31", chapter: "workflow", title: "条件分支设计", source: "条件分支通过 Condition 节点、else 兜底和低置信度转人工，让流程具备判断和安全出口。",
+        explain: "条件分支让流程能根据结果选择路径。尤其重要的是 else 兜底和低置信度转人工，避免 AI 自信地犯错。",
+        scene: "如果 AI 判断“回款风险高且金额超过 10 万”，流程进入催收提醒；如果置信度低于 0.8，则转给财务确认；其他情况只记录观察。",
+        flow: ["条件判断", "高风险处理", "低置信度转人工", "兜底出口"],
+        talk: "条件分支让 AI 流程既自动化，又不丢掉安全边界。"
+      },
+      {
+        no: "32", chapter: "ops", title: "生产环境工程保障", source: "生产环境保障确保 Agent 平台能长期稳定运行，并满足企业对性能、可靠性、隔离和审计的要求。",
+        explain: "企业级平台最终要在生产环境长期运行。稳定性、性能、隔离、审计和降级，比试用效果更重要。",
+        scene: "业财平台的 AI 问数如果在经营会上卡顿、查错数据或权限穿透，会直接影响管理信任，所以必须有工程保障。",
+        flow: ["性能", "可靠性", "隔离", "审计"],
+        talk: "生产保障决定 AI 能不能从试用阶段进入日常经营。"
+      },
+      {
+        no: "33", chapter: "ops", title: "性能指标", source: "性能指标关注 Skill 加载延迟、Token 消耗、记忆检索延迟、Skill 更新延迟等关键体验。",
+        explain: "这些指标说明平台优化不是抽象概念，而是能体现在响应速度、成本和更新可靠性上的。",
+        scene: "经营问数场景中，管理层希望几秒内得到趋势和归因。如果 Skill 加载慢、记忆检索慢、上下文太长，体验就会下降。",
+        flow: ["0ms 加载", "Token 降低", "50ms 检索", "5 分钟更新"],
+        talk: "性能优化的结果，是让 AI 真正能在业务现场使用。"
+      },
+      {
+        no: "34", chapter: "ops", title: "可靠性设计", source: "可靠性设计覆盖限流降级、多租户隔离和审计追踪。",
+        explain: "可靠性设计解决三个问题：流量太大怎么办、不同客户/租户如何隔离、出了问题如何追溯。",
+        scene: "多家客户同时使用 AI 问数时，系统要限制单用户 QPS；客户 A 的合同和回款数据不能被客户 B 查到；每次 SQL 和 LLM 调用都要有日志。",
+        flow: ["限流", "降级", "租户隔离", "审计日志"],
+        talk: "可靠性不是后台细节，而是企业敢不敢把 AI 接进核心数据的前提。"
+      },
+      {
+        no: "35", chapter: "ops", title: "总结：贯穿始终的工程模式", source: "平台能力背后由策略+模板方法、三级缓存、Source of Truth、向量+LLM、ReAct、DAG、声明式存储和组合模式共同支撑。",
+        explain: "平台不是堆功能，而是用一组工程模式保证能力可扩展、数据一致、记忆准确、流程可编排。",
+        scene: "业财体系里，这些模式对应真实价值：Skill 可切换、合同口径有权威源、记忆不会误合并、问数流程可追踪、数字员工可组合。",
+        flow: ["可扩展", "一致性", "语义判断", "流程编排", "能力组合"],
+        talk: "工程模式的价值，是把 AI 从一次性能力变成长期可运营的平台。"
+      },
+      {
+        no: "36", chapter: "ops", title: "总结：经营智能闭环", source: "整套平台最终回到企业经营价值：让数据可问、原因可追、动作可执行。",
+        explain: "AI 平台的目的不是增加一个工具入口，而是把经营数据、分析判断和业务动作放进同一个可治理闭环。",
+        scene: "对于电商内容运营公司的业财一体化系统，最终目标是让管理层直接追问：利润为什么变动、回款风险在哪里、哪个团队产出低、哪个项目成本超预算。",
+        flow: ["可信数据", "智能问数", "风险预警", "自动流程"],
+        talk: "TaiChu AI 与业财体系结合后，形成的是一套可追踪、可解释、可行动的经营智能体系。"
+      }
+    ];
+
+    function pd(title, intro, steps, actions) {
+      return {
+        type: "process",
+        title,
+        intro,
+        steps: steps.map(step => ({ title: step[0], action: step[1], data: step[2] })),
+        actions: actions.map(action => ({ title: action[0], text: action[1] }))
+      };
+    }
+
+    function dd(title, intro, rows) {
+      return {
+        type: "decision",
+        title,
+        intro,
+        rows: rows.map(row => ({
+          trigger: row[0],
+          routes: row[1].map(route => ({ title: route[0], text: route[1] }))
+        }))
+      };
+    }
+
+    const deepDives = {
+      "03": pd("企业级 AI 落地流程", "从客户视角看，企业级 AI 不是先买模型，而是先把业务数据、权限、工具和流程接到一起。", [
+        ["01 明确经营问题", "先选择高频问题", "例如月度经营复盘、项目毛利异常、年框预算消耗、回款风险和团队人效。"],
+        ["02 对齐业务口径", "定义数据怎么算", "明确收入用对账金额还是合同金额，成本是否含薪酬、外包和费用。"],
+        ["03 接入系统数据", "连接 CRM、PM、HR、FM", "让 AI 能读取客户合同、项目产出、薪酬成本、应收回款等可信数据。"],
+        ["04 编排执行流程", "把问数变成动作", "将查询、分析、预警、复盘、催收和人工确认串成可审计流程。"]
+      ], [
+        ["客户价值", "AI 回答来自真实经营链路，不是凭空生成。"],
+        ["落地重点", "先选 3-5 个高频经营问题做闭环，再逐步扩展。"],
+        ["风险控制", "每次查询和动作都要有权限、日志和人工兜底。"]
+      ]),
+      "04": dd("四个工程矛盾如何在业财里暴露", "每个矛盾都对应客户能感知的管理问题，需要用平台化方式一次性治理。", [
+        ["能力碎片化", [["表现", "对账、薪酬、问数、回款提醒各自独立，口径容易不一致。"], ["平台拆解", "把查询、计算、报表、提醒封装成可复用 Skill。"], ["业财落点", "同一个毛利口径同时服务经营驾驶舱、AI 问数和月度复盘。"]]],
+        ["记忆断裂", [["表现", "每次都要重复解释客户结算规则和财务口径。"], ["平台拆解", "用记忆引擎沉淀客户规则、项目 SOP 和历史复盘。"], ["业财落点", "AI 回答自动带入客户对账口径、薪酬规则和管理层偏好。"]]],
+        ["安全不可控", [["表现", "AI 一旦能查财务数据，就必须限制范围和留痕。"], ["平台拆解", "权限、脱敏、SQL 审计、沙箱和限流共同控制风险。"], ["业财落点", "普通项目成员看不到全公司利润，财务和老板权限不同。"]]],
+        ["协作孤岛", [["表现", "发现问题后还要人工拉群、查数、做复盘。"], ["平台拆解", "用工作流和数字员工把发现、分析、推送、确认串起来。"], ["业财落点", "低毛利自动生成复盘任务，应收逾期自动提醒责任人。"]]]
+      ]),
+      "05": pd("四层架构如何承接业财闭环", "四层架构不是技术堆叠，而是把业务角色、标准工具、长期记忆和安全边界分清楚。", [
+        ["01 数字员工层", "定义业务角色", "经营复盘、对账、回款预警、薪酬核算等场景各有对应数字员工。"],
+        ["02 工作流引擎", "串联业务动作", "定时触发、查数、分析、判断风险、推送消息、转人工确认。"],
+        ["03 Skill 与记忆", "提供工具和经验", "Skill 负责查数和执行，记忆负责客户规则、财务口径和历史复盘。"],
+        ["04 安全沙箱", "控制执行边界", "限制 SQL、代码、外部接口和敏感字段，保留审计日志。"]
+      ], [
+        ["讲给客户", "上层看到的是数字员工，底层保障的是工具、记忆、流程和安全。"],
+        ["业财例子", "月度经营复盘数字员工会调用问数、图表、记忆、推送和审批能力。"],
+        ["落地收益", "把一次性问答升级为可长期运行的经营流程。"]
+      ]),
+      "06": pd("Skill 治理落地流程", "Skill 治理把 AI 的能力从个人脚本变成企业资产，适合沉淀业财系统里的高频动作。", [
+        ["01 识别高频动作", "找到可复用能力", "如项目毛利计算、月度对账生成、逾期应收查询、员工产出统计。"],
+        ["02 封装输入输出", "定义工具边界", "明确需要哪些字段、返回什么结果、适用哪些角色和权限。"],
+        ["03 审核发布版本", "进入生命周期管理", "通过草稿、审核、发布、下线和版本更新控制能力质量。"],
+        ["04 Agent 调用执行", "进入业务流程", "数字员工在问数、预警、复盘和简报流程中按需调用。"]
+      ], [
+        ["客户价值", "每个 AI 动作都有标准能力来源，不靠临时发挥。"],
+        ["业财落点", "对账、毛利、人效、回款等能力都能统一复用。"],
+        ["扩展方式", "后续新增行业数据查询或文档解析时，不影响既有流程。"]
+      ]),
+      "07": pd("Skill Registry 设计拆解", "注册中心解决的是能力在哪里、怎么找、怎么换、怎么保持稳定的问题。", [
+        ["01 能力登记", "记录 Skill 元信息", "包括名称、版本、权限、输入输出、适用场景和调用地址。"],
+        ["02 统一校验", "发布前检查规则", "检查参数、权限、版本、依赖和是否允许访问敏感数据。"],
+        ["03 存储适配", "屏蔽底层差异", "本地文件、数据库、Nacos 等实现都走同一套业务接口。"],
+        ["04 调用缓存", "提高运行稳定性", "常用能力优先本地读取，远程异常时仍能保障核心场景。"]
+      ], [
+        ["业财例子", "薪酬计算 Skill 从本地迁到配置中心，业务侧调用方式不变。"],
+        ["客户价值", "能力升级不打断日常对账、问数和经营复盘。"],
+        ["管理重点", "注册中心要记录每个能力的责任人、版本和权限范围。"]
+      ]),
+      "08": pd("策略模式 + 模板方法如何降低扩展成本", "这页适合用“统一流程 + 可替换实现”来讲，客户不需要懂代码，也能理解为什么系统后续好扩展。", [
+        ["01 固定公共流程", "抽出不变步骤", "能力注册、校验、发布、缓存刷新、日志记录都保持统一。"],
+        ["02 替换差异实现", "按环境选择策略", "本地、Nacos、MySQL 或云端注册中心只负责自己的读写方式。"],
+        ["03 控制业务规则", "避免复制粘贴", "新增存储方式不用重写整套流程，减少规则遗漏。"],
+        ["04 持续扩展能力", "支持多环境部署", "私有化、本地部署、云端部署可以共享同一套 Skill 管理逻辑。"]
+      ], [
+        ["业财例子", "不同客户部署环境不同，但对账 Skill、毛利 Skill 的业务规则一致。"],
+        ["客户价值", "系统可扩展，升级和迁移成本更低。"],
+        ["讲解重点", "变的是底层存储，不变的是企业能力治理流程。"]
+      ]),
+      "09": pd("Skill 生命周期状态机", "企业级 AI 能力必须像业务制度一样管理，不能未经审核就直接上线。", [
+        ["01 草稿", "业务或实施人员配置能力", "先定义用途、数据范围、输入输出和责任人。"],
+        ["02 审核", "检查权限和质量", "确认是否能访问财务数据、是否会触发外部消息、是否需要人工确认。"],
+        ["03 发布", "进入可调用状态", "经营问数、对账、回款提醒等流程可以正式调用该 Skill。"],
+        ["04 下线/更新", "控制风险和版本", "规则变化、客户口径变化或能力异常时，可下线或发布新版。"]
+      ], [
+        ["业财例子", "催收提醒 Skill 涉及客户联系人和应收账龄，必须审核后才能上线。"],
+        ["客户价值", "AI 能力上线有流程、有责任人、有版本记录。"],
+        ["风险兜底", "高风险 Skill 可设置强制人工确认。"]
+      ]),
+      "10": pd("三级缓存怎么保障 AI 响应速度", "缓存不是后台细节，它直接影响客户问数时等不等得起。", [
+        ["01 L1 启动缓存", "预加载高频 Skill", "收入查询、成本分析、对账生成、回款预警等能力开机即就绪。"],
+        ["02 L2 按需安装", "用户需要时拉取", "新增供应商对比、预算预测等能力，不必一次性全部加载。"],
+        ["03 L3 定时轮询", "后台检查更新", "客户规则或能力版本更新后，系统自动同步到本地。"],
+        ["04 降级使用", "远程异常时不中断", "远程中心短暂不可用时，核心问数能力仍可使用缓存版本。"]
+      ], [
+        ["业财例子", "经营会上连续追问利润、回款、人效时，常用 Skill 必须秒级响应。"],
+        ["客户价值", "快、稳、成本可控。"],
+        ["管理重点", "缓存要配合版本号和过期策略，避免使用旧规则。"]
+      ]),
+      "11": pd("三级缓存核心运行链路", "这一页可以继续拆成“启动、安装、巡检、修复”四个动作。", [
+        ["01 启动加载", "加载基础能力", "系统启动时把常用业财 Skill 读入本地，提高首次调用速度。"],
+        ["02 按需安装", "加载新增能力", "当客户启用预算监控或供应商对比时，再安装对应 Skill。"],
+        ["03 后台巡检", "发现版本变化", "定时检查配置中心是否有新版本、下线标记或权限变化。"],
+        ["04 本地修复", "同步差异", "如果本地缓存落后，自动刷新，保证 AI 调用的是可用版本。"]
+      ], [
+        ["业财例子", "客户临时上线“年框预算预警”，系统只安装相关能力，不拖慢其他功能。"],
+        ["客户价值", "能力可扩展但系统不臃肿。"],
+        ["讲解重点", "缓存不是偷懒保存旧数据，而是有巡检和修复机制。"]
+      ]),
+      "12": pd("双写一致性如何保证规则正确", "对 AI 来说，速度重要，但口径正确更重要。双写一致性用权威源和本地读取得到平衡。", [
+        ["01 权威源写入", "配置中心保存标准规则", "Skill 版本、客户口径、权限范围以权威源为准。"],
+        ["02 本地库读取", "保障高频响应", "Agent 调用时优先读本地，提高问数和流程执行速度。"],
+        ["03 定时比对", "发现差异", "后台比较权威源与本地库，识别版本落后或配置缺失。"],
+        ["04 自动修复", "同步最新口径", "把变化写回本地，必要时通知相关流程重新加载。"]
+      ], [
+        ["业财例子", "客户 KPI 或对账口径调整后，本地 Skill 必须同步，否则 AI 会按旧规则算收入。"],
+        ["客户价值", "回答快，同时口径不跑偏。"],
+        ["风险控制", "关键规则变更要保留审计记录。"]
+      ])
+    };
+
+    Object.assign(deepDives, {
+      "13": pd("记忆引擎如何接入业财场景", "记忆引擎要让 AI 记住业务规则，而不是记住一堆聊天片段。", [
+        ["01 捕捉业务事实", "从对话和系统事件中抽取", "客户结算口径、项目 SOP、薪酬规则、财务确认口径都会被识别。"],
+        ["02 分类入库", "按业务类型归档", "客户实体、合同规则、复盘案例、固定周期动作分别进入不同记忆类别。"],
+        ["03 检索相关记忆", "问数前先找背景", "当询问某客户利润时，先找到该客户的结算规则和历史复盘。"],
+        ["04 注入上下文", "辅助模型回答", "AI 回答时带上正确口径，减少反复解释和口径偏差。"]
+      ], [
+        ["业财例子", "客户只接受已验收视频进入对账，AI 计算收入时会自动排除草稿产出。"],
+        ["客户价值", "AI 越用越懂企业规则。"],
+        ["落地重点", "只沉淀稳定规则和高价值复盘，不把临时闲聊都写入长期记忆。"]
+      ]),
+      "14": dd("记忆该记什么、怎么存、怎么用", "记忆设计要控制边界，避免越记越乱。", [
+        ["记住什么", [["客户规则", "合同结算口径、验收口径、开票要求和特殊沟通偏好。"], ["经营规律", "低毛利原因、回款风险模式、团队产能瓶颈。"], ["不要记什么", "临时情绪、无业务价值闲聊、敏感个人信息。"]]],
+        ["怎么存", [["结构化摘要", "用简短摘要做快速匹配。"], ["详细记录", "保留规则来源、适用对象和更新时间。"], ["分类管理", "客户、项目、制度、案例、工具分开管理。"]]],
+        ["怎么用", [["问数前检索", "先找相关客户、项目和口径。"], ["回答时引用", "把关键规则放进上下文。"], ["动作后更新", "复盘确认后的新规则再沉淀回记忆。"]]]
+      ]),
+      "15": pd("三级记忆体系运行流程", "三级记忆把“快”和“准”分开处理，先快速定位，再深入理解。", [
+        ["01 L0 摘要", "一句话快速匹配", "例如“美的项目按季度包结算”。"],
+        ["02 L1 概览", "判断是否相关", "记录客户、合同、结算方式、适用时间和关键约束。"],
+        ["03 L2 详情", "支撑复杂解释", "保留历史复盘、成本分析、对账确认和沟通记录。"],
+        ["04 回答注入", "按问题深度取用", "简单问数用 L0/L1，复杂归因再读取 L2。"]
+      ], [
+        ["业财例子", "问“为什么这个项目利润低”时，AI 会从摘要定位客户，再读历史成本复盘。"],
+        ["客户价值", "回答既快，又能在关键问题上讲清原因。"],
+        ["成本控制", "不把所有历史原文都塞给模型。"]
+      ]),
+      "16": dd("记忆去重如何避免业务规则误合并", "相似文本不等于相同规则，尤其在对账和结算口径里。", [
+        ["发现相似记忆", [["向量检索", "先找到看起来相近的客户规则或历史记录。"], ["候选比较", "把新旧内容放在一起判断。"], ["风险提示", "涉及否定、金额、时间、客户主体时提高谨慎等级。"]]],
+        ["LLM 语义判断", [["SKIP", "完全重复则跳过。"], ["CREATE", "新客户、新规则或相反含义则新建。"], ["MERGE", "同一规则补充细节时合并。"]]],
+        ["落回业财使用", [["对账规则", "避免把“按月对账”和“不接受按月对账”合并。"], ["薪酬规则", "避免把不同岗位系数混用。"], ["客户口径", "避免集团客户与子公司规则串台。"]]]
+      ]),
+      "17": pd("10 维记忆如何映射到业财数据", "记忆分类的目的，是让 AI 知道不同信息应该放在哪里、何时调用。", [
+        ["01 主体与关系", "ENTITIES / PROFILE", "客户集团、子公司、项目、人员、岗位和供应商。"],
+        ["02 规则与偏好", "PREFERENCES / PATTERNS", "客户结算习惯、管理层关注指标、每月对账周期。"],
+        ["03 事件与案例", "EVENTS / CASES", "月度经营会、低毛利复盘、逾期回款处理记录。"],
+        ["04 工具与能力", "TOOLS / SKILLS", "毛利计算、对账生成、回款预警、经营简报生成能力。"]
+      ], [
+        ["业财例子", "低毛利项目复盘属于 CASES，客户结算主体属于 ENTITIES。"],
+        ["客户价值", "AI 检索记忆时更精准，不会把规则、事件和工具混在一起。"],
+        ["落地重点", "记忆分类要和 CRM、PM、HR、FM 的业务对象对齐。"]
+      ]),
+      "18": pd("ReAct 记忆提取循环", "ReAct 的价值是让 AI 先看、再判断、最后结构化写入。", [
+        ["01 Browse", "先浏览相关记忆", "查看是否已有客户、项目或制度相关记录。"],
+        ["02 Read", "读取关键详情", "确认旧规则的适用范围、更新时间和来源。"],
+        ["03 Decide", "判断写入动作", "选择跳过、新建、合并或更新。"],
+        ["04 Write", "输出结构化指令", "把确认后的规则写入指定记忆类别，并保留来源。"]
+      ], [
+        ["业财例子", "项目经理更新客户验收口径，AI 先查旧规则再决定是合并还是新建。"],
+        ["客户价值", "减少重复记忆和错误覆盖。"],
+        ["风险控制", "重要财务口径更新应进入人工确认。"]
+      ]),
+      "19": pd("会话压缩如何支持连续追问", "经营问数经常会连续追问，压缩机制保证上下文不断线。", [
+        ["01 保留最近原文", "保留最新问题和回答", "让 AI 准确理解当前追问指向。"],
+        ["02 压缩历史结论", "把前面讨论变成摘要", "收入、成本、回款、人效等阶段性结论被压缩保留。"],
+        ["03 注入关键变量", "保留口径和筛选条件", "客户、月份、项目范围、指标口径继续沿用。"],
+        ["04 继续下钻", "支持多轮分析", "从公司整体追问到客户、项目、人员和成本项。"]
+      ], [
+        ["业财例子", "先问本月利润，再追问低毛利客户、再追问具体项目，系统保持同一分析上下文。"],
+        ["客户价值", "连续追问自然，成本也可控。"],
+        ["落地重点", "压缩摘要要保留业务口径，不能只保留闲聊式摘要。"]
+      ]),
+      "20": pd("Data Agent 经营问数主链路", "Data Agent 是把一句经营问题变成可信数据分析的核心。", [
+        ["01 接收问题", "理解自然语言", "识别用户问的是收入、成本、利润、回款、人效还是风险。"],
+        ["02 确认口径", "匹配业务定义", "判断收入用对账收入、合同金额、已回款金额还是利润口径。"],
+        ["03 查询分析", "生成 SQL 并执行", "连接 CRM、PM、HR、FM 数据，做统计、排行和趋势分析。"],
+        ["04 输出报告", "给出答案和动作", "生成图表、异常归因、建议动作和可追溯数据来源。"]
+      ], [
+        ["业财例子", "问“哪些项目毛利异常”，系统同时查合同单价、产出、薪酬、成本和对账。"],
+        ["客户价值", "管理层不需要找表、等人统计或写 SQL。"],
+        ["风险控制", "每次问数都要经过权限和 SQL 审计。"]
+      ]),
+      "21": pd("Data Agent 六步拆解", "问数的难点不是回答文字，而是把问题转成正确数据口径。", [
+        ["01 理解意图", "识别业务问题", "判断是查结果、找原因、看趋势还是要建议动作。"],
+        ["02 生成 SQL", "匹配表与字段", "从客户、项目、产出、薪酬、对账、回款表中选择数据。"],
+        ["03 执行查询", "权限和超时控制", "只查用户有权访问的数据，并限制高风险查询。"],
+        ["04 分析输出", "生成图表和报告", "输出趋势、排行、对比、异常解释和下一步建议。"]
+      ], [
+        ["业财例子", "“销售趋势”要先确认是合同额、对账收入还是回款金额。"],
+        ["客户价值", "避免看似聪明但口径错误的答案。"],
+        ["落地重点", "高频问题应预置指标口径和字段映射。"]
+      ]),
+      "22": pd("图编排流水线如何运行", "DAG 让 AI 分析过程可拆、可控、可复盘。", [
+        ["01 Start", "接收用户问题或定时触发", "例如每周自动检查回款风险。"],
+        ["02 Intent / NL2SQL", "识别意图并生成查询", "把“哪些客户回款风险高”转成账龄、开票、回款查询。"],
+        ["03 Analyze / Chart", "统计分析并生成图表", "输出风险排行、账龄分布和责任人清单。"],
+        ["04 Report / Action", "生成报告和动作", "推送提醒、生成催收建议或转人工确认。"]
+      ], [
+        ["业财例子", "回款风险问数可以被编排成固定 DAG，每次按同一标准分析。"],
+        ["客户价值", "分析过程透明，可复查每一步。"],
+        ["扩展能力", "后续可在 DAG 中加入预算预测、利润归因或知识库解释节点。"]
+      ]),
+      "23": pd("Data Agent 安全机制", "能查真实经营数据的 AI，安全机制要内置在每一步。", [
+        ["01 权限控制", "先判断能不能查", "按角色、部门、客户、项目限制数据范围。"],
+        ["02 SQL 审计", "记录查了什么", "保留查询语句、数据源、执行时间和调用人。"],
+        ["03 结果脱敏", "保护敏感字段", "手机号、银行卡、身份证、薪酬明细按权限脱敏。"],
+        ["04 沙箱与超时", "限制代码和资源", "Python 分析在沙箱运行，避免危险操作和长时间占用。"]
+      ], [
+        ["业财例子", "老板可看公司利润，项目成员只能看自己项目进度和交付数据。"],
+        ["客户价值", "AI 可以接入核心数据，但不突破管理边界。"],
+        ["落地重点", "权限模型要和 CRM、PM、HR、FM 保持一致。"]
+      ]),
+      "24": pd("数字员工如何成为业务角色", "数字员工不是一个聊天入口，而是一组可分工的业务角色。", [
+        ["01 定义角色", "确定职责边界", "经营复盘、对账、回款预警、薪酬核算各自负责不同任务。"],
+        ["02 配置能力", "绑定 Skill 和数据源", "不同员工调用不同查询、计算、报表和提醒能力。"],
+        ["03 注入记忆", "带上业务经验", "读取客户规则、历史复盘、财务口径和团队偏好。"],
+        ["04 接入工作流", "执行端到端任务", "从触发、分析、判断到推送、确认形成闭环。"]
+      ], [
+        ["业财例子", "对账数字员工负责拉取产出、生成对账单、提交财务复核。"],
+        ["客户价值", "AI 从工具变成可分工的业务助手。"],
+        ["管理重点", "每个数字员工都要有权限、责任和人工兜底。"]
+      ]),
+      "25": pd("数字员工核心公式拆解", "Agent、Skill、Workflow、Memory 四者缺一不可。", [
+        ["01 Agent", "负责理解和决策", "理解经营问题、判断下一步该调用什么能力。"],
+        ["02 Skill", "负责具体执行", "查数、计算毛利、生成对账单、发送提醒。"],
+        ["03 Workflow", "负责流程秩序", "规定先查什么、再分析什么、何时转人工。"],
+        ["04 Memory", "负责业务经验", "带上客户口径、制度规则和历史处理方式。"]
+      ], [
+        ["业财例子", "回款预警员工 = Agent 判断风险 + Skill 查账龄 + Workflow 推送提醒 + Memory 读取客户历史回款习惯。"],
+        ["客户价值", "既能自动化，又不会脱离企业规则。"],
+        ["讲解重点", "数字员工不是替代人，而是接管重复跨系统动作。"]
+      ]),
+      "26": pd("四类数字员工映射到业财岗位", "同一平台底座可以长出不同岗位型 Agent。", [
+        ["01 财务员工", "收入、成本、对账、回款", "生成对账单、识别逾期应收、输出利润分析。"],
+        ["02 运营员工", "项目、内容、产出、风险", "监控项目进度、内容产出、返工和交付风险。"],
+        ["03 会议员工", "纪要、待办、复盘", "生成经营会纪要、跟踪待办、推送复盘结论。"],
+        ["04 招聘员工", "岗位、简历、能力匹配", "辅助内容团队招聘、筛选候选人和沉淀岗位要求。"]
+      ], [
+        ["业财例子", "财务员工和运营员工协作定位低毛利原因。"],
+        ["客户价值", "不是一个万能机器人，而是一组专业角色。"],
+        ["落地建议", "先从财务和经营复盘两个高价值角色开始。"]
+      ]),
+      "27": pd("多数字员工协作流程", "复杂经营问题通常需要多个 Agent 接力，而不是一个 Agent 全包。", [
+        ["01 发现异常", "运营 Agent 监控指标", "发现某客户发布量下降、项目延期或成本升高。"],
+        ["02 财务核对", "财务 Agent 查利润和回款", "确认是否影响对账、应收或项目毛利。"],
+        ["03 组织协同", "会议 Agent 安排复盘", "生成议题、拉取材料、形成待办。"],
+        ["04 人工确认", "负责人决定动作", "确认报价调整、排期优化、催收跟进或客户沟通。"]
+      ], [
+        ["业财例子", "低毛利预警由运营、财务、会议三个数字员工协作处理。"],
+        ["客户价值", "从发现问题到推动处理，不再断在某个部门。"],
+        ["风险控制", "关键经营决策仍由负责人确认。"]
+      ]),
+      "28": dd("人机协作四模式如何选择", "不同风险等级，适合不同自动化深度。", [
+        ["AI 辅助", [["适用", "高风险或需要判断的事项。"], ["业财例子", "回款催收建议、报价调整建议。"], ["人工角色", "人决定是否执行。"]]],
+        ["AI 执行", [["适用", "低风险、规则清晰的重复任务。"], ["业财例子", "生成日报、汇总产出、生成经营简报草稿。"], ["人工角色", "抽查结果质量。"]]],
+        ["AI 代理", [["适用", "固定时间、固定规则的流程。"], ["业财例子", "每周自动检查应收账龄并提醒责任人。"], ["人工角色", "设置阈值和例外规则。"]]],
+        ["人机共创", [["适用", "复杂分析和经营策略。"], ["业财例子", "年度经营策略、团队配置、客户续签策略。"], ["人工角色", "和 AI 持续追问、共同形成结论。"]]]
+      ]),
+      "29": pd("工作流引擎如何承载经营流程", "工作流让 AI 从回答问题变成按企业流程持续办事。", [
+        ["01 触发", "用户提问或系统定时", "例如每月 5 号自动生成经营复盘。"],
+        ["02 查数", "NL2SQL / Database", "查询收入、成本、项目、薪酬、回款和人效数据。"],
+        ["03 分析", "LLM / Python", "生成图表、异常归因和建议动作。"],
+        ["04 分支与推送", "Condition / HTTP", "根据风险等级推送简报、提醒或转人工确认。"]
+      ], [
+        ["业财例子", "月度经营复盘流程可自动查数、生成报告、推送管理层。"],
+        ["客户价值", "流程稳定重复执行，不靠人每次手工组织。"],
+        ["落地重点", "条件分支和人工确认决定流程是否安全。"]
+      ]),
+      "30": pd("变量插值如何让节点连起来", "变量插值让工作流不是一堆孤立节点，而是一条数据链。", [
+        ["01 接收变量", "start_node.user_query", "保存用户问题或定时任务参数。"],
+        ["02 查询变量", "nl2sql_1.result", "把 SQL 查询结果传给后续分析节点。"],
+        ["03 报告变量", "llm_report.output", "把分析报告传给推送、审批或归档节点。"],
+        ["04 动作变量", "risk_level / owner", "根据风险等级和责任人决定下一步动作。"]
+      ], [
+        ["业财例子", "利润分析结果传给 LLM 生成报告，再传给消息节点推送老板。"],
+        ["客户价值", "每一步结果都能被后续流程复用。"],
+        ["风险控制", "变量要明确来源，避免用错节点结果。"]
+      ]),
+      "31": dd("条件分支如何保证自动化不过界", "条件分支决定哪些事情自动做，哪些事情必须转人工。", [
+        ["回款风险判断", [["正常", "只记录观察，不打扰管理层。"], ["临期", "提醒客户经理跟进。"], ["逾期高金额", "推送管理层并生成催收建议。"]]],
+        ["毛利风险判断", [["轻微偏低", "进入项目观察清单。"], ["明显偏低", "自动生成毛利归因报告。"], ["数据不完整", "转财务确认成本口径。"]]],
+        ["AI 置信度判断", [["高置信度", "自动生成报告或提醒。"], ["中置信度", "标注待确认。"], ["低置信度", "暂停动作并转人工。"]]]
+      ]),
+      "32": pd("生产环境保障拆解", "企业级 AI 真正上线后，稳定性比试用效果更重要。", [
+        ["01 性能", "响应速度可控", "Skill 加载、记忆检索、SQL 查询和报告生成都要有指标。"],
+        ["02 可靠性", "异常可降级", "模型、数据库或外部服务异常时，核心业务不能被拖垮。"],
+        ["03 隔离", "租户和权限隔离", "不同客户、部门、角色的数据边界必须清晰。"],
+        ["04 审计", "全过程留痕", "每次问数、工具调用、SQL 和推送动作都可追溯。"]
+      ], [
+        ["业财例子", "经营会上问数不能卡顿，更不能查错权限或给出无来源答案。"],
+        ["客户价值", "企业敢把 AI 放进核心经营流程。"],
+        ["落地重点", "上线前定义 SLA、限流、降级和审计策略。"]
+      ]),
+      "33": pd("性能指标对应客户体验", "性能指标要转化为客户能感知的体验，而不只是工程数字。", [
+        ["01 Skill 加载", "决定工具启动速度", "常用问数能力应接近即时可用。"],
+        ["02 Token 消耗", "决定成本和上下文长度", "压缩记忆和摘要，降低连续追问成本。"],
+        ["03 记忆检索", "决定是否懂业务背景", "快速找到客户规则、项目复盘和财务口径。"],
+        ["04 更新延迟", "决定规则生效速度", "客户口径或 Skill 版本变化后尽快同步。"]
+      ], [
+        ["业财例子", "老板在经营会上追问利润原因，系统要几秒内返回趋势和归因。"],
+        ["客户价值", "快、准、成本可控。"],
+        ["管理重点", "指标要监控趋势，而不是只看单次表现。"]
+      ]),
+      "34": pd("可靠性设计如何让客户放心", "可靠性不是后台细节，而是核心经营数据能否接入 AI 的前提。", [
+        ["01 限流", "控制调用频率", "防止单用户或异常任务拖慢系统。"],
+        ["02 降级", "异常时保留核心能力", "模型异常时可返回缓存报表或提示人工处理。"],
+        ["03 多租户隔离", "客户与部门数据隔离", "客户 A 的合同和回款不会被客户 B 查询到。"],
+        ["04 审计追踪", "问题可回溯", "定位谁在何时查了什么、调用了哪个能力。"]
+      ], [
+        ["业财例子", "财务问数、老板问数、项目成员查询要走不同权限和审计路径。"],
+        ["客户价值", "AI 接入核心数据后依然可控。"],
+        ["落地重点", "可靠性规则应和企业组织、角色、租户模型一致。"]
+      ]),
+      "35": pd("工程模式如何服务业务价值", "这些工程模式最终都要落到可扩展、口径一致、流程可控上。", [
+        ["01 策略 + 模板", "保证扩展不失控", "多注册中心、多部署环境共享统一业务流程。"],
+        ["02 Source of Truth", "保证口径一致", "合同、客户规则、财务口径有权威来源。"],
+        ["03 向量 + LLM / ReAct", "保证语义判断", "记忆去重、规则合并、上下文提取更准确。"],
+        ["04 DAG / 组合模式", "保证流程编排", "问数、分析、预警、复盘和推送可以组合成数字员工。"]
+      ], [
+        ["业财例子", "同一个毛利口径用于驾驶舱、AI 问数、经营简报和复盘流程。"],
+        ["客户价值", "AI 能力长期可运营，而不是一次性项目。"],
+        ["讲解重点", "工程模式的目的，是让业务规则可复制、可治理、可追踪。"]
+      ]),
+      "36": pd("经营智能闭环最终形态", "最后要让客户看到：Agent 平台不是技术展示，而是经营管理方式升级。", [
+        ["01 数据可信", "业务动作沉淀为底账", "客户、合同、项目、产出、薪酬、成本、对账、回款和利润统一。"],
+        ["02 AI 可问", "管理层随时追问", "收入、成本、利润、回款、人效和风险都可自然语言查询。"],
+        ["03 原因可追", "从结果下钻到证据", "低毛利能追到单价、产出、成本、返工和对账。"],
+        ["04 动作可执行", "流程回到业务系统", "复盘、提醒、催收、预算预警和人工确认形成闭环。"]
+      ], [
+        ["客户价值", "从找数据、拼报表、解释原因，升级为随问随答、可追可行动。"],
+        ["业财落点", "CRM、PM、HR、FM 不再是四个系统，而是一条经营智能链路。"],
+        ["收束表达", "TaiChu AI 帮企业把 AI 放进可治理的经营闭环。"]
+      ])
+    });
+
+    const colorByChapter = {
+      challenge: ["var(--blue)", "var(--blue-soft)"],
+      skill: ["var(--orange)", "var(--orange-soft)"],
+      memory: ["var(--green)", "var(--green-soft)"],
+      data: ["var(--cyan)", "var(--cyan-soft)"],
+      workflow: ["var(--violet)", "var(--violet-soft)"],
+      ops: ["var(--red)", "var(--red-soft)"]
+    };
+
+    const chapterName = Object.fromEntries(chapters.map(c => [c.id, c.name]));
+
+    function renderChapters() {
+      const grid = document.getElementById("chapterGrid");
+      grid.innerHTML = chapters.map(ch => `
+        <a class="chapter-card" href="#page-${ch.no === "01" ? "01" : ch.range.split("-")[0]}" style="--accent:${ch.color}">
+          <small>${ch.no} · ${ch.range}</small>
+          <b>${ch.name}</b>
+          <span>企业级 Agent 能力路径</span>
+        </a>
+      `).join("");
+    }
+
+    function renderFilters() {
+      const filters = document.getElementById("filters");
+      filters.innerHTML = `<button type="button" aria-pressed="true" data-filter="all">全部</button>` +
+        chapters.map(ch => `<button type="button" aria-pressed="false" data-filter="${ch.id}">${ch.no}</button>`).join("");
+      filters.addEventListener("click", event => {
+        const button = event.target.closest("button[data-filter]");
+        if (!button) return;
+        document.querySelectorAll("[data-filter]").forEach(btn => btn.setAttribute("aria-pressed", "false"));
+        button.setAttribute("aria-pressed", "true");
+        applyFilters();
+      });
+    }
+
+    function renderToc() {
+      const toc = document.getElementById("toc");
+      toc.innerHTML = slides.map(slide => `
+        <a href="#page-${slide.no}">
+          <b>${slide.no}</b>
+          <span>${slide.title}</span>
+        </a>
+      `).join("");
+    }
+
+    function renderDefaultBody(slide) {
+      return `
+        <div class="slide-body">
+          <div class="explain">
+            <div class="block">
+              <span class="label">平台能力</span>
+              <p>${slide.source}</p>
+            </div>
+            <div class="block">
+              <span class="label">业务理解</span>
+              <p>${slide.explain}</p>
+            </div>
+            <div class="block">
+              <span class="label">关键链路</span>
+              <div class="mini-flow">${slide.flow.map(item => `<span>${item}</span>`).join("")}</div>
+            </div>
+          </div>
+          <div class="scenario">
+            <div class="scene-box">
+              <b>业财体系场景例子</b>
+              <p>${slide.scene}</p>
+              <div class="mini-flow">${slide.flow.map(item => `<span>${item}</span>`).join("")}</div>
+            </div>
+            <div class="talk"><b>客户价值：</b>${slide.talk}</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderProcessDetail(detail) {
+      return `
+        <div class="detail-flow" aria-label="${detail.title}">
+          <h4>${detail.title}</h4>
+          <p>${detail.intro}</p>
+          <div class="process-chain">
+            ${detail.steps.map(step => `
+              <div class="process-step">
+                <b>${step.title}</b>
+                <em>${step.action}</em>
+                <span>${step.data}</span>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderActionGrid(detail) {
+      if (detail.type !== "process" || !detail.actions?.length) return "";
+      return `
+        <div class="action-grid-inline">
+          ${detail.actions.map(action => `
+            <div>
+              <b>${action.title}</b>
+              <span>${action.text}</span>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderDecisionDetail(detail) {
+      return `
+        <div class="detail-flow" aria-label="${detail.title}">
+          <h4>${detail.title}</h4>
+          <p>${detail.intro}</p>
+          <div class="decision-flow">
+            ${detail.rows.map(row => `
+              <div class="decision-row">
+                <div class="trigger">${row.trigger}</div>
+                <div class="routes">
+                  ${row.routes.map(route => `
+                    <div>
+                      <b>${route.title}</b>
+                      <span>${route.text}</span>
+                    </div>
+                  `).join("")}
+                </div>
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderDetailBody(slide) {
+      const detail = slide.detail;
+      const detailHtml = detail.type === "process" ? renderProcessDetail(detail) : renderDecisionDetail(detail);
+      const actionHtml = renderActionGrid(detail);
+      return `
+        <div class="detail-layout">
+          <div class="detail-copy">
+            <div class="block">
+              <span class="label">平台能力</span>
+              <p>${slide.source}</p>
+            </div>
+            <div class="block">
+              <span class="label">业务理解</span>
+              <p>${slide.explain}</p>
+            </div>
+            <div class="block">
+              <span class="label">关键链路</span>
+              <div class="mini-flow">${slide.flow.map(item => `<span>${item}</span>`).join("")}</div>
+            </div>
+          </div>
+          <div class="detail-right">
+            ${detailHtml}
+            <div class="detail-side-grid">
+              <div class="scene-box">
+                <b>业财体系场景例子</b>
+                <p>${slide.scene}</p>
+                <div class="mini-flow">${slide.flow.map(item => `<span>${item}</span>`).join("")}</div>
+              </div>
+              <div class="talk"><b>客户价值：</b>${slide.talk}</div>
+            </div>
+            ${actionHtml}
+          </div>
+        </div>
+      `;
+    }
+
+    function detailSearchText(detail) {
+      if (!detail) return "";
+      if (detail.type === "process") {
+        return [
+          detail.title,
+          detail.intro,
+          ...detail.steps.flatMap(step => [step.title, step.action, step.data]),
+          ...detail.actions.flatMap(action => [action.title, action.text])
+        ].join(" ");
+      }
+      return [
+        detail.title,
+        detail.intro,
+        ...detail.rows.flatMap(row => [
+          row.trigger,
+          ...row.routes.flatMap(route => [route.title, route.text])
+        ])
+      ].join(" ");
+    }
+
+    function renderSlides() {
+      const list = document.getElementById("slideList");
+      list.innerHTML = slides.map(slide => {
+        const [accent, soft] = colorByChapter[slide.chapter];
+        const detail = slide.detail || deepDives[slide.no];
+        const detailText = detailSearchText(detail);
+        const richSlide = detail ? { ...slide, detail } : slide;
+        return `
+          <article class="slide-card ${detail ? "slide-card-detail" : ""}" id="page-${slide.no}" data-chapter="${slide.chapter}" data-search="${[slide.title, slide.source, slide.explain, slide.scene, slide.talk, slide.flow.join(" "), detailText].join(" ")}" style="--accent:${accent};--soft:${soft}">
+            <div class="slide-top">
+              <div class="page-no">${slide.no}</div>
+              <div class="slide-title">
+                <h3>${slide.title}</h3>
+                <p>${chapterName[slide.chapter]}</p>
+              </div>
+              <span class="tag">能力 ${slide.no}</span>
+            </div>
+            ${detail ? renderDetailBody(richSlide) : renderDefaultBody(slide)}
+          </article>
+        `;
+      }).join("");
+    }
+
+    function normalize(value) {
+      return String(value || "").toLowerCase().trim();
+    }
+
+    function applyFilters() {
+      const active = document.querySelector("[data-filter][aria-pressed='true']")?.dataset.filter || "all";
+      const query = normalize(document.getElementById("searchInput").value);
+      document.querySelectorAll(".slide-card").forEach(card => {
+        const chapterMatch = active === "all" || card.dataset.chapter === active;
+        const searchMatch = !query || normalize(card.dataset.search).includes(query);
+        card.hidden = !(chapterMatch && searchMatch);
+      });
+    }
+
+    function initSearch() {
+      const input = document.getElementById("searchInput");
+      input.addEventListener("input", applyFilters);
+    }
+
+    function initProgress() {
+      const progressBar = document.getElementById("progressBar");
+      const update = () => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+        progressBar.style.width = `${Math.min(100, Math.max(0, pct))}%`;
+      };
+      window.addEventListener("scroll", update, { passive: true });
+      window.addEventListener("resize", update);
+      update();
+    }
+
+    renderChapters();
+    renderFilters();
+    renderToc();
+    renderSlides();
+    initSearch();
+    initProgress();
+  </script>
+</body>
+</html>
