@@ -138,7 +138,7 @@ tbody tr:hover{background:#f8f9fb}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab-content{display:none}.tab-content.active{display:block}
 .sub-tab{padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-tertiary);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}.sub-tab.active{color:var(--text-primary);border-bottom-color:var(--text-primary)}
-.gantt-cell{width:56px;height:40px;flex-shrink:0;border-right:1px solid var(--border-light);position:relative;font-size:10px;color:var(--text-tertiary);text-align:center;padding-top:2px}.gantt-cell.conflict{background:#fff3cd}.gantt-bar{position:absolute;left:2px;right:2px;height:16px;border-radius:3px;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;cursor:pointer;z-index:1}.gantt-bar.model{background:var(--purple)}.gantt-bar.venue{background:var(--teal)}.gantt-bar.sample{background:var(--blue)}.gantt-bar.reserved{border:1px dashed;opacity:.6;background:transparent!important;color:var(--text-secondary)}.gantt-bar.completed{background:var(--border)!important;color:var(--text-tertiary)}.ba-dropdown{position:absolute;top:100%;right:0;z-index:999;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:200px;max-height:240px;overflow-y:auto}
+.gantt-cell{width:56px;height:40px;flex-shrink:0;border-right:1px solid var(--border-light);position:relative;font-size:10px;color:var(--text-tertiary);text-align:center;padding-top:2px}.gantt-cell.conflict{background:#fff3cd}.gantt-bar{position:absolute;left:2px;right:2px;height:16px;border-radius:3px;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;cursor:pointer;z-index:1}.gantt-bar.model{background:var(--purple)}.gantt-bar.venue{background:var(--teal)}.gantt-bar.sample{background:var(--blue)}.gantt-bar.reserved{border:1px dashed;opacity:.6;background:transparent!important;color:var(--text-secondary)}.gantt-bar.completed{background:#b0b0b0!important;color:#fff}.gantt-bar.in_progress{background:var(--amber)!important}.ba-dropdown{position:absolute;top:100%;right:0;z-index:999;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:200px;max-height:240px;overflow-y:auto}
 
 /* Pipeline Kanban */
 .pipe-section{margin-bottom:20px}
@@ -151,7 +151,7 @@ tbody tr:hover{background:#f8f9fb}
 .pipe-icon.edit{background:var(--teal-light);color:var(--teal)}
 .pipe-icon.pub{background:var(--amber-light);color:var(--amber)}
 .pipe-kanban{display:grid;gap:8px}
-.pipe-kanban.cols3{grid-template-columns:repeat(3,1fr)}
+.pipe-kanban.cols3{grid-template-columns:repeat(3,1fr)}.pipe-kanban.cols4{grid-template-columns:repeat(4,1fr)}
 .pipe-kanban.cols5{grid-template-columns:repeat(5,1fr)}
 .kanban-col{background:#f8f9fb;border-radius:var(--radius-sm);padding:8px}
 .kanban-col-header{font-size:10px;font-weight:700;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;display:flex;align-items:center;gap:4px}
@@ -636,7 +636,8 @@ tbody tr:hover{background:#f8f9fb}
 <!-- Stage 2: Shooting -->
 <div class="pipe-section">
   <div class="pipe-header"><div class="pipe-icon shoot">摄</div><div class="pipe-header title">📹 拍摄（Shooting）</div></div>
-  <div class="pipe-kanban cols3">
+  <div class="pipe-kanban cols4">
+    <div class="kanban-col"><div class="kanban-col-header">待排期 <span class="kanban-count" id="sh-await">0</span></div><div id="sh-await-cards"></div></div>
     <div class="kanban-col"><div class="kanban-col-header">待分配 <span class="kanban-count" id="sh-pending">2</span></div><div id="sh-pending-cards"></div></div>
     <div class="kanban-col"><div class="kanban-col-header">进行中 <span class="kanban-count" id="sh-ip">5</span></div><div id="sh-ip-cards"></div></div>
     <div class="kanban-col"><div class="kanban-col-header">已完成待剪辑 <span class="kanban-count" id="sh-done">5</span></div><div id="sh-done-cards"></div></div>
@@ -941,6 +942,22 @@ tbody tr:hover{background:#f8f9fb}
   <div class="modal-footer">
     <button class="btn btn-secondary" onclick="closeModal('modal-schedule')">取消</button>
     <button class="btn btn-primary" onclick="confirmSchedule()">确认排期</button>
+  </div>
+</div></div>
+
+<!-- Schedule Delete Confirm Modal -->
+<div class="modal-overlay" id="modal-sch-delete"><div class="modal">
+  <div class="modal-header"><div class="modal-title">确认删除排期</div><button class="drawer-close" onclick="closeModal('modal-sch-delete')">✕</button></div>
+  <div class="modal-body" style="display:flex;flex-direction:column;gap:10px">
+    <div style="font-size:13px">确认删除以下排期？</div>
+    <div id="sch-del-info" style="padding:10px 12px;background:var(--bg-input);border-radius:6px;font-size:12px"></div>
+    <div style="padding:8px 12px;background:var(--accent-light);border-radius:6px;font-size:11px;color:var(--text-secondary)">
+      ⚠️ 删除后排期色条将从甘特图中移除。关联资源的该时段将被释放，可供其他批次排期。该批次的资源分配不受影响。
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" onclick="closeModal('modal-sch-delete')">取消</button>
+    <button class="btn btn-primary" style="background:var(--red);border-color:var(--red)" onclick="confirmSchDelete()">确认删除</button>
   </div>
 </div></div>
 
@@ -3070,6 +3087,12 @@ const batchData=[
     script:15,shooting:15,editing:15,published:15,
     items:Array.from({length:10},()=>['✅完成','✅完成','✅完成','📎已上线'])},
   {label:'PJ-2026-001-B021',model:'JM1',ctype:'商品讲解',qty:30,created:'2026-06-08 09:00',creator:'赵六',status:'draft',script:0,shooting:0,editing:0,published:0,items:[]},
+  {label:'PJ-2026-001-B022',model:'白泽1200Pro',ctype:'攻略测评',qty:25,created:'2026-06-10 13:00',creator:'赵六',status:'submitted',
+    script:25,shooting:0,editing:0,published:0,
+    items:Array.from({length:10},()=>['✅完成','⏳待分配','⏳待开始','⏳待开始'])},
+  {label:'PJ-2026-001-B023',model:'Q325',ctype:'产品展示',qty:20,created:'2026-06-09 10:30',creator:'钱七',status:'submitted',
+    script:20,shooting:0,editing:0,published:0,
+    items:Array.from({length:10},()=>['✅完成','⏳待分配','⏳待开始','⏳待开始'])},
 ];
 const batchResourceData=[
   {batchLabel:'PJ-2026-001-B020',taskIndex:1,resourceType:'model',resourceName:'小林 (S级)'},
@@ -3109,6 +3132,10 @@ const batchResourceData=[
   {batchLabel:'PJ-2026-001-B015',taskIndex:1,resourceType:'model',resourceName:'赵丽 (A级)'},
   {batchLabel:'PJ-2026-001-B015',taskIndex:1,resourceType:'venue',resourceName:'广州天河创意园A区'},
   {batchLabel:'PJ-2026-001-B015',taskIndex:1,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B022',taskIndex:1,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B022',taskIndex:1,resourceType:'venue',resourceName:'公司自建拍摄间-客厅场景'},
+  {batchLabel:'PJ-2026-001-B023',taskIndex:1,resourceType:'model',resourceName:'小王 (B级)'},
+  {batchLabel:'PJ-2026-001-B023',taskIndex:1,resourceType:'sample',resourceName:'LN7PRO (燃热)'},
 ];
 let batchOpen=null;
 
@@ -3456,8 +3483,8 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDrawer();close
 const pipeData=[
   // === SCRIPT (30) - pending(6) in_progress(6) reviewing(5) returned(3) completed(10) ===
   {id:'s01',title:'脚本-烟机TZ5攻略01',stage:'script',sub:'pending',person:'待指派',cat:'烟灶',ctype:'攻略测评',model:'TZ5',platform:'京东',month:'2026-06',coef:'1.5',tags:''},{id:'s02',title:'脚本-灶具Q325展示01',stage:'script',sub:'pending',person:'待指派',cat:'灶具',ctype:'产品展示',model:'Q325',platform:'天猫',month:'2026-06',coef:'1.2',tags:''},{id:'s03',title:'脚本-净水星河2.0商品03',stage:'script',sub:'pending',person:'待指派',cat:'净水器',ctype:'商品讲解',model:'星河2.0',platform:'京东',month:'2026-06',coef:'1.0',tags:''},{id:'s04',title:'脚本-燃热M9Pro攻略01',stage:'script',sub:'pending',person:'待指派',cat:'燃热',ctype:'攻略测评',model:'M9Pro',platform:'天猫',month:'2026-06',coef:'1.5',tags:''},{id:'s05',title:'脚本-消毒柜150B展示01',stage:'script',sub:'pending',person:'待指派',cat:'消毒柜',ctype:'产品展示',model:'150B05',platform:'京东',month:'2026-06',coef:'1.2',tags:''},{id:'s06',title:'脚本-电热UDpro好物01',stage:'script',sub:'pending',person:'待指派',cat:'电热',ctype:'好物分享',model:'UDpro',platform:'天猫',month:'2026-06',coef:'1.0',tags:''},{id:'s07',title:'脚本-烟机AK5pro商品03',stage:'script',sub:'in_progress',person:'巫昭仪',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.0',tags:''},{id:'s08',title:'脚本-净水白泽1200Pro商品01',stage:'script',sub:'in_progress',person:'苏韵婷',cat:'净水器',ctype:'商品讲解',model:'白泽1200Pro',platform:'京东',month:'2026-01',coef:'1.0',tags:''},{id:'s09',title:'脚本-燃热M9Pro商品01',stage:'script',sub:'in_progress',person:'soso',cat:'燃热',ctype:'商品讲解',model:'M9Pro',platform:'京东',month:'2026-02',coef:'1.0',tags:''},{id:'s10',title:'脚本-洗碗机攻略01',stage:'script',sub:'in_progress',person:'刘泽琛',cat:'洗碗机',ctype:'攻略测评',model:'WQP12',platform:'天猫',month:'2026-06',coef:'1.5',tags:''},{id:'s11',title:'脚本-饮水机好物01',stage:'script',sub:'in_progress',person:'刘泽琛',cat:'饮水机',ctype:'好物分享',model:'YR1808',platform:'京东',month:'2026-06',coef:'1.0',tags:''},{id:'s12',title:'脚本-消毒柜110HQ2商品01',stage:'script',sub:'in_progress',person:'苏韵婷',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.0',tags:''},{id:'s13',title:'脚本-燃热LN7PRO攻略01',stage:'script',sub:'reviewing',person:'梁记',cat:'燃热',ctype:'攻略测评',model:'LN7PRO',platform:'天猫',month:'2026-01',coef:'1.5',deliverable:'https://docs.icloud.com/share?t=8a3f9e2b1c4d7f&fn=燃热LN7PRO攻略脚本v3',tags:'AE审核'},{id:'s14',title:'脚本-空调30秒 v3',stage:'script',sub:'reviewing',person:'孙八',cat:'烟灶',ctype:'产品展示',model:'KFR-35GW',platform:'京东',month:'2026-06',coef:'1.5',deliverable:'https://docs.icloud.com/share?t=2b7c4e9f1a3d8&fn=KFR-35GW空调30秒脚本v3',tags:'AE审核/P0'},{id:'s15',title:'脚本-净水白月光商品03',stage:'script',sub:'reviewing',person:'巫昭仪',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.0',deliverable:'https://docs.icloud.com/share?t=7d2e1f8a3b6c9&fn=净水白月光商品脚本v2',tags:'AE审核'},{id:'s16',title:'脚本-饮水机商品05',stage:'script',sub:'reviewing',person:'高颖茵',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'京东',month:'2026-06',coef:'1.0',deliverable:'https://docs.icloud.com/share?t=4a8f1c3e9d2b7&fn=饮水机商品脚本v1',tags:'AE审核'},{id:'s17',title:'脚本-灶具Q325攻略01',stage:'script',sub:'reviewing',person:'巫昭怡',cat:'灶具',ctype:'攻略测评',model:'Q325',platform:'天猫',month:'2026-06',coef:'1.5',deliverable:'https://docs.icloud.com/share?t=9e3b7f2c1a5d6&fn=灶具Q325攻略脚本v2',tags:'AE审核'},{id:'s18',title:'脚本-净水星河2.0商品01',stage:'script',sub:'returned',person:'梁记',cat:'净水器',ctype:'产品展示',model:'星河2.0',platform:'天猫',month:'2026-01',coef:'1.2',deliverable:'https://docs.icloud.com/share?t=1f6c8a3e5d9b4&fn=净水星河2.0商品脚本v2',tags:'v2退回'},{id:'s19',title:'脚本-燃热HWF商品01',stage:'script',sub:'returned',person:'高颖茵',cat:'燃热',ctype:'商品讲解',model:'HWF',platform:'京东',month:'2026-01',coef:'1.0',deliverable:'https://docs.icloud.com/share?t=6b2d7f3a9c1e8&fn=燃热HWF商品脚本v1',tags:'v1退回'},{id:'s20',title:'脚本-电热JM1展示01',stage:'script',sub:'returned',person:'soso',cat:'电热',ctype:'产品展示',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.2',deliverable:'https://docs.icloud.com/share?t=3d9e5a7f1b2c4&fn=电热JM1展示脚本v1',tags:'AE退回'},{id:'s21',title:'脚本-烟机AK5pro商品01',stage:'script',sub:'completed',person:'巫昭仪',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.0',tags:''},{id:'s22',title:'脚本-烟机AK5pro商品02',stage:'script',sub:'completed',person:'巫昭仪',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.0',tags:''},{id:'s23',title:'脚本-净水白月光1000G商品01',stage:'script',sub:'completed',person:'梁记',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.0',tags:''},{id:'s24',title:'脚本-净水白月光1000G商品02',stage:'script',sub:'completed',person:'梁记',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.0',tags:''},{id:'s25',title:'脚本-净水白泽1000G商品01',stage:'script',sub:'completed',person:'巫昭仪',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-01',coef:'1.0',tags:''},{id:'s26',title:'脚本-燃热LN7PRO商品01',stage:'script',sub:'completed',person:'苏韵婷',cat:'燃热',ctype:'商品讲解',model:'LN7PRO',platform:'天猫',month:'2026-02',coef:'1.0',tags:''},{id:'s27',title:'脚本-电热JM1商品01',stage:'script',sub:'completed',person:'巫昭仪',cat:'电热',ctype:'商品讲解',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.0',tags:''},{id:'s28',title:'脚本-电热V7S商品01',stage:'script',sub:'completed',person:'苏韵婷',cat:'电热',ctype:'商品讲解',model:'V7S',platform:'京东',month:'2026-04',coef:'1.0',tags:''},{id:'s29',title:'脚本-消毒柜110HQ2好物01',stage:'script',sub:'completed',person:'苏韵婷',cat:'消毒柜',ctype:'好物分享',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.0',tags:''},{id:'s30',title:'脚本-饮水机商品01',stage:'script',sub:'completed',person:'soso',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.0',tags:''},
-  // === SHOOTING (30) - pending(8) in_progress(10) completed(12) ===
-  {id:'sh01',title:'拍摄-烟机TZ5攻略01',stage:'shooting',sub:'pending',person:'待指派',cat:'烟灶',ctype:'攻略测评',model:'TZ5',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh02',title:'拍摄-灶具Q325展示01',stage:'shooting',sub:'pending',person:'待指派',cat:'灶具',ctype:'产品展示',model:'Q325',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh03',title:'拍摄-洗碗机好物01',stage:'shooting',sub:'pending',person:'待指派',cat:'洗碗机',ctype:'好物分享',model:'WQP12',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh04',title:'拍摄-饮水机商品01素材',stage:'shooting',sub:'pending',person:'待指派',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh05',title:'拍摄-净水白泽1000G产品01',stage:'shooting',sub:'pending',person:'待指派',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh06',title:'拍摄-燃热LN7PRO商品01',stage:'shooting',sub:'pending',person:'待指派',cat:'燃热',ctype:'商品讲解',model:'LN7PRO',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh07',title:'拍摄-消毒柜150B展示01',stage:'shooting',sub:'pending',person:'待指派',cat:'消毒柜',ctype:'产品展示',model:'150B05',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh08',title:'拍摄-电热UDpro好物01',stage:'shooting',sub:'pending',person:'待指派',cat:'电热',ctype:'好物分享',model:'UDpro',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh09',title:'拍摄-烟机AK5pro商品03',stage:'shooting',sub:'in_progress',person:'李四',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机/场景'},{id:'sh10',title:'拍摄-消毒柜110HQ2商品01',stage:'shooting',sub:'in_progress',person:'李四',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.3',tags:'样机/场景'},{id:'sh11',title:'拍摄-电热UDpro展示01',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'电热',ctype:'产品展示',model:'UDpro',platform:'天猫',month:'2026-04',coef:'1.5',tags:'外包'},{id:'sh12',title:'拍摄-净水白泽1000G产品02',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-03',coef:'1.5',tags:'外包'},{id:'sh13',title:'拍摄-燃热LN7PRO商品02',stage:'shooting',sub:'in_progress',person:'李四',cat:'燃热',ctype:'商品讲解',model:'LN7PRO',platform:'天猫',month:'2026-03',coef:'1.3',tags:''},{id:'sh14',title:'拍摄-洗碗机WQP12商品01',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'洗碗机',ctype:'商品讲解',model:'WQP12',platform:'京东',month:'2026-05',coef:'1.5',tags:'外包'},{id:'sh15',title:'拍摄-电热JM1展示素材',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'电热',ctype:'产品展示',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.5',tags:'外包'},{id:'sh16',title:'拍摄-灶具Q325商品01',stage:'shooting',sub:'in_progress',person:'李四',cat:'灶具',ctype:'商品讲解',model:'Q325',platform:'天猫',month:'2026-05',coef:'1.3',tags:'样机'},{id:'sh17',title:'拍摄-燃热HWF商品01',stage:'shooting',sub:'in_progress',person:'李四',cat:'燃热',ctype:'商品讲解',model:'HWF',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机'},{id:'sh18',title:'拍摄-饮水机YR1808素材01',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.5',tags:'外包'},{id:'sh19',title:'拍摄-烟机AK5pro商品01',stage:'shooting',sub:'completed',person:'李四',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机/场景'},{id:'sh20',title:'拍摄-烟机AK5pro商品02',stage:'shooting',sub:'completed',person:'李四',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机'},{id:'sh21',title:'拍摄-净水白月光素材01',stage:'shooting',sub:'completed',person:'李四',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.3',tags:''},{id:'sh22',title:'拍摄-净水白月光素材02',stage:'shooting',sub:'completed',person:'李四',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.3',tags:''},{id:'sh23',title:'拍摄-燃热HWF素材01',stage:'shooting',sub:'completed',person:'李四',cat:'燃热',ctype:'商品讲解',model:'HWF',platform:'京东',month:'2026-03',coef:'1.3',tags:'样机'},{id:'sh24',title:'拍摄-燃热MagicPro素材',stage:'shooting',sub:'completed',person:'李四',cat:'燃热',ctype:'商品讲解',model:'M9Pro',platform:'京东',month:'2026-02',coef:'1.3',tags:''},{id:'sh25',title:'拍摄-电热JM1素材01',stage:'shooting',sub:'completed',person:'李四',cat:'电热',ctype:'商品讲解',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.3',tags:''},{id:'sh26',title:'拍摄-电热V7S素材01',stage:'shooting',sub:'completed',person:'XX工作室',cat:'电热',ctype:'商品讲解',model:'V7S',platform:'京东',month:'2026-04',coef:'1.5',tags:'外包'},{id:'sh27',title:'拍摄-消毒柜110HQ2素材01',stage:'shooting',sub:'completed',person:'李四',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.3',tags:'样机'},{id:'sh28',title:'拍摄-饮水机YR1808素材02',stage:'shooting',sub:'completed',person:'XX工作室',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.5',tags:'外包'},{id:'sh29',title:'拍摄-净水白泽1000G素材01',stage:'shooting',sub:'completed',person:'李四',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-02',coef:'1.3',tags:''},{id:'sh30',title:'拍摄-灶具Q325素材01',stage:'shooting',sub:'completed',person:'XX工作室',cat:'灶具',ctype:'产品展示',model:'Q325',platform:'天猫',month:'2026-05',coef:'1.5',tags:'外包'},
+  // === SHOOTING (30) - awaiting_schedule(8) in_progress(10) completed(12) ===
+  {id:'sh01',title:'拍摄-烟机TZ5攻略01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'烟灶',ctype:'攻略测评',model:'TZ5',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh02',title:'拍摄-灶具Q325展示01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'灶具',ctype:'产品展示',model:'Q325',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh03',title:'拍摄-洗碗机好物01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'洗碗机',ctype:'好物分享',model:'WQP12',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh04',title:'拍摄-饮水机商品01素材',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh05',title:'拍摄-净水白泽1000G产品01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh06',title:'拍摄-燃热LN7PRO商品01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'燃热',ctype:'商品讲解',model:'LN7PRO',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh07',title:'拍摄-消毒柜150B展示01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'消毒柜',ctype:'产品展示',model:'150B05',platform:'京东',month:'2026-06',coef:'1.3',tags:''},{id:'sh08',title:'拍摄-电热UDpro好物01',stage:'shooting',sub:'awaiting_schedule',person:'待指派',cat:'电热',ctype:'好物分享',model:'UDpro',platform:'天猫',month:'2026-06',coef:'1.3',tags:''},{id:'sh09',title:'拍摄-烟机AK5pro商品03',stage:'shooting',sub:'in_progress',person:'李四',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机/场景'},{id:'sh10',title:'拍摄-消毒柜110HQ2商品01',stage:'shooting',sub:'in_progress',person:'李四',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.3',tags:'样机/场景'},{id:'sh11',title:'拍摄-电热UDpro展示01',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'电热',ctype:'产品展示',model:'UDpro',platform:'天猫',month:'2026-04',coef:'1.5',tags:'外包'},{id:'sh12',title:'拍摄-净水白泽1000G产品02',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-03',coef:'1.5',tags:'外包'},{id:'sh13',title:'拍摄-燃热LN7PRO商品02',stage:'shooting',sub:'in_progress',person:'李四',cat:'燃热',ctype:'商品讲解',model:'LN7PRO',platform:'天猫',month:'2026-03',coef:'1.3',tags:''},{id:'sh14',title:'拍摄-洗碗机WQP12商品01',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'洗碗机',ctype:'商品讲解',model:'WQP12',platform:'京东',month:'2026-05',coef:'1.5',tags:'外包'},{id:'sh15',title:'拍摄-电热JM1展示素材',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'电热',ctype:'产品展示',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.5',tags:'外包'},{id:'sh16',title:'拍摄-灶具Q325商品01',stage:'shooting',sub:'in_progress',person:'李四',cat:'灶具',ctype:'商品讲解',model:'Q325',platform:'天猫',month:'2026-05',coef:'1.3',tags:'样机'},{id:'sh17',title:'拍摄-燃热HWF商品01',stage:'shooting',sub:'in_progress',person:'李四',cat:'燃热',ctype:'商品讲解',model:'HWF',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机'},{id:'sh18',title:'拍摄-饮水机YR1808素材01',stage:'shooting',sub:'in_progress',person:'XX工作室',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.5',tags:'外包'},{id:'sh19',title:'拍摄-烟机AK5pro商品01',stage:'shooting',sub:'completed',person:'李四',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机/场景'},{id:'sh20',title:'拍摄-烟机AK5pro商品02',stage:'shooting',sub:'completed',person:'李四',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.3',tags:'样机'},{id:'sh21',title:'拍摄-净水白月光素材01',stage:'shooting',sub:'completed',person:'李四',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.3',tags:''},{id:'sh22',title:'拍摄-净水白月光素材02',stage:'shooting',sub:'completed',person:'李四',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.3',tags:''},{id:'sh23',title:'拍摄-燃热HWF素材01',stage:'shooting',sub:'completed',person:'李四',cat:'燃热',ctype:'商品讲解',model:'HWF',platform:'京东',month:'2026-03',coef:'1.3',tags:'样机'},{id:'sh24',title:'拍摄-燃热MagicPro素材',stage:'shooting',sub:'completed',person:'李四',cat:'燃热',ctype:'商品讲解',model:'M9Pro',platform:'京东',month:'2026-02',coef:'1.3',tags:''},{id:'sh25',title:'拍摄-电热JM1素材01',stage:'shooting',sub:'completed',person:'李四',cat:'电热',ctype:'商品讲解',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.3',tags:''},{id:'sh26',title:'拍摄-电热V7S素材01',stage:'shooting',sub:'completed',person:'XX工作室',cat:'电热',ctype:'商品讲解',model:'V7S',platform:'京东',month:'2026-04',coef:'1.5',tags:'外包'},{id:'sh27',title:'拍摄-消毒柜110HQ2素材01',stage:'shooting',sub:'completed',person:'李四',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.3',tags:'样机'},{id:'sh28',title:'拍摄-饮水机YR1808素材02',stage:'shooting',sub:'completed',person:'XX工作室',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.5',tags:'外包'},{id:'sh29',title:'拍摄-净水白泽1000G素材01',stage:'shooting',sub:'completed',person:'李四',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-02',coef:'1.3',tags:''},{id:'sh30',title:'拍摄-灶具Q325素材01',stage:'shooting',sub:'completed',person:'XX工作室',cat:'灶具',ctype:'产品展示',model:'Q325',platform:'天猫',month:'2026-05',coef:'1.5',tags:'外包'},
   // === EDITING (30) - pending(6) in_progress(7) reviewing(5) returned(2) completed(10) ===
   {id:'ed01',title:'剪辑-烟机TZ5攻略成片01',stage:'editing',sub:'pending',person:'待指派',cat:'烟灶',ctype:'攻略测评',model:'TZ5',platform:'京东',month:'2026-06',coef:'1.5',tags:''},{id:'ed02',title:'剪辑-灶具Q325成片01',stage:'editing',sub:'pending',person:'待指派',cat:'灶具',ctype:'产品展示',model:'Q325',platform:'天猫',month:'2026-06',coef:'1.2',tags:''},{id:'ed03',title:'剪辑-净水白月光商品02',stage:'editing',sub:'pending',person:'待指派',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-01',coef:'1.2',tags:''},{id:'ed04',title:'剪辑-洗碗机WQP12成片01',stage:'editing',sub:'pending',person:'待指派',cat:'洗碗机',ctype:'好物分享',model:'WQP12',platform:'天猫',month:'2026-06',coef:'1.2',tags:''},{id:'ed05',title:'剪辑-饮水机YR1808成片01',stage:'editing',sub:'pending',person:'待指派',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'京东',month:'2026-06',coef:'1.2',tags:''},{id:'ed06',title:'剪辑-电热UDpro成片01',stage:'editing',sub:'pending',person:'待指派',cat:'电热',ctype:'产品展示',model:'UDpro',platform:'天猫',month:'2026-06',coef:'1.2',tags:''},{id:'ed07',title:'剪辑-烟机AK5pro成片03',stage:'editing',sub:'in_progress',person:'XX工作室',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-02',coef:'1.2',tags:'外包'},{id:'ed08',title:'剪辑-电热V7S成片01',stage:'editing',sub:'in_progress',person:'XX工作室',cat:'电热',ctype:'商品讲解',model:'V7S',platform:'京东',month:'2026-04',coef:'1.2',tags:'外包'},{id:'ed09',title:'剪辑-燃热LN7PRO攻略成片',stage:'editing',sub:'in_progress',person:'王五',cat:'燃热',ctype:'攻略测评',model:'LN7PRO',platform:'天猫',month:'2026-03',coef:'1.5',tags:''},{id:'ed10',title:'剪辑-净水白月光成片01',stage:'editing',sub:'in_progress',person:'王五',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-03',coef:'1.2',tags:''},{id:'ed11',title:'剪辑-烟灶AK5攻略成片01',stage:'editing',sub:'in_progress',person:'王五',cat:'烟灶',ctype:'攻略测评',model:'AK5 PRO',platform:'京东',month:'2026-02',coef:'1.5',tags:''},{id:'ed12',title:'剪辑-电热JM1成片01',stage:'editing',sub:'in_progress',person:'王五',cat:'电热',ctype:'商品讲解',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.2',tags:''},{id:'ed13',title:'剪辑-消毒柜110HQ2成片01',stage:'editing',sub:'in_progress',person:'XX工作室',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.2',tags:'外包'},{id:'ed14',title:'剪辑-消毒柜150B成片01',stage:'editing',sub:'reviewing',person:'XX工作室',cat:'消毒柜',ctype:'商品讲解',model:'150B05',platform:'天猫',month:'2026-05',coef:'1.2',tags:'外包/PM复核'},{id:'ed15',title:'剪辑-燃热HWF成片01',stage:'editing',sub:'reviewing',person:'XX工作室',cat:'燃热',ctype:'商品讲解',model:'HWF',platform:'京东',month:'2026-03',coef:'1.2',tags:'外包/PM复核'},{id:'ed16',title:'剪辑-饮水机YR1808成片02',stage:'editing',sub:'reviewing',person:'王五',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.2',tags:'PM复核'},{id:'ed17',title:'剪辑-灶具Q325攻略成片',stage:'editing',sub:'reviewing',person:'王五',cat:'灶具',ctype:'攻略测评',model:'Q325',platform:'京东',month:'2026-06',coef:'1.5',tags:'PM复核'},{id:'ed18',title:'剪辑-电热JM1素材成片01',stage:'editing',sub:'reviewing',person:'XX工作室',cat:'电热',ctype:'商品讲解',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.2',tags:'外包/PM复核'},{id:'ed19',title:'剪辑-燃热M9Pro攻略成片',stage:'editing',sub:'returned',person:'XX工作室',cat:'燃热',ctype:'攻略测评',model:'M9Pro',platform:'京东',month:'2026-03',coef:'1.5',tags:'外包/退回修正'},{id:'ed20',title:'剪辑-净水星河2.0展示成片',stage:'editing',sub:'returned',person:'王五',cat:'净水器',ctype:'产品展示',model:'星河2.0',platform:'天猫',month:'2026-02',coef:'1.2',tags:'退回修正'},{id:'ed21',title:'剪辑-烟机AK5pro成片01',stage:'editing',sub:'completed',person:'王五',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.2',tags:''},{id:'ed22',title:'剪辑-烟机AK5pro成片02',stage:'editing',sub:'completed',person:'王五',cat:'烟灶',ctype:'商品讲解',model:'AK5 PRO',platform:'京东',month:'2026-01',coef:'1.2',tags:''},{id:'ed23',title:'剪辑-燃热HWF攻略成片',stage:'editing',sub:'completed',person:'王五',cat:'燃热',ctype:'攻略测评',model:'HWF',platform:'京东',month:'2026-02',coef:'1.5',tags:''},{id:'ed24',title:'剪辑-净水白泽成片01',stage:'editing',sub:'completed',person:'王五',cat:'净水器',ctype:'商品讲解',model:'白泽1000G',platform:'京东',month:'2026-01',coef:'1.2',tags:''},{id:'ed25',title:'剪辑-电热JM1商品成片01',stage:'editing',sub:'completed',person:'王五',cat:'电热',ctype:'商品讲解',model:'JM1',platform:'天猫',month:'2026-04',coef:'1.2',tags:''},{id:'ed26',title:'剪辑-消毒柜110HQ2成片02',stage:'editing',sub:'completed',person:'XX工作室',cat:'消毒柜',ctype:'商品讲解',model:'110HQ2',platform:'京东',month:'2026-05',coef:'1.2',tags:'外包'},{id:'ed27',title:'剪辑-洗碗机成片01',stage:'editing',sub:'completed',person:'王五',cat:'洗碗机',ctype:'好物分享',model:'WQP12',platform:'京东',month:'2026-06',coef:'1.2',tags:''},{id:'ed28',title:'剪辑-饮水机商品01成片',stage:'editing',sub:'completed',person:'王五',cat:'饮水机',ctype:'商品讲解',model:'YR1808',platform:'天猫',month:'2026-06',coef:'1.2',tags:''},{id:'ed29',title:'剪辑-燃热MagicPro成片',stage:'editing',sub:'completed',person:'XX工作室',cat:'燃热',ctype:'商品讲解',model:'M9Pro',platform:'京东',month:'2026-02',coef:'1.2',tags:'外包'},{id:'ed30',title:'剪辑-净水白月光成片02',stage:'editing',sub:'completed',person:'XX工作室',cat:'净水器',ctype:'商品讲解',model:'白月光1000G',platform:'天猫',month:'2026-03',coef:'1.2',tags:'外包'},
   // === PUBLISHING (30) - pending(8) in_progress(10) published(12) ===
@@ -4696,9 +4723,11 @@ function renderPipeline(){
   document.getElementById('sc-done-cards').innerHTML=sc.filter(t=>t.sub==='completed').map(makeCard).join('');
 
   // Shooting
+  document.getElementById('sh-await').textContent=sh.filter(t=>t.sub==='awaiting_schedule').length;
   document.getElementById('sh-pending').textContent=sh.filter(t=>t.sub==='pending').length;
   document.getElementById('sh-ip').textContent=sh.filter(t=>t.sub==='in_progress').length;
   document.getElementById('sh-done').textContent=sh.filter(t=>t.sub==='completed').length;
+  document.getElementById('sh-await-cards').innerHTML=sh.filter(t=>t.sub==='awaiting_schedule').map(makeCard).join('');
   document.getElementById('sh-pending-cards').innerHTML=sh.filter(t=>t.sub==='pending').map(makeCard).join('');
   document.getElementById('sh-ip-cards').innerHTML=sh.filter(t=>t.sub==='in_progress').map(makeCard).join('');
   document.getElementById('sh-done-cards').innerHTML=sh.filter(t=>t.sub==='completed').map(makeCard).join('');
@@ -4764,8 +4793,8 @@ function renderTaskList(){
   const searchVal=(document.getElementById('list-search')?.value||'').toLowerCase();
   if(searchVal) mt=mt.filter(t=>t.title.toLowerCase().includes(searchVal)||t.person.toLowerCase().includes(searchVal));
 
-  const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
-  const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
+  const subMap={awaiting_schedule:'待排期',pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
+  const badgeMap={awaiting_schedule:'badge-amber',pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
   const stageLabels={script:'✏️ 脚本',shooting:'📹 拍摄',editing:'✂️ 剪辑',publishing:'📤 发布'};
   const countEl=document.getElementById('list-task-count');
   if(countEl) countEl.textContent=mt.length+' 条结果';
@@ -4835,8 +4864,8 @@ function showPipeDrawer(id){
 
   const typeIcons={script:'✏️',shooting:'📹',editing:'✂️',publishing:'📤'};
   const typeNames={script:'脚本',shooting:'拍摄',editing:'剪辑',publishing:'发布'};
-  const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
-  const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
+  const subMap={awaiting_schedule:'待排期',pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
+  const badgeMap={awaiting_schedule:'badge-amber',pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
 
   document.getElementById('d-code').textContent = 'TSK-2026-'+t.id+' · '+typeNames[t.stage]+' · '+subMap[t.sub];
   document.getElementById('d-title').textContent = t.title;
@@ -4858,11 +4887,13 @@ function showPipeDrawer(id){
     (isPublished?'<span class="badge badge-teal"><span class="badge-dot"></span>已上线</span>':'');
 
   // Assign section
-  const isPending=t.sub==='pending';
+  const isPending=t.sub==='pending'||t.sub==='awaiting_schedule';
   document.getElementById('d-assign-section').style.display=isPending?'block':'none';
   if(isPending){
     const persons={script:['巫昭仪','梁记','苏韵婷','巫昭怡','刘泽琛','soso','高颖茵','XX工作室','YY传媒'],shooting:['李四','XX工作室'],editing:['王五','XX工作室'],publishing:['赵六(AE)','钱七(AE)']};
+    const scheduleNote=t.sub==='awaiting_schedule'?'<div style="padding:8px 10px;background:var(--amber-light);border-radius:6px;font-size:11px;color:var(--text-secondary);margin-bottom:8px">⚠️ 该任务尚未排期，待PM完成批次的资源排期后执行人方可开始。目前可提前指派执行人。</div>':'';
     document.getElementById('d-assign-form').innerHTML=
+      scheduleNote+
       '<div class="person-tags">'+persons[t.stage].map(p=>`<span class="person-tag" onclick="this.classList.toggle('selected')">${p}<span class="pt-remove">&times;</span></span>`).join('')+'</div>'+
       '<div class="form-group" style="margin-top:8px"><div class="form-label">计划完成日期</div><input class="form-input" type="date" value="2026-01-25"></div>'+
       '<div class="form-group" style="margin-top:6px"><div class="form-label">备注</div><textarea class="form-input" style="resize:vertical;min-height:40px" placeholder="可选"></textarea></div>';
@@ -5202,13 +5233,13 @@ function renderMTKanban(stage,person){
   else{tasks=tasks.filter(t=>t.person===person||t.person==='待指派'||(t.sub==='pending'&&!t.person))}
   if(mtProject!=='all'){tasks=tasks.filter(function(t){let h=0;for(var i=0;i<t.id.length;i++){h=((h<<5)-h)+t.id.charCodeAt(i);h|=0}return (Math.abs(h)%4+1).toString()===mtProject})}
   const cols=kanbanCols[stage]||kanbanCols.script;
-  const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
-  const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
+  const subMap={awaiting_schedule:'待排期',pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
+  const badgeMap={awaiting_schedule:'badge-amber',pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
   const doneTasks=tasks.filter(t=>t.sub==='completed'||t.sub==='published').length;
   const weighted=Math.round(tasks.filter(t=>t.coef!=='-').reduce((s,t)=>s+parseFloat(t.coef||1),0));
   let statsHTML='';
   if(stage==='script'){statsHTML=`<div class="stats-grid" style="margin-bottom:0"><div class="stat-card blue"><div class="stat-label">本月加权产出</div><div class="stat-value">${weighted}</div></div><div class="stat-card teal"><div class="stat-label">待认领</div><div class="stat-value">${tasks.filter(t=>t.sub==='pending').length}</div></div><div class="stat-card amber"><div class="stat-label">审核/待修改</div><div class="stat-value">${tasks.filter(t=>t.sub==='reviewing').length}/${tasks.filter(t=>t.sub==='returned').length}</div></div><div class="stat-card accent"><div class="stat-label">已完成</div><div class="stat-value">${doneTasks}</div></div></div>`}
-  else if(stage==='shooting'){statsHTML=`<div class="stats-grid" style="margin-bottom:0"><div class="stat-card purple" style="border-left:3px solid var(--purple)"><div class="stat-label">待拍摄</div><div class="stat-value">${tasks.filter(t=>t.sub==='pending'||t.sub==='in_progress').length}</div></div><div class="stat-card teal"><div class="stat-label">已完成</div><div class="stat-value">${doneTasks}</div></div><div class="stat-card blue"><div class="stat-label">加权产出</div><div class="stat-value">${weighted}</div></div></div>`}
+  else if(stage==='shooting'){statsHTML=`<div class="stats-grid" style="margin-bottom:0"><div class="stat-card purple" style="border-left:3px solid var(--purple)"><div class="stat-label">待拍摄</div><div class="stat-value">${tasks.filter(t=>t.sub==='pending'||t.sub==='in_progress').length}</div></div><div class="stat-card amber"><div class="stat-label">待排期</div><div class="stat-value">${tasks.filter(t=>t.sub==='awaiting_schedule').length}</div></div><div class="stat-card teal"><div class="stat-label">已完成</div><div class="stat-value">${doneTasks}</div></div><div class="stat-card blue"><div class="stat-label">加权产出</div><div class="stat-value">${weighted}</div></div></div>`}
   else if(stage==='editing'){statsHTML=`<div class="stats-grid" style="margin-bottom:0"><div class="stat-card teal"><div class="stat-label">待剪辑</div><div class="stat-value">${tasks.filter(t=>t.sub!=='completed').length}</div></div><div class="stat-card blue"><div class="stat-label">已完成</div><div class="stat-value">${doneTasks}</div></div><div class="stat-card amber"><div class="stat-label">加权产出</div><div class="stat-value">${weighted}</div></div></div>`}
   else{statsHTML=`<div class="stats-grid" style="margin-bottom:0"><div class="stat-card blue"><div class="stat-label">待发布</div><div class="stat-value">${tasks.filter(t=>t.sub==='pending').length}</div></div><div class="stat-card teal"><div class="stat-label">已发布</div><div class="stat-value">${doneTasks}</div></div></div>`}
   document.getElementById('mt-stats').innerHTML=statsHTML;
@@ -5217,7 +5248,7 @@ function renderMTKanban(stage,person){
     return `<div class="card" style="min-width:180px"><div class="card-header"><div class="card-title">${col.label}</div><span class="muted">${colTasks.length}·${col.sub}</span></div><div class="card-body" style="padding:8px;display:flex;flex-direction:column;gap:6px;max-height:480px;overflow-y:auto">${colTasks.map(t=>{const isClaimable=col.key==='pending'&&(stage==='script'||stage==='shooting'||stage==='editing');const isAssigned=t.person&&t.person!=='待指派';return `<div class="card" style="box-shadow:none;border:1px solid ${isAssigned?'var(--border-light)':'var(--amber)'};cursor:pointer;position:relative" onclick="showPipeDrawer('${t.id}')"><div style="position:absolute;top:6px;right:6px;font-size:9px;padding:1px 5px;border-radius:3px;background:${isAssigned?'var(--blue-light);color:var(--blue)':'var(--amber-light);color:var(--amber)'}">${isAssigned?(t.person===person?'已指派':'已分配'):'待认领'}</div><div class="card-body" style="padding:10px"><div class="code" style="font-size:10px;margin-bottom:2px">TSK-${t.id}</div><div style="font-size:12px;font-weight:600;margin-bottom:4px">${t.title}</div><div style="display:flex;flex-wrap:wrap;gap:3px;margin-bottom:4px"><span style="font-size:9px;background:var(--bg-input);padding:1px 4px;border-radius:3px">${t.model||''}</span><span style="font-size:9px;background:var(--bg-input);padding:1px 4px;border-radius:3px">${t.ctype||''}</span><span style="font-size:9px;color:var(--text-tertiary)">×${t.coef||'1.0'}</span></div>${isClaimable?`<button class="btn btn-xs btn-primary" onclick="event.stopPropagation();claimTask('${t.id}','${stage}','${person}')" style="width:100%;margin-top:4px">认领此任务</button>`:`<span class="badge badge-${badgeMap[t.sub]?.replace('badge-','')||'gray'}" style="font-size:9px"><span class="badge-dot"></span>${subMap[t.sub]||t.sub}</span>`}</div></div>`}).join('')}${colTasks.length===0?`<div class="muted" style="text-align:center;padding:20px;font-size:11px">暂无任务</div>`:''}</div></div>`}).join('')}</div>`;
 }
 
-function claimTask(id,stage,person){const t=pipeData.find(p=>p.id===id);if(t){t.person=person;t.sub='in_progress';showToast('已认领 '+t.title,'ok');renderMTKanban(stage,person)}}
+function claimTask(id,stage,person){const t=pipeData.find(p=>p.id===id);if(t){if(t.sub==='awaiting_schedule'){showToast('该任务待PM完成排期后才能开始执行','warn');return;}t.person=person;t.sub='in_progress';showToast('已认领 '+t.title,'ok');renderMTKanban(stage,person)}}
 
 function renderMTList(stage,person,rebindFilters){
   const sk={'script':'script','shooting':'shooting','editing':'editing','publishing':'publishing'}[stage]||stage;
@@ -5226,8 +5257,8 @@ function renderMTList(stage,person,rebindFilters){
   else if(stage==='editing'&&person==='XX工作室'){tasks=pipeData.filter(t=>t.stage==='editing'&&t.person==='XX工作室')}
   else{tasks=tasks.filter(t=>t.person===person||t.person==='待指派'||(t.sub==='pending'&&!t.person))}
   if(mtProject!=='all'){tasks=tasks.filter(function(t){let h=0;for(var i=0;i<t.id.length;i++){h=((h<<5)-h)+t.id.charCodeAt(i);h|=0}return (Math.abs(h)%4+1).toString()===mtProject})}
-  const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
-  const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
+  const subMap={awaiting_schedule:'待排期',pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
+  const badgeMap={awaiting_schedule:'badge-amber',pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
   const colChips=kanbanCols[stage]||kanbanCols.script;
 
   // build filter bar with status chips + ctype dropdown + month dropdown
@@ -5862,6 +5893,10 @@ const scheduleData=[
   {id:'SCH-013',resourceType:'model',resourceName:'阿杰 (A级)',start:'2026-06-22',end:'2026-06-23',days:2,batchLabel:'PJ-2026-001-B018',batchModel:'AK5 PRO',batchCtype:'攻略测评',taskCount:30,status:'scheduled',remark:''},
   {id:'SCH-014',resourceType:'venue',resourceName:'深圳南山摄影棚B02',start:'2026-06-22',end:'2026-06-23',days:2,batchLabel:'PJ-2026-001-B018',batchModel:'AK5 PRO',batchCtype:'攻略测评',taskCount:30,status:'scheduled',remark:''},
   {id:'SCH-015',resourceType:'sample',resourceName:'JM1 (电热)',start:'2026-06-08',end:'2026-06-09',days:2,batchLabel:'PJ-2026-001-B016',batchModel:'HWF',batchCtype:'产品展示',taskCount:20,status:'completed',remark:''},
+  {id:'SCH-016',resourceType:'model',resourceName:'小林 (S级)',start:'2026-06-24',end:'2026-06-25',days:2,batchLabel:'PJ-2026-001-B022',batchModel:'白泽1200Pro',batchCtype:'攻略测评',taskCount:25,status:'scheduled',remark:''},
+  {id:'SCH-017',resourceType:'venue',resourceName:'公司自建拍摄间-客厅场景',start:'2026-06-24',end:'2026-06-25',days:2,batchLabel:'PJ-2026-001-B022',batchModel:'白泽1200Pro',batchCtype:'攻略测评',taskCount:25,status:'scheduled',remark:''},
+  {id:'SCH-018',resourceType:'model',resourceName:'小王 (B级)',start:'2026-06-26',end:'2026-06-26',days:1,batchLabel:'PJ-2026-001-B023',batchModel:'Q325',batchCtype:'产品展示',taskCount:20,status:'scheduled',remark:''},
+  {id:'SCH-019',resourceType:'sample',resourceName:'LN7PRO (燃热)',start:'2026-06-26',end:'2026-06-27',days:2,batchLabel:'PJ-2026-001-B023',batchModel:'Q325',batchCtype:'产品展示',taskCount:20,status:'scheduled',remark:''},
 ];
 let schMonth={year:2026,month:6};
 let schTypeFilter='all';
@@ -5947,12 +5982,12 @@ function renderGantt(){
       rowHTML+='<div class="gantt-cell'+(hasConflict?' conflict':'')+'">';
       deduped.forEach((s,i)=>{
         const typeClass=s.resourceType;
-        const statusClass=s.status==='completed'?'completed':'';
+        const statusClass=s.status==='completed'?'completed':s.status==='in_progress'?'in_progress':'';
         const shortLabel=s.batchLabel.replace('PJ-2026-001-','');
         const label=shortLabel+'·'+s.taskCount+'条';
         const top=deduped.length===1?2:i*18+2;
         const h=deduped.length===1?36:16;
-        rowHTML+='<div class="gantt-bar '+typeClass+' '+statusClass+'" style="top:'+top+'px;height:'+h+'px" title="'+s.batchLabel+' '+s.batchModel+' '+s.batchCtype+' · '+s.taskCount+'条" onclick="event.stopPropagation();showBatchTaskDrawer(\''+s.batchLabel+'\',\''+s.resourceName+'\',\''+s.start+'\')">'+label+'</div>';
+        rowHTML+='<div class="gantt-bar '+typeClass+' '+statusClass+'" style="top:'+top+'px;height:'+h+'px" title="'+s.batchLabel+' '+s.batchModel+' '+s.batchCtype+' · '+s.taskCount+'条" onclick="event.stopPropagation();showSchDetailDrawer(\''+s.id+'\')">'+label+'</div>';
       });
       rowHTML+='</div>';
     }
@@ -5992,7 +6027,7 @@ function renderScheduleList(){
     '<td class="code">'+s.days+'天</td>'+
     '<td><span class="code" style="cursor:pointer;color:var(--blue)" onclick="showBatchTaskDrawer(\''+s.batchLabel+'\',\''+s.resourceName+'\',\''+s.start+'\')">'+s.batchLabel.replace('PJ-2026-001-','')+' · '+s.batchModel+' · '+s.batchCtype+' · '+s.taskCount+'条</span></td>'+
     '<td><span class="badge '+statusBadge[s.status]+'"><span class="badge-dot"></span>'+statusLabels[s.status]+'</span></td>'+
-    '<td><button class="btn btn-xs" style="color:var(--red)" onclick="deleteSchedule(\''+s.id+'\')">取消</button></td>'+
+    '<td><button class="btn btn-xs btn-ghost" style="color:var(--blue)" onclick="showSchDetailDrawer(\''+s.id+'\')">编辑</button><button class="btn btn-xs btn-ghost" style="color:var(--red)" onclick="deleteSchedule(\''+s.id+'\')">删除</button></td>'+
   '</tr>').join('');
 }
 
@@ -6095,10 +6130,127 @@ function confirmSchedule(){
 function deleteSchedule(id){
   const s=scheduleData.find(s=>s.id===id);
   if(!s) return;
-  if(!confirm('取消排期「'+s.batchLabel.replace('PJ-2026-001-','')+' · '+s.taskCount+'条」？\n将同时解除该批次下所有任务的排期关联。')) return;
-  const idx=scheduleData.findIndex(s=>s.id===id);
-  if(idx>=0){scheduleData.splice(idx,1);showToast('排期已取消','ok')}
+  // Check if batch has shooting tasks already in progress
+  const hasActiveShooting=pipeData.some(p=>p.stage==='shooting'&&p.model===s.batchModel&&p.ctype===s.batchCtype&&!['awaiting_schedule','pending'].includes(p.sub));
+  if(hasActiveShooting){
+    showToast('该批次拍摄任务已开始执行，排期不可删除','warn');return;
+  }
+  _schDeleteId=id;
+  document.getElementById('sch-del-info').innerHTML='<div style="font-weight:600;margin-bottom:4px">'+s.batchLabel+' · '+s.batchModel+' · '+s.batchCtype+'</div><div>'+s.start+' ~ '+s.end+' · '+s.days+'天</div><div style="color:var(--text-tertiary);margin-top:2px">关联资源：'+s.resourceName+'</div>';
+  openModal('modal-sch-delete');
+}
+let _schDeleteId=null;
+function confirmSchDelete(){
+  const s=scheduleData.find(s=>s.id===_schDeleteId);
+  const idx=scheduleData.findIndex(s=>s.id===_schDeleteId);
+  if(idx>=0){
+    scheduleData.splice(idx,1);
+    // Rollback pending shooting tasks to awaiting_schedule
+    pipeData.filter(p=>p.stage==='shooting'&&p.sub==='pending').forEach(p=>{
+      const batKey=Object.keys({'KFR35GW':'','AK5PRO':'','白月光1000G':'','白泽1200Pro':'','白泽1000G':'','LN7PRO':'','HWF':'','M9Pro':'','JM1':'','UDpro':'','V7S':'','星河2':'','Q325':'','WQP12':'','YR1808':'','TZ5':'','150B05':'','110HQ2':''}).find(k=>p.model&&p.model.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,'').includes(k));
+      if(batKey&&!scheduleData.some(s=>s.batchLabel===('PJ-2026-001-'+batKey))) p.sub='awaiting_schedule';
+    });
+    showToast('排期已删除','ok');
+  }
+  _schDeleteId=null;
+  closeModal('modal-sch-delete');
   if(schViewMode==='gantt') renderGantt(); else renderScheduleList();
+}
+
+// ------ Schedule Detail Drawer (v2.51) ------
+function showSchDetailDrawer(id){
+  const s=scheduleData.find(s=>s.id===id);
+  if(!s) return;
+
+  if(!_drawerBodyBackup) _drawerBodyBackup=document.getElementById('drawer-body').innerHTML;
+
+  const batch=batchData.find(b=>b.label===s.batchLabel);
+  const hasActiveShooting=pipeData.some(p=>p.stage==='shooting'&&p.model===s.batchModel&&p.ctype===s.batchCtype&&!['awaiting_schedule','pending'].includes(p.sub));
+  const canEdit=!hasActiveShooting;
+  const readOnly=canEdit?'':'disabled';
+  const relatedRes=batchResourceData.filter(r=>r.batchLabel===s.batchLabel);
+
+  document.getElementById('d-code').textContent='排期详情';
+  document.getElementById('d-title').textContent=s.batchLabel+' · '+s.batchModel+' · '+s.batchCtype+' · '+s.taskCount+'条';
+  document.getElementById('d-btn-edit').style.display='none';
+  document.getElementById('d-btn-delete').style.display='none';
+
+  let html='<div style="display:flex;gap:6px;margin-bottom:10px"><span class="badge badge-blue"><span class="badge-dot"></span>'+s.resourceName+'</span><span class="badge badge-teal"><span class="badge-dot"></span>'+s.resourceType+'</span></div>';
+
+  // Date editing section
+  html+='<div class="drawer-section-title">📅 计划日期</div>'+
+    '<div style="padding:10px 12px;background:var(--bg-input);border-radius:6px;margin-bottom:12px">'+
+    '<div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">'+
+    '<div style="font-size:12px">开始 '+s.start+'</div>'+
+    '<input class="form-input" type="date" id="sch-edit-start" value="'+s.start+'" style="width:130px;font-size:12px" '+readOnly+' onchange="calcSchEditDays()">'+
+    '<div style="font-size:12px">结束 '+s.end+'</div>'+
+    '<input class="form-input" type="date" id="sch-edit-end" value="'+s.end+'" style="width:130px;font-size:12px" '+readOnly+' onchange="calcSchEditDays()">'+
+    '<span id="sch-edit-days" style="font-size:11px;color:var(--text-tertiary)">预计 '+s.days+' 天</span>'+
+    '</div></div>';
+
+  // Related resources
+  html+='<div class="drawer-section-title">📦 关联资源</div>';
+  ['model','venue','sample'].forEach(type=>{
+    const res=relatedRes.find(r=>r.resourceType===type);
+    html+='<div style="padding:6px 10px;font-size:12px;color:'+(res?'var(--text-primary)':'var(--text-tertiary)')+'">'+
+      (type==='model'?'🎭 ':type==='venue'?'📍 ':'📦 ')+(res?res.resourceName:'—')+'</div>';
+  });
+
+  // Batch task link
+  html+='<div class="drawer-section-title" style="margin-top:8px">🔗 关联批次</div>'+
+    '<div style="padding:6px 10px;font-size:12px"><a style="color:var(--blue);cursor:pointer;text-decoration:underline" onclick="showBatchTaskDrawer(\''+s.batchLabel+'\',\''+s.resourceName+'\',\''+s.start+'\')">查看批次 '+s.batchLabel.replace('PJ-2026-001-','')+' · '+s.taskCount+'条任务 →</a></div>';
+
+  // Status hint
+  html+='<div style="padding:8px 12px;margin-top:10px;border-radius:6px;font-size:11px;background:'+(canEdit?'var(--accent-light)':'var(--amber-light)')+';color:var(--text-secondary)">'+
+    (canEdit?'⚠️ 该批次拍摄任务尚未开始执行，可自由编辑。':'🔒 该批次拍摄任务已开始执行，排期不可修改')+'</div>';
+
+  // Actions
+  if(canEdit){
+    html+='<div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">'+
+      '<button class="btn btn-secondary btn-sm" onclick="deleteSchedule(\''+s.id+'\')">删除排期</button>'+
+      '<button class="btn btn-secondary btn-sm" onclick="closeSchDetailDrawer()">取消</button>'+
+      '<button class="btn btn-primary btn-sm" onclick="saveSchEdit(\''+s.id+'\')">保存修改</button></div>';
+  }else{
+    html+='<div style="display:flex;gap:8px;margin-top:12px;justify-content:flex-end">'+
+      '<button class="btn btn-primary btn-sm" onclick="closeSchDetailDrawer()">关闭</button></div>';
+  }
+
+  document.getElementById('drawer-body').innerHTML=html;
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function calcSchEditDays(){
+  const s=document.getElementById('sch-edit-start')?.value;
+  const e=document.getElementById('sch-edit-end')?.value;
+  const el=document.getElementById('sch-edit-days');
+  if(s&&e&&el){
+    const days=Math.ceil((new Date(e)-new Date(s))/(86400000))+1;
+    el.textContent=days>0?'预计 '+days+' 天':'日期无效';
+  }
+}
+
+function saveSchEdit(id){
+  const s=scheduleData.find(s=>s.id===id);
+  if(!s) return;
+  const newStart=document.getElementById('sch-edit-start').value;
+  const newEnd=document.getElementById('sch-edit-end').value;
+  if(!newStart||!newEnd){showToast('请填写日期','warn');return;}
+  const days=Math.ceil((new Date(newEnd)-new Date(newStart))/(86400000))+1;
+  if(days<=0){showToast('日期范围无效','warn');return;}
+  s.start=newStart;s.end=newEnd;s.days=days;
+  closeSchDetailDrawer();
+  showToast('排期已更新 · '+s.batchLabel.replace('PJ-2026-001-','')+' · '+days+'天','ok');
+  if(schViewMode==='gantt') renderGantt(); else renderScheduleList();
+}
+
+function closeSchDetailDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  if(_drawerBodyBackup){
+    document.getElementById('drawer-body').innerHTML=_drawerBodyBackup;
+    _drawerBodyBackup='';
+  }
 }
 
 // ------ Batch Task Drawer (v2.45) ------
@@ -8009,7 +8161,7 @@ function renderPersonnel(){
     const capacity=calcCapacity(person,role,capMonth);
     const loadPct=Math.min(100,Math.round(weightedThis/(capacity||1)*100));
 
-    const subMap={pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
+    const subMap={awaiting_schedule:'待排期',pending:'待分配',in_progress:'进行中',reviewing:'待审核',returned:'待修改',completed:'已完成',published:'已发布'};
     let loadColor,statusLabel,statusColor;
     if(loadPct>90){loadColor='red';statusLabel='🔴 过载';statusColor='var(--accent)'}
     else if(loadPct>=75){loadColor='amber';statusLabel='🟡 饱和';statusColor='var(--amber)'}
@@ -8069,7 +8221,7 @@ function renderPersonnel(){
         <div style="margin-bottom:10px"><span style="font-weight:600;font-size:12px">📊 月度产能历史（加权条）</span><span class="muted" style="font-size:10px;margin-left:6px">${p.history.map(h=>`<span style="margin-left:8px;padding:2px 6px;background:${h.w>=p.capacity?'var(--teal-light);color:var(--teal)':'var(--bg-input);color:var(--text-tertiary)'};border-radius:3px;font-weight:600">${h.m}月 ${h.w}条</span>`).join('')}</span></div>
         <div class="table-wrap"><table style="font-size:11px"><thead><tr><th style="width:75px">编号</th><th>标题</th><th style="width:55px">阶段</th><th style="width:70px">状态</th><th style="width:65px">内容类型</th><th style="width:45px">系数</th></tr></thead><tbody>
           ${p.tasks.map(t=>{
-            const badgeMap={pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
+            const badgeMap={awaiting_schedule:'badge-amber',pending:'badge-gray',in_progress:'badge-blue',reviewing:'badge-purple',returned:'badge-red',completed:'badge-teal',published:'badge-teal'};
             const stageLabels={script:'✏️ 脚本',shooting:'📹 拍摄',editing:'✂️ 剪辑',publishing:'📤 发布'};
             return `<tr onclick="event.stopPropagation();showPipeDrawer('${t.id}')" style="cursor:pointer"><td class="code">TSK-${t.id}</td><td><strong>${t.title}</strong></td><td>${stageLabels[t.stage]||t.stage}</td><td><span class="badge ${badgeMap[t.sub]||'badge-gray'}"><span class="badge-dot"></span>${p.subMap[t.sub]||t.sub}</span></td><td>${t.ctype||''}</td><td><span class="coef-badge">×${t.coef&&t.coef!=='-'?t.coef:'1.0'}</span></td></tr>`;
           }).join('')||'<tr><td colspan="6" style="text-align:center;padding:16px;color:var(--text-tertiary)">该范围内暂无任务</td></tr>'}
