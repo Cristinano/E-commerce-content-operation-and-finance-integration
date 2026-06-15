@@ -137,6 +137,8 @@ tbody tr:hover{background:#f8f9fb}
 .tab:hover{color:var(--text-secondary)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .tab-content{display:none}.tab-content.active{display:block}
+.sub-tab{padding:6px 14px;font-size:12px;font-weight:600;color:var(--text-tertiary);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}.sub-tab.active{color:var(--text-primary);border-bottom-color:var(--text-primary)}
+.gantt-cell{width:56px;height:40px;flex-shrink:0;border-right:1px solid var(--border-light);position:relative;font-size:10px;color:var(--text-tertiary);text-align:center;padding-top:2px}.gantt-cell.conflict{background:#fff3cd}.gantt-bar{position:absolute;left:2px;right:2px;height:16px;border-radius:3px;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;white-space:nowrap;cursor:pointer;z-index:1}.gantt-bar.model{background:var(--purple)}.gantt-bar.venue{background:var(--teal)}.gantt-bar.sample{background:var(--blue)}.gantt-bar.reserved{border:1px dashed;opacity:.6;background:transparent!important;color:var(--text-secondary)}.gantt-bar.completed{background:var(--border)!important;color:var(--text-tertiary)}.ba-dropdown{position:absolute;top:100%;right:0;z-index:999;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:200px;max-height:240px;overflow-y:auto}
 
 /* Pipeline Kanban */
 .pipe-section{margin-bottom:20px}
@@ -566,7 +568,7 @@ tbody tr:hover{background:#f8f9fb}
 <div class="topbar"><div class="topbar-left"><h1 class="topbar-title" id="detail-title">美的2026年度框架</h1><div class="topbar-breadcrumb">项目管理 <span style="margin:0 4px;color:var(--text-tertiary)">/</span> <span id="detail-code">PJ-2026-001</span></div></div><div class="topbar-actions"><span class="badge badge-blue" id="detail-status-badge"><span class="badge-dot"></span>执行中</span><span class="muted">2026-01-01 ~ 2026-12-31</span><div class="month-switch" style="margin-left:12px"><button class="month-switch-btn" onclick="switchMonth(-1)">&#8249;</button><span class="month-switch-val" id="cur-month-display">2026-06</span><button class="month-switch-btn" onclick="switchMonth(1)">&#8250;</button></div><button class="btn btn-sm btn-secondary" id="btn-close-project" style="margin-left:12px;display:none" onclick="openModal('modal-close-project')">关项归档</button></div></div>
 <div class="content" style="padding-top:0">
 <div class="card" style="border-radius:0 0 var(--radius-md) var(--radius-md);border-top:0">
-<div class="tabs" style="padding:0 18px"><div class="tab active" data-tab="overview">概览</div><div class="tab" data-tab="tasks">任务看板</div><div class="tab" data-tab="batch">批次管理</div><div class="tab" data-tab="budget">预算执行</div><div class="tab" data-tab="cost">项目成本</div><!-- <div class="tab" data-tab="finance">财务</div> --><div class="tab" data-tab="personnel">人员管理</div><div class="tab" data-tab="milestone">里程碑</div><div class="tab" data-tab="costconfig">项目资源库</div><div class="tab" data-tab="accountbind">项目发布账号</div><div class="tab" data-tab="documents">📁 项目资料</div></div>
+<div class="tabs" style="padding:0 18px"><div class="tab active" data-tab="overview">概览</div><div class="tab" data-tab="tasks">任务看板</div><div class="tab" data-tab="budget">预算执行</div><div class="tab" data-tab="batch">批次管理</div><div class="tab" data-tab="resourceplan">项目资源计划</div><div class="tab" data-tab="cost">项目成本</div><div class="tab" data-tab="personnel">人员管理</div><div class="tab" data-tab="accountbind">项目发布账号</div><div class="tab" data-tab="documents">项目资料</div><div class="tab" data-tab="milestone">里程碑</div></div>
 
 <!-- Overview Tab -->
 <div class="tab-content active" id="tab-overview">
@@ -835,27 +837,111 @@ tbody tr:hover{background:#f8f9fb}
 <div id="milestone-list"></div>
 </div></div>
 
-<!-- Cost Config Tab content -->
-<div class="tab-content" id="tab-costconfig"><div class="card-body">
+<!-- Resource Plan Tab (v2.44) -->
+<div class="tab-content" id="tab-resourceplan"><div class="card-body" style="padding:0">
 
-<!-- Project Models Section -->
-<div class="card" style="box-shadow:none;margin-bottom:12px">
-  <div class="card-header"><div class="card-title">🎭 项目专属模特</div><button class="btn btn-primary btn-sm" onclick="openProjResModal('model')">+ 添加模特</button></div>
-  <div class="table-wrap"><table><thead><tr><th style="width:80px">编号</th><th style="width:80px">姓名</th><th style="width:50px">分级</th><th style="width:120px">肖像类型</th><th style="width:100px">日租报价</th><th style="width:60px">操作</th></tr></thead><tbody id="proj-model-cards"></tbody></table></div>
+<!-- Secondary Tabs -->
+<div class="sub-tabs" style="padding:8px 18px 0;border-bottom:1px solid var(--border-light);display:flex;gap:0">
+  <div class="sub-tab active" data-subtab="schedule" onclick="switchResourceSubTab('schedule')">📅 资源排期</div>
+  <div class="sub-tab" data-subtab="reslib" onclick="switchResourceSubTab('reslib')">📋 项目资源库</div>
 </div>
 
-<!-- Project Venues Section -->
-<div class="card" style="box-shadow:none;margin-bottom:12px">
-  <div class="card-header"><div class="card-title">📍 项目专属场地</div><button class="btn btn-primary btn-sm" onclick="openProjResModal('venue')">+ 添加场地</button></div>
-  <div class="table-wrap"><table><thead><tr><th style="width:80px">编号</th><th style="width:120px">名称</th><th style="width:50px">类型</th><th style="width:140px">位置</th><th style="width:80px">面积</th><th style="width:100px">费用</th><th style="width:60px">操作</th></tr></thead><tbody id="proj-venue-cards"></tbody></table></div>
+<!-- Sub Page: Resource Schedule (Gantt) -->
+<div id="sub-schedule" style="padding:12px 18px">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+    <button class="btn btn-primary btn-sm" onclick="openScheduleModal()">+ 新建排期</button>
+    <div class="month-switch" style="margin-left:4px"><button class="month-switch-btn" onclick="shiftScheduleMonth(-1)">‹</button><span class="month-switch-val" id="sch-month-display">2026-06</span><button class="month-switch-btn" onclick="shiftScheduleMonth(1)">›</button></div>
+    <div class="filter-row" style="margin-left:8px">
+      <button class="filter-chip active" data-filter="schtype" data-val="all" onclick="filterSchType('all',this)">全部</button>
+      <button class="filter-chip" data-filter="schtype" data-val="model" onclick="filterSchType('model',this)">🎭 模特</button>
+      <button class="filter-chip" data-filter="schtype" data-val="venue" onclick="filterSchType('venue',this)">📍 场地</button>
+      <button class="filter-chip" data-filter="schtype" data-val="sample" onclick="filterSchType('sample',this)">📦 样机</button>
+    </div>
+    <div class="filter-spacer"></div>
+    <div class="view-toggle">
+      <button class="view-toggle-btn active" id="sch-view-gantt-btn" onclick="switchSchView('gantt')">甘特图</button>
+      <button class="view-toggle-btn" id="sch-view-list-btn" onclick="switchSchView('list')">列表</button>
+    </div>
+  </div>
+
+  <!-- Gantt View -->
+  <div id="sch-gantt-view">
+    <div class="gantt-wrap" style="overflow-x:auto;border:1px solid var(--border-light);border-radius:8px">
+      <div style="display:flex" id="sch-gantt-inner">
+        <!-- Left: Resource Names -->
+        <div style="width:180px;flex-shrink:0;border-right:1px solid var(--border-light);background:var(--bg-input)">
+          <div style="height:32px;padding:6px 10px;font-size:11px;font-weight:700;color:var(--text-secondary);border-bottom:1px solid var(--border-light)">资源名称</div>
+          <div id="sch-gantt-names"></div>
+        </div>
+        <!-- Right: Timeline -->
+        <div style="flex:1;overflow-x:auto">
+          <div style="display:flex;height:32px;border-bottom:1px solid var(--border-light)" id="sch-gantt-header"></div>
+          <div id="sch-gantt-rows"></div>
+        </div>
+      </div>
+    </div>
+    <div id="sch-gantt-empty" style="display:none;text-align:center;padding:40px;color:var(--text-tertiary);font-size:13px">该月份暂无排期数据</div>
+  </div>
+
+  <!-- List View -->
+  <div id="sch-list-view" style="display:none">
+    <div class="table-wrap"><table><thead><tr>
+      <th style="width:120px">资源名称</th><th style="width:100px">类型</th><th style="width:120px">日期范围</th><th style="width:50px">天数</th><th style="width:120px">关联任务</th><th style="width:70px">状态</th><th style="width:80px">操作</th>
+    </tr></thead><tbody id="sch-list-tbody"></tbody></table></div>
+    <div id="sch-list-empty" style="display:none;text-align:center;padding:40px;color:var(--text-tertiary);font-size:13px">暂无排期数据</div>
+  </div>
 </div>
 
-<!-- Project Samples Section -->
-<div class="card" style="box-shadow:none">
-  <div class="card-header"><div class="card-title">📦 项目专属样机</div><button class="btn btn-primary btn-sm" onclick="openProjResModal('sample')">+ 添加样机</button></div>
-  <div class="table-wrap"><table><thead><tr><th style="width:80px">编号</th><th style="width:140px">名称</th><th style="width:100px">客户</th><th style="width:120px">型号</th><th style="width:120px">机身编号</th><th style="width:70px">状态</th><th style="width:60px">操作</th></tr></thead><tbody id="proj-sample-cards"></tbody></table></div>
+<!-- Sub Page: Resource Library (moved from old costconfig) -->
+<div id="sub-reslib" style="display:none;padding:12px 18px">
+  <div class="card" style="box-shadow:none;margin-bottom:12px">
+    <div class="card-header"><div class="card-title">🎭 项目专属模特</div><button class="btn btn-primary btn-sm" onclick="openProjResModal('model')">+ 添加模特</button></div>
+    <div class="table-wrap"><table><thead><tr><th style="width:80px">编号</th><th style="width:80px">姓名</th><th style="width:50px">分级</th><th style="width:120px">肖像类型</th><th style="width:100px">日租报价</th><th style="width:60px">操作</th></tr></thead><tbody id="proj-model-cards"></tbody></table></div>
+  </div>
+  <div class="card" style="box-shadow:none;margin-bottom:12px">
+    <div class="card-header"><div class="card-title">📍 项目专属场地</div><button class="btn btn-primary btn-sm" onclick="openProjResModal('venue')">+ 添加场地</button></div>
+    <div class="table-wrap"><table><thead><tr><th style="width:80px">编号</th><th style="width:120px">名称</th><th style="width:50px">类型</th><th style="width:140px">位置</th><th style="width:80px">面积</th><th style="width:100px">费用</th><th style="width:60px">操作</th></tr></thead><tbody id="proj-venue-cards"></tbody></table></div>
+  </div>
+  <div class="card" style="box-shadow:none">
+    <div class="card-header"><div class="card-title">📦 项目专属样机</div><button class="btn btn-primary btn-sm" onclick="openProjResModal('sample')">+ 添加样机</button></div>
+    <div class="table-wrap"><table><thead><tr><th style="width:80px">编号</th><th style="width:140px">名称</th><th style="width:100px">客户</th><th style="width:120px">型号</th><th style="width:120px">机身编号</th><th style="width:70px">状态</th><th style="width:60px">操作</th></tr></thead><tbody id="proj-sample-cards"></tbody></table></div>
+  </div>
 </div>
 
+</div></div>
+
+<!-- Schedule Modal (v2.44) -->
+<div class="modal-overlay" id="modal-schedule">
+<div class="modal">
+  <div class="modal-header"><div class="modal-title">新建排期</div><button class="drawer-close" onclick="closeModal('modal-schedule')">✕</button></div>
+  <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
+    <div class="form-group">
+      <div class="form-label">资源类型</div>
+      <select class="form-input form-select" id="sch-res-type" onchange="onSchTypeChange()">
+        <option value="model">🎭 模特</option>
+        <option value="venue">📍 场地</option>
+        <option value="sample">📦 样机</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <div class="form-label">选择资源</div>
+      <div id="sch-res-list" style="display:flex;flex-direction:column;gap:6px"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><div class="form-label">开始日期</div><input class="form-input" type="date" id="sch-start" onchange="calcSchDays()"></div>
+      <div class="form-group"><div class="form-label">结束日期</div><input class="form-input" type="date" id="sch-end" onchange="calcSchDays()"></div>
+      <div class="form-group"><div class="form-label">天数</div><div class="form-input" style="display:flex;align-items:center;background:var(--bg-input);color:var(--text-secondary);font-size:13px" id="sch-days-display">—</div></div>
+    </div>
+    <div class="form-group">
+      <div class="form-label">选择批次 <span class="hint">（仅展示脚本已完成、拍摄未排期的批次）</span></div>
+      <select class="form-input form-select" id="sch-task"><option value="">请选择批次</option></select>
+    </div>
+    <div class="form-group"><div class="form-label">备注</div><input class="form-input" id="sch-remark" placeholder="排期备注"></div>
+  </div>
+  <div class="modal-footer">
+    <button class="btn btn-secondary" onclick="closeModal('modal-schedule')">取消</button>
+    <button class="btn btn-primary" onclick="confirmSchedule()">确认排期</button>
+  </div>
 </div></div>
 
 <!-- Account Bind Tab content -->
@@ -1192,7 +1278,7 @@ tbody tr:hover{background:#f8f9fb}
       <button class="drawer-close" onclick="closeDrawer()">✕</button>
     </div>
   </div>
-  <div class="drawer-body">
+  <div class="drawer-body" id="drawer-body">
     <div style="display:flex;gap:6px" id="d-badges"></div>
     <div id="d-edit-section" style="display:none"><div class="drawer-section-title">✏️ 编辑任务信息</div>
       <div class="form-row"><div class="form-group" style="flex:1"><div class="form-label">标题 <span class="hint">（必填）</span></div><input class="form-input" id="d-edit-title"></div></div>
@@ -1215,12 +1301,35 @@ tbody tr:hover{background:#f8f9fb}
       <div id="d-dependency"></div>
       <div id="d-resource"></div>
       <div id="d-deliverables"></div>
-      <div id="d-extra-cost"></div>
       <div class="drawer-section-title">流水线状态</div>
       <div id="d-pipeline" style="display:flex;flex-direction:column;gap:6px;font-size:12px"></div>
       <div class="drawer-section-title">活动日志</div>
       <div id="d-log" style="font-size:11.5px;display:flex;flex-direction:column;gap:7px"></div>
     </div>
+  </div>
+</div>
+
+<!-- RESOURCE TASK DRAWER (v2.42) -->
+<div class="slide-drawer-overlay" id="pg-restask-drawer" onclick="closeResourceTaskDrawer()"></div>
+<div class="slide-drawer-panel" id="rtd-panel" style="width:520px">
+  <div class="drawer-topbar">
+    <div>
+      <span class="drawer-title" id="rtd-title">关联任务</span>
+      <span class="drawer-badge" id="rtd-badge" style="font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px"></span>
+    </div>
+    <button class="drawer-close" onclick="closeResourceTaskDrawer()">✕</button>
+  </div>
+  <div class="drawer-body" id="rtd-body">
+    <div class="stats-grid col3" style="margin-bottom:0">
+      <div class="stat-card teal"><div class="stat-label">📸 本月已完成拍摄</div><div class="stat-value" id="rtd-monthly">0</div><div class="stat-sub">条</div></div>
+      <div class="stat-card purple"><div class="stat-label">📁 本项目已完成</div><div class="stat-value" id="rtd-proj-done">0</div><div class="stat-sub">条</div></div>
+      <div class="stat-card blue"><div class="stat-label">📋 关联任务总数</div><div class="stat-value" id="rtd-total">0</div><div class="stat-sub">个任务</div></div>
+    </div>
+    <div class="table-wrap" style="margin-top:8px">
+      <table><thead><tr><th style="width:80px">任务编号</th><th>任务名称</th><th style="width:50px">项目</th><th style="width:90px">使用时间</th><th style="width:40px">天数</th><th style="width:55px">状态</th></tr></thead>
+      <tbody id="rtd-tbody"></tbody></table>
+    </div>
+    <div id="rtd-empty" style="display:none;text-align:center;padding:32px;color:var(--text-tertiary);font-size:13px">该资源暂无关联任务</div>
   </div>
 </div>
 
@@ -1298,55 +1407,6 @@ tbody tr:hover{background:#f8f9fb}
   <div class="modal-footer">
     <button class="btn btn-secondary" onclick="closeModal('modal-close-project')">取消</button>
     <button class="btn btn-primary" id="btn-confirm-close" disabled onclick="confirmCloseProject()">确认关项归档</button>
-  </div>
-</div></div>
-
-<!-- Extra Cost Modal -->
-<div class="modal-overlay" id="modal-extra-cost"><div class="modal">
-  <div class="modal-header"><div class="modal-title">添加额外成本</div><button class="drawer-close" onclick="closeModal('modal-extra-cost')">✕</button></div>
-  <div class="modal-body" style="display:flex;flex-direction:column;gap:12px">
-    <div style="padding:8px 12px;background:var(--accent-light);border-radius:6px;font-size:12px">⚠ 仅能选择当前项目预设的模特与场地。如需更多资源，请联系PM在「项目详情→项目资源库」中添加。</div>
-    <div class="form-group">
-      <div class="form-label">成本类型</div>
-      <select class="form-input form-select" id="ec-type" onchange="onExtraCostTypeChange()">
-        <option value="model">模特费</option>
-        <option value="venue">场地租赁费</option>
-        <option value="prop">道具费</option>
-        <option value="music">版权音乐费</option>
-        <option value="travel">交通差旅费</option>
-        <option value="custom">自定义费用</option>
-      </select>
-    </div>
-    <div id="ec-model-section">
-      <div class="form-label">选择模特 <span class="hint">（本项目专属 · 不显示报价）</span></div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg-input);border-radius:6px;cursor:pointer">
-          <input type="radio" name="ec-model" value="m1" checked> 张三 · A级 · 厨房场景
-        </label>
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg-input);border-radius:6px;cursor:pointer">
-          <input type="radio" name="ec-model" value="m2"> 李四 · B级 · 客厅场景
-        </label>
-      </div>
-    </div>
-    <div id="ec-venue-section" style="display:none">
-      <div class="form-label">选择场地 <span class="hint">（本项目专属 · 不显示报价）</span></div>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg-input);border-radius:6px;cursor:pointer">
-          <input type="radio" name="ec-venue" value="v1" checked> 影棚A区 · 120㎡
-        </label>
-      </div>
-      <div class="form-group" style="margin-top:8px"><div class="form-label">选择时段</div><select class="form-input form-select" id="ec-venue-slot"><option>工作日 08:00-12:00</option><option>工作日 13:00-17:00</option><option>工作日 18:00-22:00（夜间）</option><option>周末全天</option><option>节假日全天</option></select></div>
-    </div>
-    <div id="ec-amount-section" style="display:none">
-      <div class="form-group"><div class="form-label">费用金额（元）</div><input class="form-input" id="ec-amount" type="number" placeholder="请输入金额"></div>
-      <div class="form-group"><div class="form-label">计费单位</div><select class="form-input form-select" id="ec-unit"><option>元/天</option><option>元/次</option><option>元/首</option></select></div>
-    </div>
-    <div class="form-group"><div class="form-label">数量</div><input class="form-input" id="ec-qty" type="number" value="1" min="1"></div>
-    <div class="form-group"><div class="form-label">备注</div><input class="form-input" id="ec-remark" placeholder="备注说明"></div>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-secondary" onclick="closeModal('modal-extra-cost')">取消</button>
-    <button class="btn btn-primary" onclick="confirmExtraCost()">确认添加</button>
   </div>
 </div></div>
 
@@ -1475,10 +1535,15 @@ tbody tr:hover{background:#f8f9fb}
   <div id="venue-internal-section" style="display:none">
     <div class="form-group"><div class="form-label">租金单价（元/㎡/月）</div><input class="form-input" type="number" id="venue-rent-pm" placeholder="如：120" oninput="calculateMonthlyRent()"></div>
     <div class="form-row">
-      <div class="form-group"><div class="form-label">月租金（自动计算）</div><input class="form-input" id="venue-monthly-rent" readonly placeholder="如：14400"></div>
-      <div class="form-group"><div class="form-label">月均水电费（元）</div><input class="form-input" type="number" id="venue-utility" placeholder="如：2500"></div>
+      <div class="form-group"><div class="form-label">月租金（自动计算，FM可覆盖）</div><input class="form-input" id="venue-monthly-rent" readonly placeholder="如：14400"></div>
+      <div class="form-group"><div class="form-label">分摊模式</div>
+        <select class="form-input form-select" id="venue-alloc-mode">
+          <option value="weighted_output">按产出分摊</option>
+          <option value="fixed_overhead">归管理费用</option>
+        </select>
+      </div>
     </div>
-    <div class="form-group"><div class="form-label">月均物业费（元）</div><input class="form-input" type="number" id="venue-property" placeholder="如：900"></div>
+    <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">💡 水电费、物业费等月度变动费用由 FM 在每月生成分摊时手工填写</div>
   </div>
 
   <div class="form-group"><div class="form-label">场地图片 <span class="hint">（可选，最多3张）</span></div>
@@ -1961,7 +2026,7 @@ function switchPMCostView(view){
 }
 document.querySelectorAll('.nav-item').forEach(i=>i.addEventListener('click',function(e){e.stopPropagation();navTo(this.dataset.nav)}));
 document.querySelectorAll('.nav-sub').forEach(i=>i.addEventListener('click',function(e){e.stopPropagation();navTo(this.dataset.nav,this.dataset.pid)}));
-document.querySelectorAll('.tab').forEach(tab=>{tab.addEventListener('click',function(){let p=this.closest('.tabs');p.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');let c=this.closest('.card');c.querySelectorAll('.tab-content').forEach(ct=>ct.classList.remove('active'));let tg=c.querySelector('#tab-'+this.dataset.tab);if(tg)tg.classList.add('active');if(this.dataset.tab==='costconfig'){if(!document.getElementById('proj-model-cards').innerHTML)renderProjResourceConfig()}if(this.dataset.tab==='accountbind'){if(!document.getElementById('proj-account-tbody').innerHTML)renderProjAccountBind()}if(this.dataset.tab==='documents'){renderDocTree();renderDocBreadcrumb();renderDocList()}if(this.dataset.tab==='personnel'){if(!document.getElementById('personnel-tbody').innerHTML)renderPersonnel()}if(this.dataset.tab==='finance'){renderFinanceCostTable('finance')}})});
+document.querySelectorAll('.tab').forEach(tab=>{tab.addEventListener('click',function(){let p=this.closest('.tabs');p.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));this.classList.add('active');let c=this.closest('.card');c.querySelectorAll('.tab-content').forEach(ct=>ct.classList.remove('active'));let tg=c.querySelector('#tab-'+this.dataset.tab);if(tg)tg.classList.add('active');if(this.dataset.tab==='resourceplan'){if(!document.getElementById('proj-model-cards').innerHTML)renderProjResourceConfig();renderGantt()}if(this.dataset.tab==='accountbind'){if(!document.getElementById('proj-account-tbody').innerHTML)renderProjAccountBind()}if(this.dataset.tab==='documents'){renderDocTree();renderDocBreadcrumb();renderDocList()}if(this.dataset.tab==='personnel'){if(!document.getElementById('personnel-tbody').innerHTML)renderPersonnel()}if(this.dataset.tab==='finance'){renderFinanceCostTable('finance')}})});
 document.querySelectorAll('.filter-chip').forEach(b=>b.addEventListener('click',function(){if(this.closest('#tab-tasks')||this.closest('#review-project-chips')||this.closest('#tab-personnel'))return;this.parentElement.querySelectorAll('.filter-chip').forEach(bb=>bb.classList.remove('active'));this.classList.add('active')}));
 document.querySelectorAll('#tab-tasks .filter-chip').forEach(chip=>{chip.addEventListener('click',function(){this.parentElement.querySelectorAll('.filter-chip').forEach(c=>c.classList.remove('active'));this.classList.add('active');renderPipeline();if(document.getElementById('task-list-view').style.display!=='none')renderTaskList()})});
 
@@ -3006,6 +3071,45 @@ const batchData=[
     items:Array.from({length:10},()=>['✅完成','✅完成','✅完成','📎已上线'])},
   {label:'PJ-2026-001-B021',model:'JM1',ctype:'商品讲解',qty:30,created:'2026-06-08 09:00',creator:'赵六',status:'draft',script:0,shooting:0,editing:0,published:0,items:[]},
 ];
+const batchResourceData=[
+  {batchLabel:'PJ-2026-001-B020',taskIndex:1,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:1,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:1,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:2,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:2,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:2,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:3,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:3,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:3,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:4,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:5,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:6,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:6,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:6,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:7,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:7,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:7,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:8,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:9,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:10,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:10,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B020',taskIndex:10,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+  {batchLabel:'PJ-2026-001-B019',taskIndex:1,resourceType:'model',resourceName:'小林 (S级)'},
+  {batchLabel:'PJ-2026-001-B019',taskIndex:1,resourceType:'venue',resourceName:'公司自建拍摄间-客厅场景'},
+  {batchLabel:'PJ-2026-001-B019',taskIndex:1,resourceType:'sample',resourceName:'JM1 (电热)'},
+  {batchLabel:'PJ-2026-001-B018',taskIndex:1,resourceType:'model',resourceName:'阿杰 (A级)'},
+  {batchLabel:'PJ-2026-001-B018',taskIndex:1,resourceType:'venue',resourceName:'深圳南山摄影棚B02'},
+  {batchLabel:'PJ-2026-001-B018',taskIndex:1,resourceType:'sample',resourceName:'JM1 (电热)'},
+  {batchLabel:'PJ-2026-001-B017',taskIndex:1,resourceType:'model',resourceName:'小王 (B级)'},
+  {batchLabel:'PJ-2026-001-B017',taskIndex:1,resourceType:'venue',resourceName:'公司自建拍摄间-客厅场景'},
+  {batchLabel:'PJ-2026-001-B017',taskIndex:1,resourceType:'sample',resourceName:'LN7PRO (燃热)'},
+  {batchLabel:'PJ-2026-001-B016',taskIndex:1,resourceType:'model',resourceName:'阿杰 (A级)'},
+  {batchLabel:'PJ-2026-001-B016',taskIndex:1,resourceType:'venue',resourceName:'深圳南山摄影棚B02'},
+  {batchLabel:'PJ-2026-001-B016',taskIndex:1,resourceType:'sample',resourceName:'JM1 (电热)'},
+  {batchLabel:'PJ-2026-001-B015',taskIndex:1,resourceType:'model',resourceName:'赵丽 (A级)'},
+  {batchLabel:'PJ-2026-001-B015',taskIndex:1,resourceType:'venue',resourceName:'广州天河创意园A区'},
+  {batchLabel:'PJ-2026-001-B015',taskIndex:1,resourceType:'sample',resourceName:'AK5 PRO (烟灶)'},
+];
 let batchOpen=null;
 
 function renderBatches(){
@@ -3032,9 +3136,9 @@ function renderBatches(){
     const isOpen=batchOpen===b.label;
     let detailHTML='';
     if(isOpen&&!isDraft){
-      detailHTML=`<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:6px">批次 ${b.label} 内容明细（前10条）</div>
-      <div class="table-wrap"><table style="font-size:10.5px"><thead><tr><th style="width:30px">#</th><th>标题</th><th style="width:60px">✏️脚本</th><th style="width:60px">📹拍摄</th><th style="width:60px">✂️剪辑</th><th style="width:60px">📤发布</th></tr></thead><tbody>
-      ${b.items.map((item,i)=>`<tr onclick="showBatchContentDrawer('${b.model}','${b.ctype}','${String(i+1).padStart(2,'0')}')" style="cursor:pointer"><td class="code">${String(i+1).padStart(3,'0')}</td><td><strong>${b.ctype}·${b.model}-${String(i+1).padStart(2,'0')}</strong></td>${item.map(s=>`<td><span style="font-size:10px">${s}</span></td>`).join('')}</tr>`).join('')}
+      detailHTML=`<div style="margin-top:12px;border-top:1px solid var(--border);padding-top:10px"><div style="font-size:11px;font-weight:700;color:var(--text-secondary);margin-bottom:6px">批次 ${b.label} 内容明细（前${Math.min(b.qty,10)}条）</div>
+      <div class="table-wrap"><table style="font-size:10px"><thead><tr><th style="width:28px">#</th><th>标题</th><th style="width:55px">🎭模特</th><th style="width:75px">📍场地</th><th style="width:75px">📦样机</th><th style="width:48px">✏️脚本</th><th style="width:48px">📹拍摄</th><th style="width:48px">✂️剪辑</th><th style="width:48px">📤发布</th></tr></thead><tbody>
+      ${b.items.map((item,i)=>{const ti=i+1;const m=getTaskResource(b.label,ti,'model');const v=getTaskResource(b.label,ti,'venue');const s=getTaskResource(b.label,ti,'sample');return `<tr onclick="showBatchContentDrawer('${b.model}','${b.ctype}','${String(ti).padStart(2,'0')}','${b.label}',${ti})" style="cursor:pointer"><td class="code">${String(ti).padStart(3,'0')}</td><td><strong>${b.ctype}·${b.model}-${String(ti).padStart(2,'0')}</strong></td><td style="font-size:9.5px">${m?'<span style="color:var(--blue)">'+m+'</span>':'<span style="color:var(--text-tertiary)">—</span>'}</td><td style="font-size:9.5px">${v?'<span style="color:var(--blue)">'+v+'</span>':'<span style="color:var(--text-tertiary)">—</span>'}</td><td style="font-size:9.5px">${s?'<span style="color:var(--blue)">'+s+'</span>':'<span style="color:var(--text-tertiary)">—</span>'}</td>${item.map(st=>`<td><span style="font-size:10px">${st}</span></td>`).join('')}</tr>`}).join('')}
       </tbody></table></div></div>`;
     }
     return `<div class="card" style="margin-bottom:12px;${isOpen?'border-color:var(--blue);box-shadow:0 0 0 1px rgba(38,98,217,.1)':''}">
@@ -3047,7 +3151,7 @@ function renderBatches(){
         </div>
         <div class="filter-row" style="gap:12px">
           <span class="muted">${b.created} · ${b.creator}(AE)</span>
-          ${!isDraft?`<button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();batchOpen=batchOpen==='${b.label}'?null:'${b.label}';renderBatches()">${isOpen?'收起 ▲':'展开明细 ▼'}</button>`:''}
+          ${!isDraft?`<button class="btn btn-ghost btn-xs" onclick="event.stopPropagation();batchOpen=batchOpen==='${b.label}'?null:'${b.label}';renderBatches()">${isOpen?'收起 ▲':'展开明细 ▼'}</button><button class="btn btn-ghost btn-xs" style="color:var(--purple)" onclick="event.stopPropagation();showBatchAdjustDrawer('${b.label}')">🔧 批次调整</button>`:''}
         </div>
       </div>
       <div class="card-body" style="padding:12px 18px">
@@ -3174,7 +3278,7 @@ function saveMilestone(){
 renderBudget();
 
 function openDrawer(){document.getElementById('drawer-overlay').classList.add('open');document.getElementById('drawer').classList.add('open')}
-function closeDrawer(){document.getElementById('drawer-overlay').classList.remove('open');document.getElementById('drawer').classList.remove('open')}
+function closeDrawer(){_batchCtx=null;document.getElementById('drawer-overlay').classList.remove('open');document.getElementById('drawer').classList.remove('open')}
 document.getElementById('drawer-overlay').addEventListener('click',closeDrawer);
 
 function openModal(id){
@@ -4647,7 +4751,7 @@ function renderTaskList(){
   if(isPubList){
     document.getElementById('task-list-thead').innerHTML='<tr><th style="width:75px">编号</th><th style="width:95px">批次编号</th><th>标题</th><th style="width:70px">内容类型</th><th style="width:55px">阶段</th><th style="width:70px">状态</th><th style="width:55px">发布平台</th><th style="width:75px">账号</th><th style="width:65px">账号类型</th></tr>';
   } else {
-    document.getElementById('task-list-thead').innerHTML='<tr><th style="width:75px">编号</th><th style="width:95px">批次编号</th><th style="width:46px">平台</th><th style="width:60px">品类</th><th style="width:70px">型号</th><th>标题</th><th style="width:70px">内容类型</th><th style="width:55px">阶段</th><th style="width:70px">状态</th><th style="width:48px">系数</th><th>执行人</th></tr>';
+    document.getElementById('task-list-thead').innerHTML='<tr><th style="width:75px">编号</th><th style="width:95px">批次编号</th><th style="width:46px">平台</th><th style="width:60px">品类</th><th style="width:70px">型号</th><th style="width:65px">🎭模特</th><th style="width:80px">📍场地</th><th style="width:80px">📦样机</th><th>标题</th><th style="width:70px">内容类型</th><th style="width:55px">阶段</th><th style="width:70px">状态</th><th style="width:48px">系数</th><th>执行人</th></tr>';
   }
   const catF=document.getElementById('list-filter-cat')?.value;
   if(catF&&catF!=='all') mt=mt.filter(t=>t.cat===catF);
@@ -4665,7 +4769,7 @@ function renderTaskList(){
   const stageLabels={script:'✏️ 脚本',shooting:'📹 拍摄',editing:'✂️ 剪辑',publishing:'📤 发布'};
   const countEl=document.getElementById('list-task-count');
   if(countEl) countEl.textContent=mt.length+' 条结果';
-  const batchLabelMap={};['KFR35GW','AK5PRO','白月光1000G','白泽1200Pro','白泽1000G','LN7PRO','HWF','M9Pro','JM1','UDpro','V7S','星河2','Q325','WQP12','YR1808','TZ5','150B05','110HQ2'].forEach((k,i)=>batchLabelMap[k]=['PJ-001-B020','PJ-001-B018','PJ-001-B019','PJ-001-B019','PJ-001-B019','PJ-001-B017','PJ-001-B016','PJ-001-B015','PJ-001-B022','PJ-001-B021','PJ-001-B022','PJ-001-B020','PJ-001-B023','PJ-001-B024','PJ-001-B025','PJ-001-B020','PJ-001-B026','PJ-001-B027'][i]);
+  const batchLabelMap={};['KFR35GW','AK5PRO','白月光1000G','白泽1200Pro','白泽1000G','LN7PRO','HWF','M9Pro','JM1','UDpro','V7S','星河2','Q325','WQP12','YR1808','TZ5','150B05','110HQ2'].forEach((k,i)=>batchLabelMap[k]=['PJ-2026-001-B020','PJ-2026-001-B018','PJ-2026-001-B019','PJ-2026-001-B019','PJ-2026-001-B019','PJ-2026-001-B017','PJ-2026-001-B016','PJ-2026-001-B015','PJ-2026-001-B022','PJ-2026-001-B021','PJ-2026-001-B022','PJ-2026-001-B020','PJ-2026-001-B023','PJ-2026-001-B024','PJ-2026-001-B025','PJ-2026-001-B020','PJ-2026-001-B026','PJ-2026-001-B027'][i]);
   document.getElementById('task-list-tbody').innerHTML=mt.map(t=>{
     const batKey=Object.keys(batchLabelMap).find(k=>t.model&&t.model.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,'').includes(k));
     const batch=batKey?batchLabelMap[batKey]:'-';
@@ -4685,12 +4789,27 @@ function renderTaskList(){
        <td><span style="display:inline-flex;align-items:center;gap:3px;font-size:10px;padding:2px 6px;border-radius:3px;background:${ownerBg};color:${ownerColor};font-weight:600">${ownerLabel}</span></td>
      </tr>`;
     }
+    let resCols='';
+    if(t.stage==='shooting'){
+      const bKey=Object.keys(batchLabelMap).find(k=>t.model&&t.model.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,'').includes(k));
+      const bl=bKey?batchLabelMap[bKey]:'';
+      const ti=bl?Math.abs(t.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%20+1:1;
+      const m=getTaskResource(bl,ti,'model');
+      const v=getTaskResource(bl,ti,'venue');
+      const s=getTaskResource(bl,ti,'sample');
+      resCols='<td style="font-size:11px">'+(m?'<span style="color:var(--blue);cursor:pointer" onclick="event.stopPropagation();openResourceTaskDrawer(\'model\',\''+m.replace(/'/g,"\\'")+'\')">'+m+'</span>':'<span style="color:var(--text-tertiary)">—</span>')+'</td>'+
+        '<td style="font-size:11px">'+(v?'<span style="color:var(--blue);cursor:pointer" onclick="event.stopPropagation();openResourceTaskDrawer(\'venue\',\''+v.replace(/'/g,"\\'")+'\')">'+v+'</span>':'<span style="color:var(--text-tertiary)">—</span>')+'</td>'+
+        '<td style="font-size:11px">'+(s?'<span style="color:var(--blue);cursor:pointer" onclick="event.stopPropagation();openResourceTaskDrawer(\'sample\',\''+s.replace(/'/g,"\\'")+'\')">'+s+'</span>':'<span style="color:var(--text-tertiary)">—</span>')+'</td>';
+    }else{
+      resCols='<td style="color:var(--text-tertiary);font-size:11px">—</td><td style="color:var(--text-tertiary);font-size:11px">—</td><td style="color:var(--text-tertiary);font-size:11px">—</td>';
+    }
     return `<tr onclick="showPipeDrawer('${t.id}')" style="cursor:pointer">
      <td class="code">TSK-2026-${t.id}</td>
      <td class="code">${batch}</td>
      <td>${t.platform||''}</td>
      <td>${t.cat||''}</td>
      <td>${t.model||''}</td>
+     ${resCols}
      <td><strong>${t.title}</strong></td>
      <td>${t.ctype||''}</td>
      <td>${stageLabels[t.stage]||''}</td>
@@ -4700,16 +4819,17 @@ function renderTaskList(){
    </tr>`}).join('');
 }
 
-function showBatchContentDrawer(model,ctype,idx){
-  // Try to find a matching pipeData task by model+ctype
+let _batchCtx=null;
+function showBatchContentDrawer(model,ctype,idx,batchLabel,taskIndex){
+  _batchCtx={batchLabel, taskIndex};
   let t=pipeData.find(p=>p.model===model&&p.ctype===ctype);
-  // Or find any task with matching model
   if(!t) t=pipeData.find(p=>p.model===model);
   if(t){showPipeDrawer(t.id)}
   else{showToast('该内容暂无任务详情','warn')}
 }
 
 function showPipeDrawer(id){
+  if(_drawerBodyBackup){document.getElementById('drawer-body').innerHTML=_drawerBodyBackup;_drawerBodyBackup='';}
   const t=pipeData.find(p=>p.id===id);
   if(!t) return;
 
@@ -4760,11 +4880,40 @@ function showPipeDrawer(id){
     else depEl.innerHTML='<div class="drawer-section-title">前置依赖</div><div style="padding:10px 12px;background:var(--teal-light);border-radius:6px;font-size:12.5px">✅ 拍摄已交付 · 前置条件已满足</div>';
   } else depEl.innerHTML='';
 
-  // Resource
+  // Resource (v2.48 - editable for shooting)
   const resEl=document.getElementById('d-resource');
-  if(t.stage==='shooting'){
-    if(t.sub==='in_progress') resEl.innerHTML='<div class="drawer-section-title">关联资源</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-sample" style="font-size:11px;padding:4px 8px">🔒 '+t.model+'（已出库）</span><span class="tag tag-scene" style="font-size:11px;padding:4px 8px">📍 厨房A区（已预订）</span></div>';
-    else if(t.sub==='pending') resEl.innerHTML='<div class="drawer-section-title">关联资源</div><div style="display:flex;gap:6px;flex-wrap:wrap"><span class="tag tag-sample" style="font-size:11px;padding:4px 8px">样机-待申领</span><span class="tag tag-scene" style="font-size:11px;padding:4px 8px">场景-待预订</span></div>';
+  if(t.stage==='shooting'||_batchCtx){
+    const ctx=_batchCtx;_batchCtx=null;
+    let bl,ti;
+    if(ctx){
+      bl=ctx.batchLabel;ti=ctx.taskIndex;
+    }else{
+      const batchLabelMap={};['KFR35GW','AK5PRO','白月光1000G','白泽1200Pro','白泽1000G','LN7PRO','HWF','M9Pro','JM1','UDpro','V7S','星河2','Q325','WQP12','YR1808','TZ5','150B05','110HQ2'].forEach((k,i)=>batchLabelMap[k]=['PJ-2026-001-B020','PJ-2026-001-B018','PJ-2026-001-B019','PJ-2026-001-B019','PJ-2026-001-B019','PJ-2026-001-B017','PJ-2026-001-B016','PJ-2026-001-B015','PJ-2026-001-B022','PJ-2026-001-B021','PJ-2026-001-B022','PJ-2026-001-B020','PJ-2026-001-B023','PJ-2026-001-B024','PJ-2026-001-B025','PJ-2026-001-B020','PJ-2026-001-B026','PJ-2026-001-B027'][i]);
+      const batKey=Object.keys(batchLabelMap).find(k=>t.model&&t.model.replace(/[^a-zA-Z0-9\u4e00-\u9fff]/g,'').includes(k));
+      bl=batKey?batchLabelMap[batKey]:'PJ-2026-001-B020';
+      ti=bl?Math.abs(t.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0))%Math.min((batchData.find(b=>b.label===bl)?.qty||50),10)+1:1;
+    }
+    const isCompleted=t.sub==='completed';
+    const readOnly=isCompleted?'style="pointer-events:none;opacity:0.6"':'';
+    const typeConfig=[
+      {type:'model',icon:'🎭',label:'模特',list:projModels,attr:r=>r.name+' · '+r.grade+'级 · '+r.portrait+' · '+r.base},
+      {type:'venue',icon:'📍',label:'场地',list:projVenues,attr:r=>r.name+' · '+r.area+'㎡ · '+r.style+(r.pricing?' · '+r.pricing:' · ¥'+r.rent+'/月')},
+      {type:'sample',icon:'📦',label:'样机',list:projSamples,attr:r=>r.name+' · '+r.model+' · '+r.serial}
+    ];
+    let html='<div class="drawer-section-title">关联资源</div><div '+readOnly+'>';
+    typeConfig.forEach(cfg=>{
+      const cur=getTaskResource(bl,ti,cfg.type);
+      html+='<div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg-input);border-radius:6px;margin-bottom:6px;font-size:12px">'+
+        '<span>'+cfg.icon+'</span>'+
+        '<span style="flex:1">'+(cur?'● '+(cfg.list.find(r=>r.name===cur)?cfg.attr(cfg.list.find(r=>r.name===cur)):cur):'暂无')+'</span>';
+      if(!isCompleted){
+        html+='<button class="btn btn-xs btn-ghost" style="color:var(--blue)" onclick="event.stopPropagation();drReplaceRes(\''+t.id+'\',\''+bl+'\','+ti+',\''+cfg.type+'\',event)">更换</button>'+
+          (cur?'<button class="btn btn-xs btn-ghost" style="color:var(--red)" onclick="event.stopPropagation();drRemoveRes(\''+t.id+'\',\''+bl+'\','+ti+',\''+cfg.type+'\')">移除</button>':'<button class="btn btn-xs btn-ghost" style="color:var(--purple)" onclick="event.stopPropagation();drReplaceRes(\''+t.id+'\',\''+bl+'\','+ti+',\''+cfg.type+'\',event)">添加</button>');
+      }
+      html+='</div>';
+    });
+    html+='<div style="padding:6px 10px;background:var(--accent-light);border-radius:6px;font-size:10px;color:var(--text-secondary)">⚠️ 修改仅影响本条任务。</div></div>';
+    resEl.innerHTML=html;
   } else if(t.stage==='editing'){
     resEl.innerHTML='';
   } else resEl.innerHTML='';
@@ -4826,31 +4975,6 @@ function showPipeDrawer(id){
     }
   } else {
     delEl.innerHTML='';
-  }
-
-  // Extra cost management (shooting only)
-  const ecEl=document.getElementById('d-extra-cost');
-  if(t.stage==='shooting'&&!['pending'].includes(t.sub)){
-    const costItems=[
-      {id:'ec1',type:'模特费',name:'张三（厨房场景）',amount:'¥2000/天',qty:1,total:'¥2000'},
-      {id:'ec2',type:'场地租赁费',name:'影棚A区',amount:'¥800/天',qty:1,total:'¥800'}
-    ];
-    ecEl.innerHTML=
-      `<div class="drawer-section-title">💰 额外成本</div>
-      <div style="display:flex;flex-direction:column;gap:8px">
-      ${costItems.map(ci=>`
-        <div style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg-input);border-radius:6px">
-          <span style="font-size:11px;padding:2px 6px;background:var(--teal-light);color:var(--teal);border-radius:3px">${ci.type}</span>
-          <div style="flex:1"><div style="font-size:13px;font-weight:600">${ci.name}</div><div style="font-size:11px;color:var(--text-tertiary)">${ci.amount} × ${ci.qty} = ${ci.total}</div></div>
-          <button class="btn btn-xs" style="color:var(--red);font-size:10px" onclick="event.stopPropagation();removeExtraCost('${ci.id}')">×</button>
-        </div>
-      `).join('')}
-      <button class="btn btn-sm btn-primary" onclick="event.stopPropagation();openExtraCostModal('${t.id}')" style="width:100%">+ 添加额外成本</button>
-      </div>`;
-  } else if(t.stage==='shooting'&&t.sub==='pending'){
-    ecEl.innerHTML='<div class="drawer-section-title">💰 额外成本</div><div style="padding:10px 12px;background:var(--accent-light);border-radius:6px;font-size:12.5px">任务领取后可添加额外成本（模特费、场地租赁费等）</div>';
-  } else {
-    ecEl.innerHTML='';
   }
 
   // Pipeline status (4 stages)
@@ -5020,32 +5144,6 @@ function saveDeliverable(taskId,stage){
 
 function savePublishAccounts(taskId){
   showToast('发布账号配置已保存','ok');
-}
-
-function openExtraCostModal(taskId){
-  document.getElementById('ec-type').value='model';
-  onExtraCostTypeChange();
-  openModal('modal-extra-cost');
-}
-
-function onExtraCostTypeChange(){
-  const type=document.getElementById('ec-type').value;
-  document.getElementById('ec-model-section').style.display=type==='model'?'block':'none';
-  document.getElementById('ec-venue-section').style.display=type==='venue'?'block':'none';
-  document.getElementById('ec-amount-section').style.display=(type==='model'||type==='venue')?'none':'block';
-}
-
-function confirmExtraCost(){
-  const type=document.getElementById('ec-type').value;
-  const typeLabels={model:'模特费',venue:'场地租赁费',prop:'道具费',music:'版权音乐费',travel:'交通差旅费',custom:'自定义费用'};
-  const modelNames={m1:'张三（厨房场景）',m2:'李四（客厅场景）',m3:'王五（老人角色）'};
-  const name=type==='model'?modelNames[document.querySelector('input[name=ec-model]:checked')?.value||'m1']:document.getElementById('ec-remark').value||typeLabels[type];
-  closeModal('modal-extra-cost');
-  showToast('已添加'+typeLabels[type]+'：'+name,'ok');
-}
-
-function removeExtraCost(id){
-  showToast('已移除该成本项','ok');
 }
 
 function switchMyTaskRole(val){
@@ -5638,7 +5736,7 @@ function showVenueDetail(id) {
   const typeBadge = v.type === 'external' ? '<span class="badge badge-blue"><span class="badge-dot"></span>外部</span>' : '<span class="badge badge-purple"><span class="badge-dot"></span>自建</span>';
   const costSection = v.type === 'external'
     ? `<div class="form-group"><div class="form-label">计费规则</div><div style="font-size:14px">${v.billing}</div></div><div class="form-group"><div class="form-label">单价</div><div class="code" style="font-size:14px">${v.pricing}</div></div>`
-    : `<div class="form-group"><div class="form-label">月租金</div><div style="font-size:14px">${v.rent || '-'}</div></div><div class="form-group"><div class="form-label">水电费（均摊）</div><div style="font-size:14px">${v.utility || '-'}</div></div><div class="form-group"><div class="form-label">物业费</div><div style="font-size:14px">${v.property || '-'}</div></div>`;
+    : `<div class="form-group"><div class="form-label">月租金（默认值，FM可覆盖）</div><div style="font-size:14px">${v.rent || '-'}</div></div><div class="form-group"><div class="form-label">分摊模式</div><div style="font-size:14px">${v.allocMode === 'fixed_overhead' ? '归管理费用' : '按产出分摊'}</div></div><div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">💡 水电费、物业费由 FM 每月手填</div>`;
   document.getElementById('venue-detail-title').textContent = '场地详情：' + v.name;
   document.getElementById('venue-detail-body').innerHTML =
     `<div class="form-group"><div class="form-label">编号</div><div class="code" style="font-size:14px">${v.id}</div></div>
@@ -5698,9 +5796,9 @@ function showProjAccountDetail(name) {
 }
 
 // ========== PROJECT RESOURCE DATA ==========
-let projModels = [{id:'M001',name:'张三',grade:'A',portrait:'厨房场景',base:'¥2,000'},{id:'M002',name:'李四',grade:'B',portrait:'客厅场景',base:'¥1,800'},{id:'M003',name:'王五',grade:'C',portrait:'老人角色',base:'¥1,500'}];
-let projVenues = [{id:'V001',name:'影棚A区',type:'external',location:'朝阳区XX路18号',area:'120',style:'现代风',scene:'客厅',billing:'按小时',pricing:'¥200/h'},{id:'V004',name:'公司影棚A',type:'internal',location:'总部B1层',area:'150',style:'现代风',scene:'客厅',rent:'¥18,000/月'}];
-let projSamples = [{id:'S001',name:'白泽1000G净水器',client:'美的集团',model:'MRO1891B-1000G',serial:'MX20260101001',status:'库存中'},{id:'S002',name:'白月光空调',client:'美的集团',model:'KFR-35GW',serial:'MX20260101002',status:'已借出',remark:'已借予项目组拍摄'}];
+let projModels = [{id:'M001',name:'小林 (S级)',grade:'S',portrait:'时尚/家居类',base:'¥1,200'},{id:'M002',name:'阿杰 (A级)',grade:'A',portrait:'生活/科技类',base:'¥800'},{id:'M003',name:'小王 (B级)',grade:'B',portrait:'厨房场景',base:'¥500'},{id:'M004',name:'赵丽 (A级)',grade:'A',portrait:'厨房/美食类',base:'¥900'}];
+let projVenues = [{id:'V001',name:'广州天河创意园A区',type:'external',location:'天河区XX路18号',area:'120',style:'现代简约',scene:'客厅',billing:'按天',pricing:'¥1,500/天'},{id:'V002',name:'公司自建拍摄间-客厅场景',type:'internal',location:'总部B1层',area:'60',style:'奶油风',scene:'客厅',rent:'¥7,800/月'},{id:'V003',name:'深圳南山摄影棚B02',type:'external',location:'南山区科技园',area:'80',style:'工业风',scene:'多功能',billing:'按天',pricing:'¥800/天'}];
+let projSamples = [{id:'S001',name:'AK5 PRO (烟灶)',client:'美的集团',model:'CXW-260-AK5',serial:'AK5-2026-001',status:'库存中'},{id:'S002',name:'JM1 (电热)',client:'松下',model:'F6030-JM1',serial:'JM1-2026-003',status:'已借出',remark:'已借予项目组拍摄'},{id:'S003',name:'LN7PRO (燃热)',client:'美的集团',model:'JSQ30-LN7PRO',serial:'LN7-2026-002',status:'库存中'}];
 let projAccounts = [{name:'小美',platform:'抖音',type:'达人账号',owner:'company'},{name:'美的官方旗舰店',platform:'京东',type:'甲方店铺账号'},{name:'厨房达人',platform:'小红书',type:'达人账号',owner:'external'}];
 
 // ========== PROJECT RESOURCE RENDER ==========
@@ -5714,7 +5812,7 @@ function renderProjResourceConfig() {
       <td><span class="badge badge-${gc}"><span class="badge-dot"></span>${m.grade}级</span></td>
       <td>${m.portrait}</td>
       <td class="code">${m.base || '-'}</td>
-      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('model','${m.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('model','${m.id}')">移除</button></td>
+      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();openResourceTaskDrawer('model','${m.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('model','${m.id}')">移除</button></td>
     </tr>`;
   }).join('');
 
@@ -5729,7 +5827,7 @@ function renderProjResourceConfig() {
       <td>${v.location}</td>
       <td>${v.area}㎡</td>
       <td>${costInfo}</td>
-      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('venue','${v.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('venue','${v.id}')">移除</button></td>
+      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();openResourceTaskDrawer('venue','${v.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('venue','${v.id}')">移除</button></td>
     </tr>`;
   }).join('');
 
@@ -5742,9 +5840,526 @@ function renderProjResourceConfig() {
       <td>${s.model}</td>
       <td class="code">${s.serial}</td>
       <td><span class="badge badge-${sc}"><span class="badge-dot"></span>${s.status}</span></td>
-      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('sample','${s.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('sample','${s.id}')">移除</button></td>
+      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();openResourceTaskDrawer('sample','${s.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="removeProjResource('sample','${s.id}')">移除</button></td>
     </tr>`;
   }).join('');
+}
+
+// ------ Resource Schedule (v2.45 batch-level) ------
+const scheduleData=[
+  {id:'SCH-001',resourceType:'model',resourceName:'小林 (S级)',start:'2026-06-05',end:'2026-06-06',days:2,batchLabel:'PJ-2026-001-B020',batchModel:'KFR-35GW',batchCtype:'商品讲解',taskCount:50,status:'completed',remark:''},
+  {id:'SCH-002',resourceType:'model',resourceName:'小林 (S级)',start:'2026-06-20',end:'2026-06-20',days:1,batchLabel:'PJ-2026-001-B019',batchModel:'白月光1000G',batchCtype:'商品讲解',taskCount:50,status:'scheduled',remark:''},
+  {id:'SCH-003',resourceType:'model',resourceName:'阿杰 (A级)',start:'2026-06-01',end:'2026-06-02',days:2,batchLabel:'PJ-2026-001-B016',batchModel:'HWF',batchCtype:'产品展示',taskCount:20,status:'completed',remark:''},
+  {id:'SCH-004',resourceType:'model',resourceName:'小王 (B级)',start:'2026-06-10',end:'2026-06-10',days:1,batchLabel:'PJ-2026-001-B017',batchModel:'LN7PRO',batchCtype:'商品讲解',taskCount:40,status:'completed',remark:''},
+  {id:'SCH-005',resourceType:'model',resourceName:'赵丽 (A级)',start:'2026-06-12',end:'2026-06-13',days:2,batchLabel:'PJ-2026-001-B015',batchModel:'M9Pro',batchCtype:'好物分享',taskCount:15,status:'in_progress',remark:''},
+  {id:'SCH-006',resourceType:'venue',resourceName:'广州天河创意园A区',start:'2026-06-05',end:'2026-06-06',days:2,batchLabel:'PJ-2026-001-B020',batchModel:'KFR-35GW',batchCtype:'商品讲解',taskCount:50,status:'completed',remark:''},
+  {id:'SCH-007',resourceType:'venue',resourceName:'广州天河创意园A区',start:'2026-06-18',end:'2026-06-19',days:2,batchLabel:'PJ-2026-001-B018',batchModel:'AK5 PRO',batchCtype:'攻略测评',taskCount:30,status:'in_progress',remark:''},
+  {id:'SCH-008',resourceType:'venue',resourceName:'公司自建拍摄间-客厅场景',start:'2026-06-10',end:'2026-06-10',days:1,batchLabel:'PJ-2026-001-B017',batchModel:'LN7PRO',batchCtype:'商品讲解',taskCount:40,status:'completed',remark:''},
+  {id:'SCH-009',resourceType:'venue',resourceName:'深圳南山摄影棚B02',start:'2026-06-08',end:'2026-06-09',days:2,batchLabel:'PJ-2026-001-B016',batchModel:'HWF',batchCtype:'产品展示',taskCount:20,status:'completed',remark:''},
+  {id:'SCH-010',resourceType:'sample',resourceName:'AK5 PRO (烟灶)',start:'2026-06-05',end:'2026-06-06',days:2,batchLabel:'PJ-2026-001-B020',batchModel:'KFR-35GW',batchCtype:'商品讲解',taskCount:50,status:'completed',remark:''},
+  {id:'SCH-011',resourceType:'sample',resourceName:'AK5 PRO (烟灶)',start:'2026-06-12',end:'2026-06-13',days:2,batchLabel:'PJ-2026-001-B015',batchModel:'M9Pro',batchCtype:'好物分享',taskCount:15,status:'in_progress',remark:''},
+  {id:'SCH-012',resourceType:'sample',resourceName:'LN7PRO (燃热)',start:'2026-06-05',end:'2026-06-09',days:5,batchLabel:'PJ-2026-001-B017',batchModel:'LN7PRO',batchCtype:'商品讲解',taskCount:40,status:'completed',remark:''},
+  {id:'SCH-013',resourceType:'model',resourceName:'阿杰 (A级)',start:'2026-06-22',end:'2026-06-23',days:2,batchLabel:'PJ-2026-001-B018',batchModel:'AK5 PRO',batchCtype:'攻略测评',taskCount:30,status:'scheduled',remark:''},
+  {id:'SCH-014',resourceType:'venue',resourceName:'深圳南山摄影棚B02',start:'2026-06-22',end:'2026-06-23',days:2,batchLabel:'PJ-2026-001-B018',batchModel:'AK5 PRO',batchCtype:'攻略测评',taskCount:30,status:'scheduled',remark:''},
+  {id:'SCH-015',resourceType:'sample',resourceName:'JM1 (电热)',start:'2026-06-08',end:'2026-06-09',days:2,batchLabel:'PJ-2026-001-B016',batchModel:'HWF',batchCtype:'产品展示',taskCount:20,status:'completed',remark:''},
+];
+let schMonth={year:2026,month:6};
+let schTypeFilter='all';
+let schViewMode='gantt';
+
+function switchResourceSubTab(sub){
+  document.querySelectorAll('#tab-resourceplan .sub-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelector('#tab-resourceplan .sub-tab[data-subtab="'+sub+'"]').classList.add('active');
+  document.getElementById('sub-schedule').style.display=sub==='schedule'?'block':'none';
+  document.getElementById('sub-reslib').style.display=sub==='reslib'?'block':'none';
+  if(sub==='schedule') renderGantt();
+}
+
+function getDaysInMonth(y,m){return new Date(y,m,0).getDate();}
+
+function getSchResources(){
+  const all=projModels.concat(projVenues,projSamples);
+  const map={};
+  all.forEach(r=>{
+    const type=r.grade?'model':(r.type?'venue':'sample');
+    if(schTypeFilter!=='all'&&type!==schTypeFilter) return;
+    if(!map[r.name]) map[r.name]={name:r.name,type:type};
+  });
+  return Object.values(map);
+}
+
+function getSchBatchInfo(batchLabel){
+  const b=batchData.find(b=>b.label===batchLabel);
+  if(!b) return {scriptDone:0,total:0};
+  return {scriptDone:b.script,total:b.qty};
+}
+
+function renderGantt(){
+  const resources=getSchResources();
+  const daysInMonth=getDaysInMonth(schMonth.year,schMonth.month);
+  document.getElementById('sch-month-display').textContent=schMonth.year+'-'+String(schMonth.month).padStart(2,'0');
+
+  const monthStr=schMonth.year+'-'+String(schMonth.month).padStart(2,'0');
+  const filtered=scheduleData.filter(s=>{
+    if(schTypeFilter!=='all'&&s.resourceType!==schTypeFilter) return false;
+    const sMonth=s.start.substring(0,7);
+    const eMonth=s.end.substring(0,7);
+    return sMonth===monthStr||eMonth===monthStr||(s.start<monthStr+'-01'&&s.end>monthStr+'-'+daysInMonth);
+  });
+
+  let headerHTML='';
+  for(let d=1;d<=daysInMonth;d++) headerHTML+='<div class="gantt-cell">'+d+'</div>';
+  document.getElementById('sch-gantt-header').innerHTML=headerHTML;
+
+  let namesHTML='',rowsHTML='';
+  if(resources.length===0){
+    document.getElementById('sch-gantt-names').innerHTML='';
+    document.getElementById('sch-gantt-rows').innerHTML='';
+    document.getElementById('sch-gantt-empty').style.display='block';
+    document.querySelector('#sch-gantt-view .gantt-wrap').style.display='none';
+    return;
+  }
+  document.getElementById('sch-gantt-empty').style.display='none';
+  document.querySelector('#sch-gantt-view .gantt-wrap').style.display='block';
+
+  resources.forEach(res=>{
+    const resSchedules=filtered.filter(s=>s.resourceName===res.name);
+    const totalBatches=scheduleData.filter(s=>s.resourceName===res.name).length;
+    namesHTML+='<div style="height:40px;padding:4px 10px;font-size:11px;border-bottom:1px solid var(--border-light);display:flex;align-items:center;cursor:pointer;gap:6px" onclick="openResourceTaskDrawer(\''+res.type+'\',\''+res.name.replace(/'/g,"\\'")+'\')" title="查看关联任务"><span>'+res.name+'</span><span style="font-size:9px;color:var(--text-tertiary)">'+totalBatches+'个批次</span></div>';
+
+    const dayMap={};
+    for(let d=1;d<=daysInMonth;d++) dayMap[d]=[];
+    resSchedules.forEach(s=>{
+      const sDay=parseInt(s.start.substring(8));
+      const eDay=parseInt(s.end.substring(8));
+      const sM=s.start.substring(0,7),eM=s.end.substring(0,7);
+      let from=sM===monthStr?sDay:1;
+      let to=eM===monthStr?eDay:daysInMonth;
+      for(let d=from;d<=to;d++) dayMap[d].push(s);
+    });
+
+    let rowHTML='';
+    for(let d=1;d<=daysInMonth;d++){
+      const deduped=[];
+      const seen={};
+      dayMap[d].forEach(s=>{if(!seen[s.batchLabel]){seen[s.batchLabel]=true;deduped.push(s)}});
+      const hasConflict=deduped.length>=2;
+      rowHTML+='<div class="gantt-cell'+(hasConflict?' conflict':'')+'">';
+      deduped.forEach((s,i)=>{
+        const typeClass=s.resourceType;
+        const statusClass=s.status==='completed'?'completed':'';
+        const shortLabel=s.batchLabel.replace('PJ-2026-001-','');
+        const label=shortLabel+'·'+s.taskCount+'条';
+        const top=deduped.length===1?2:i*18+2;
+        const h=deduped.length===1?36:16;
+        rowHTML+='<div class="gantt-bar '+typeClass+' '+statusClass+'" style="top:'+top+'px;height:'+h+'px" title="'+s.batchLabel+' '+s.batchModel+' '+s.batchCtype+' · '+s.taskCount+'条" onclick="event.stopPropagation();showBatchTaskDrawer(\''+s.batchLabel+'\',\''+s.resourceName+'\',\''+s.start+'\')">'+label+'</div>';
+      });
+      rowHTML+='</div>';
+    }
+    rowsHTML+='<div style="display:flex;height:40px;border-bottom:1px solid var(--border-light)">'+rowHTML+'</div>';
+  });
+
+  document.getElementById('sch-gantt-names').innerHTML=namesHTML;
+  document.getElementById('sch-gantt-rows').innerHTML=rowsHTML;
+  document.getElementById('sch-gantt-inner').style.minWidth=(180+daysInMonth*56)+'px';
+}
+
+function renderScheduleList(){
+  const monthStr=schMonth.year+'-'+String(schMonth.month).padStart(2,'0');
+  const daysInMonth=getDaysInMonth(schMonth.year,schMonth.month);
+  let data=scheduleData.filter(s=>{
+    if(schTypeFilter!=='all'&&s.resourceType!==schTypeFilter) return false;
+    const sMonth=s.start.substring(0,7);
+    const eMonth=s.end.substring(0,7);
+    return sMonth===monthStr||eMonth===monthStr||(s.start<monthStr+'-01'&&s.end>monthStr+'-'+daysInMonth);
+  });
+  data.sort((a,b)=>a.start.localeCompare(b.start));
+
+  const typeLabels={model:'🎭 模特',venue:'📍 场地',sample:'📦 样机'};
+  const statusLabels={scheduled:'已排期',in_progress:'执行中',completed:'已完成'};
+  const statusBadge={scheduled:'badge-blue',in_progress:'badge-teal',completed:'badge-gray'};
+
+  if(data.length===0){
+    document.getElementById('sch-list-tbody').innerHTML='';
+    document.getElementById('sch-list-empty').style.display='block';
+    return;
+  }
+  document.getElementById('sch-list-empty').style.display='none';
+  document.getElementById('sch-list-tbody').innerHTML=data.map(s=>'<tr>'+
+    '<td>'+s.resourceName+'</td>'+
+    '<td>'+typeLabels[s.resourceType]+'</td>'+
+    '<td class="code">'+s.start+' ~ '+s.end+'</td>'+
+    '<td class="code">'+s.days+'天</td>'+
+    '<td><span class="code" style="cursor:pointer;color:var(--blue)" onclick="showBatchTaskDrawer(\''+s.batchLabel+'\',\''+s.resourceName+'\',\''+s.start+'\')">'+s.batchLabel.replace('PJ-2026-001-','')+' · '+s.batchModel+' · '+s.batchCtype+' · '+s.taskCount+'条</span></td>'+
+    '<td><span class="badge '+statusBadge[s.status]+'"><span class="badge-dot"></span>'+statusLabels[s.status]+'</span></td>'+
+    '<td><button class="btn btn-xs" style="color:var(--red)" onclick="deleteSchedule(\''+s.id+'\')">取消</button></td>'+
+  '</tr>').join('');
+}
+
+function shiftScheduleMonth(d){
+  schMonth.month+=d;
+  if(schMonth.month>12){schMonth.month=1;schMonth.year++}
+  if(schMonth.month<1){schMonth.month=12;schMonth.year--}
+  if(schViewMode==='gantt') renderGantt(); else renderScheduleList();
+}
+
+function filterSchType(type,el){
+  schTypeFilter=type;
+  document.querySelectorAll('#sub-schedule .filter-chip[data-filter="schtype"]').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  if(schViewMode==='gantt') renderGantt(); else renderScheduleList();
+}
+
+function switchSchView(view){
+  schViewMode=view;
+  document.getElementById('sch-view-gantt-btn').classList.toggle('active',view==='gantt');
+  document.getElementById('sch-view-list-btn').classList.toggle('active',view==='list');
+  document.getElementById('sch-gantt-view').style.display=view==='gantt'?'block':'none';
+  document.getElementById('sch-list-view').style.display=view==='list'?'block':'none';
+  if(view==='gantt') renderGantt(); else renderScheduleList();
+}
+
+function openScheduleModal(){
+  document.getElementById('sch-start').value='';
+  document.getElementById('sch-end').value='';
+  document.getElementById('sch-days-display').textContent='—';
+  document.getElementById('sch-remark').value='';
+  onSchTypeChange();
+  openModal('modal-schedule');
+}
+
+function onSchTypeChange(){
+  const type=document.getElementById('sch-res-type').value;
+  let resources=[];
+  if(type==='model') resources=projModels;
+  else if(type==='venue') resources=projVenues;
+  else resources=projSamples;
+
+  document.getElementById('sch-res-list').innerHTML=resources.map(r=>{
+    const scheduledCount=scheduleData.filter(s=>s.resourceType===type&&s.resourceName===r.name).length;
+    const pendingCount=batchData.filter(b=>b.script===b.qty&&b.status==='submitted'&&!scheduleData.some(s=>s.batchLabel===b.label)).length;
+    const label=type==='model'?r.name+' · '+r.grade+'级 · '+r.portrait:
+      type==='venue'?r.name+' · '+r.area+'㎡ · '+r.style:
+      r.name+' · '+r.model+' · '+r.serial;
+    return '<label style="display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--bg-input);border-radius:6px;cursor:pointer">'+
+      '<input type="radio" name="sch-res" value="'+r.name.replace(/"/g,'&quot;')+'"'+(resources.indexOf(r)===0?' checked':'')+'> '+
+      '<span>'+label+'</span>'+
+      '<span style="margin-left:auto;font-size:10px;color:var(--text-tertiary)">已排期 '+scheduledCount+' · 可排批次 '+pendingCount+'</span>'+
+    '</label>';
+  }).join('');
+
+  // Populate batch dropdown (only batches with script done and not yet scheduled)
+  const availableBatches=batchData.filter(b=>b.script===b.qty&&b.status==='submitted'&&!scheduleData.some(s=>s.batchLabel===b.label));
+  document.getElementById('sch-task').innerHTML='<option value="">请选择批次</option>'+
+    availableBatches.map(b=>'<option value="'+b.label+'">'+b.label.replace('PJ-2026-001-','')+' · '+b.model+' · '+b.ctype+' · '+b.qty+'条 · 脚本'+b.script+'/'+b.qty+'</option>').join('');
+}
+
+function calcSchDays(){
+  const s=document.getElementById('sch-start').value;
+  const e=document.getElementById('sch-end').value;
+  if(s&&e){
+    const days=Math.ceil((new Date(e)-new Date(s))/(86400000))+1;
+    document.getElementById('sch-days-display').textContent=days>0?'共 '+days+' 天':'日期无效';
+  }else{
+    document.getElementById('sch-days-display').textContent='—';
+  }
+}
+
+function confirmSchedule(){
+  const type=document.getElementById('sch-res-type').value;
+  const name=document.querySelector('input[name="sch-res"]:checked')?.value;
+  const start=document.getElementById('sch-start').value;
+  const end=document.getElementById('sch-end').value;
+  const batchLabel=document.getElementById('sch-task').value;
+  const remark=document.getElementById('sch-remark').value;
+
+  if(!name||!start||!end||!batchLabel){showToast('请填写完整信息','warn');return;}
+  const days=Math.ceil((new Date(end)-new Date(start))/(86400000))+1;
+  if(days<=0){showToast('日期范围无效','warn');return;}
+
+  const batch=batchData.find(b=>b.label===batchLabel);
+  if(!batch){showToast('批次不存在','warn');return;}
+
+  scheduleData.push({
+    id:'SCH-'+String(scheduleData.length+1).padStart(3,'0'),
+    resourceType:type,resourceName:name,start,end,days,
+    batchLabel:batchLabel,batchModel:batch.model,batchCtype:batch.ctype,taskCount:batch.qty,
+    status:'scheduled',remark
+  });
+
+  closeModal('modal-schedule');
+  showToast('排期已创建 · '+batchLabel.replace('PJ-2026-001-','')+' · '+batch.qty+'条任务','ok');
+  if(schViewMode==='gantt') renderGantt(); else renderScheduleList();
+}
+
+function deleteSchedule(id){
+  const s=scheduleData.find(s=>s.id===id);
+  if(!s) return;
+  if(!confirm('取消排期「'+s.batchLabel.replace('PJ-2026-001-','')+' · '+s.taskCount+'条」？\n将同时解除该批次下所有任务的排期关联。')) return;
+  const idx=scheduleData.findIndex(s=>s.id===id);
+  if(idx>=0){scheduleData.splice(idx,1);showToast('排期已取消','ok')}
+  if(schViewMode==='gantt') renderGantt(); else renderScheduleList();
+}
+
+// ------ Batch Task Drawer (v2.45) ------
+let _drawerBodyBackup='';
+
+function showBatchTaskDrawer(batchLabel,resourceName,scheduleDate){
+  const batch=batchData.find(b=>b.label===batchLabel);
+  if(!batch) return;
+
+  const items=batch.items&&batch.items.length>0?batch.items:Array.from({length:Math.min(batch.qty,50)},(_,i)=>['✅完成','⏳待开始','⏳待开始','⏳待开始']);
+  const shootDone=items.filter(it=>it[1]==='✅完成').length;
+
+  if(!_drawerBodyBackup) _drawerBodyBackup=document.getElementById('drawer-body').innerHTML;
+
+  document.getElementById('d-code').textContent='批次 '+batchLabel.replace('PJ-2026-001-','');
+  document.getElementById('d-title').textContent=batch.model+' · '+batch.ctype+' · '+batch.qty+'条';
+  document.getElementById('d-btn-edit').style.display='none';
+  document.getElementById('d-btn-delete').style.display='none';
+
+  document.getElementById('drawer-body').innerHTML=
+    '<div style="display:flex;gap:6px;margin-bottom:12px"><span class="badge badge-blue"><span class="badge-dot"></span>'+resourceName+'</span><span class="badge badge-teal"><span class="badge-dot"></span>'+scheduleDate+'</span></div>'+
+    '<div class="stats-grid col3" style="margin-bottom:12px">'+
+    '<div class="stat-card teal"><div class="stat-label">✏️ 脚本完成</div><div class="stat-value">'+batch.script+'/'+batch.qty+'</div></div>'+
+    '<div class="stat-card blue"><div class="stat-label">📹 拍摄完成</div><div class="stat-value">'+shootDone+'/'+batch.qty+'</div></div>'+
+    '<div class="stat-card purple"><div class="stat-label">✂️ 剪辑完成</div><div class="stat-value">'+(batch.editing||0)+'/'+batch.qty+'</div></div>'+
+    '</div>'+
+    '<div class="table-wrap" style="max-height:calc(100vh - 340px);overflow-y:auto"><table><thead><tr><th style="width:40px">#</th><th>任务标题</th><th style="width:55px">✏️脚本</th><th style="width:55px">📹拍摄</th><th style="width:55px">✂️剪辑</th><th style="width:55px">📤发布</th></tr></thead><tbody>'+
+    items.map((it,i)=>'<tr><td class="code">'+String(i+1).padStart(3,'0')+'</td><td><strong>'+batch.ctype+'·'+batch.model+'-'+String(i+1).padStart(2,'0')+'</strong></td>'+it.map(s=>'<td><span style="font-size:10px">'+s+'</span></td>').join('')+'</tr>').join('')+
+    '</tbody></table></div>';
+
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function closeBatchTaskDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  if(_drawerBodyBackup){
+    document.getElementById('drawer-body').innerHTML=_drawerBodyBackup;
+    _drawerBodyBackup='';
+  }
+}
+
+// ------ Batch Adjust Drawer (v2.47 task-level) ------
+function showBatchAdjustDrawer(batchLabel){
+  const batch=batchData.find(b=>b.label===batchLabel);
+  if(!batch) return;
+
+  if(!_drawerBodyBackup) _drawerBodyBackup=document.getElementById('drawer-body').innerHTML;
+
+  document.getElementById('d-code').textContent='批次调整';
+  document.getElementById('d-title').textContent=batchLabel+' · '+batch.model+' · '+batch.ctype+' · '+batch.qty+'条';
+  document.getElementById('d-btn-edit').style.display='none';
+  document.getElementById('d-btn-delete').style.display='none';
+
+  currentBatchAdjustLabel=batchLabel;
+  renderBatchAdjustTable(batchLabel,batch);
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('drawer').classList.add('open');
+}
+
+function getTaskResource(batchLabel,taskIndex,resourceType){
+  const r=batchResourceData.find(x=>x.batchLabel===batchLabel&&x.taskIndex===taskIndex&&x.resourceType===resourceType);
+  return r?r.resourceName:null;
+}
+
+function renderBatchAdjustTable(batchLabel,batch){
+  const qty=Math.min(batch.qty,50);
+  const selected=document.querySelectorAll('#drawer-body input.ba-check:checked').length;
+
+  let html='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">'+
+    '<button class="btn btn-xs btn-ghost" onclick="baSelectAll('+qty+')">全选</button>'+
+    '<button class="btn btn-xs btn-ghost" onclick="baInvert('+qty+')">反选</button>'+
+    '<span style="font-size:11px;color:var(--text-secondary)">已选 <b id="ba-sel-count">'+selected+'</b>/'+qty+' 条</span>'+
+    '<div style="margin-left:auto;display:flex;gap:6px">'+
+    '<div style="position:relative"><button class="btn btn-xs btn-ghost" id="ba-batch-model-btn" onclick="baToggleDropdown(\'model\')">批量分配模特 ▼</button><div class="ba-dropdown" id="ba-dd-model" style="display:none"></div></div>'+
+    '<div style="position:relative"><button class="btn btn-xs btn-ghost" id="ba-batch-venue-btn" onclick="baToggleDropdown(\'venue\')">批量分配场地 ▼</button><div class="ba-dropdown" id="ba-dd-venue" style="display:none"></div></div>'+
+    '</div></div>';
+
+  html+='<div class="table-wrap" style="max-height:calc(100vh - 300px);overflow-y:auto"><table><thead><tr>'+
+    '<th style="width:30px"><input type="checkbox" onchange="baToggleAll(this,'+qty+')"></th>'+
+    '<th style="width:35px">#</th><th>任务标题</th>'+
+    '<th style="width:100px">🎭 模特</th><th style="width:120px">📍 场地</th><th style="width:110px">📦 样机</th></tr></thead><tbody>';
+
+  for(let i=1;i<=qty;i++){
+    const model=getTaskResource(batchLabel,i,'model');
+    const venue=getTaskResource(batchLabel,i,'venue');
+    const sample=getTaskResource(batchLabel,i,'sample');
+    html+='<tr>'+
+      '<td><input type="checkbox" class="ba-check" data-idx="'+i+'" onchange="baUpdateSelCount()"></td>'+
+      '<td class="code">'+String(i).padStart(3,'0')+'</td>'+
+      '<td><strong>'+batch.ctype+'·'+batch.model+'-'+String(i).padStart(2,'0')+'</strong></td>'+
+      '<td class="ba-cell" onclick="baCellClick(\''+batchLabel+'\','+i+',\'model\',event)" style="cursor:pointer;color:'+(model?'var(--text-primary)':'var(--text-tertiary)')+'">'+(model||'—')+'</td>'+
+      '<td class="ba-cell" onclick="baCellClick(\''+batchLabel+'\','+i+',\'venue\',event)" style="cursor:pointer;color:'+(venue?'var(--text-primary)':'var(--text-tertiary)')+'">'+(venue||'—')+'</td>'+
+      '<td class="ba-cell" onclick="baCellClick(\''+batchLabel+'\','+i+',\'sample\',event)" style="cursor:pointer;color:'+(sample?'var(--text-primary)':'var(--text-tertiary)')+'">'+(sample||'—')+'</td>'+
+    '</tr>';
+  }
+  html+='</tbody></table></div>';
+
+  html+='<div style="padding:8px 12px;background:var(--accent-light);border-radius:6px;font-size:11px;color:var(--text-secondary);margin-top:8px">'+
+    '⚠️ 修改仅影响选中的任务。已完成的任务不受影响。</div>'+
+    '<div style="display:flex;gap:8px;margin-top:8px;justify-content:flex-end">'+
+    '<button class="btn btn-secondary btn-sm" onclick="closeBatchAdjustDrawer()">取消</button>'+
+    '<button class="btn btn-primary btn-sm" onclick="confirmBatchAdjust(\''+batchLabel+'\')">保存</button></div>';
+
+  document.getElementById('drawer-body').innerHTML=html;
+}
+
+function baSelectAll(qty){
+  document.querySelectorAll('#drawer-body input.ba-check').forEach(cb=>cb.checked=true);
+  baUpdateSelCount();
+}
+
+function baInvert(qty){
+  document.querySelectorAll('#drawer-body input.ba-check').forEach(cb=>cb.checked=!cb.checked);
+  baUpdateSelCount();
+}
+
+function baToggleAll(el,qty){
+  document.querySelectorAll('#drawer-body input.ba-check').forEach(cb=>cb.checked=el.checked);
+  baUpdateSelCount();
+}
+
+function baUpdateSelCount(){
+  const n=document.querySelectorAll('#drawer-body input.ba-check:checked').length;
+  const el=document.getElementById('ba-sel-count');
+  if(el) el.textContent=n;
+}
+
+function baToggleDropdown(type){
+  const dd=document.getElementById('ba-dd-'+type);
+  if(!dd) return;
+  const isOpen=dd.style.display==='block';
+  document.querySelectorAll('.ba-dropdown').forEach(d=>d.style.display='none');
+  if(!isOpen){
+    const typeConfig={model:{list:projModels,attr:r=>r.name+' · '+r.grade+'级 · '+r.portrait},venue:{list:projVenues,attr:r=>r.name+' · '+r.area+'㎡ · '+r.style},sample:{list:projSamples,attr:r=>r.name+' · '+r.model+' · '+r.serial}};
+    const cfg=typeConfig[type];
+    dd.innerHTML='<div style="padding:4px 0">'+
+      cfg.list.map(r=>'<div style="padding:6px 12px;cursor:pointer;font-size:12px" onmouseover="this.style.background=\'var(--accent-light)\'" onmouseout="this.style.background=\'transparent\'" onclick="baBatchAssign(\''+type+'\',\''+r.name.replace(/'/g,"\\'")+'\')">'+cfg.attr(r)+'</div>').join('')+
+      '<div style="border-top:1px solid var(--border-light);padding:6px 12px;cursor:pointer;font-size:12px;color:var(--red)" onmouseover="this.style.background=\'var(--accent-light)\'" onmouseout="this.style.background=\'transparent\'" onclick="baBatchClear(\''+type+'\')">— 清空</div>'+
+    '</div>';
+    dd.style.display='block';
+    setTimeout(()=>document.addEventListener('click',function h(e){if(!dd.contains(e.target)&&!e.target.closest('#ba-batch-'+type+'-btn')){dd.style.display='none';document.removeEventListener('click',h)}}),10);
+  }
+}
+
+function baBatchAssign(type,name){
+  document.querySelectorAll('#drawer-body input.ba-check:checked').forEach(cb=>{
+    const idx=parseInt(cb.dataset.idx);
+    const existing=batchResourceData.findIndex(r=>r.batchLabel===currentBatchAdjustLabel&&r.taskIndex===idx&&r.resourceType===type);
+    if(existing>=0) batchResourceData[existing].resourceName=name;
+    else batchResourceData.push({batchLabel:currentBatchAdjustLabel,taskIndex:idx,resourceType:type,resourceName:name});
+  });
+  document.querySelectorAll('.ba-dropdown').forEach(d=>d.style.display='none');
+  renderBatchAdjustTable(currentBatchAdjustLabel,batchData.find(b=>b.label===currentBatchAdjustLabel));
+  showToast('已批量分配 '+name,'ok');
+}
+
+function baBatchClear(type){
+  document.querySelectorAll('#drawer-body input.ba-check:checked').forEach(cb=>{
+    const idx=parseInt(cb.dataset.idx);
+    const existing=batchResourceData.findIndex(r=>r.batchLabel===currentBatchAdjustLabel&&r.taskIndex===idx&&r.resourceType===type);
+    if(existing>=0) batchResourceData.splice(existing,1);
+  });
+  document.querySelectorAll('.ba-dropdown').forEach(d=>d.style.display='none');
+  renderBatchAdjustTable(currentBatchAdjustLabel,batchData.find(b=>b.label===currentBatchAdjustLabel));
+  showToast('已清空','ok');
+}
+
+let currentBatchAdjustLabel='';
+function baCellClick(batchLabel,taskIndex,resourceType,event){
+  event.stopPropagation();
+  const typeConfig={model:{list:projModels,attr:r=>r.name+' · '+r.grade+'级 · '+r.portrait},venue:{list:projVenues,attr:r=>r.name+' · '+r.area+'㎡ · '+r.style},sample:{list:projSamples,attr:r=>r.name+' · '+r.model+' · '+r.serial}};
+  const cfg=typeConfig[resourceType];
+  const current=getTaskResource(batchLabel,taskIndex,resourceType);
+  const cell=event.target.closest('.ba-cell');
+  if(!cell) return;
+
+  document.querySelectorAll('.ba-cell-dropdown').forEach(d=>d.remove());
+  const dd=document.createElement('div');
+  dd.className='ba-cell-dropdown';
+  dd.style.cssText='position:absolute;top:100%;left:0;z-index:999;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:180px';
+  dd.innerHTML='<div style="padding:4px 0">'+
+    cfg.list.map(r=>'<div style="padding:6px 12px;cursor:pointer;font-size:12px;'+(r.name===current?'background:var(--accent-light);font-weight:600':'')+'" onmouseover="if(!this.style.background.includes(\'accent-light\'))this.style.background=\'var(--bg-input)\'" onmouseout="if(!this.style.background.includes(\'accent-light\'))this.style.background=\'transparent\'" onclick="baCellSelect(\''+batchLabel+'\','+taskIndex+',\''+resourceType+'\',\''+r.name.replace(/'/g,"\\'")+'\')">'+cfg.attr(r)+'</div>').join('')+
+    '<div style="border-top:1px solid var(--border-light);padding:6px 12px;cursor:pointer;font-size:12px;color:var(--red)" onmouseover="this.style.background=\'var(--bg-input)\'" onmouseout="this.style.background=\'transparent\'" onclick="baCellClear(\''+batchLabel+'\','+taskIndex+',\''+resourceType+'\')">— 不分配</div>'+
+  '</div>';
+  cell.style.position='relative';
+  cell.appendChild(dd);
+  setTimeout(()=>document.addEventListener('click',function h(e){if(!dd.contains(e.target)){dd.remove();document.removeEventListener('click',h)}}),10);
+}
+
+function baCellSelect(batchLabel,taskIndex,resourceType,name){
+  const existing=batchResourceData.findIndex(r=>r.batchLabel===batchLabel&&r.taskIndex===taskIndex&&r.resourceType===resourceType);
+  if(existing>=0) batchResourceData[existing].resourceName=name;
+  else batchResourceData.push({batchLabel,taskIndex,resourceType,resourceName:name});
+  document.querySelectorAll('.ba-cell-dropdown').forEach(d=>d.remove());
+  renderBatchAdjustTable(batchLabel,batchData.find(b=>b.label===batchLabel));
+}
+
+function baCellClear(batchLabel,taskIndex,resourceType){
+  const existing=batchResourceData.findIndex(r=>r.batchLabel===batchLabel&&r.taskIndex===taskIndex&&r.resourceType===resourceType);
+  if(existing>=0) batchResourceData.splice(existing,1);
+  document.querySelectorAll('.ba-cell-dropdown').forEach(d=>d.remove());
+  renderBatchAdjustTable(batchLabel,batchData.find(b=>b.label===batchLabel));
+}
+
+function closeBatchAdjustDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('drawer').classList.remove('open');
+  if(_drawerBodyBackup){
+    document.getElementById('drawer-body').innerHTML=_drawerBodyBackup;
+    _drawerBodyBackup='';
+  }
+}
+
+function confirmBatchAdjust(batchLabel){
+  showToast('批次 '+batchLabel.replace('PJ-2026-001-','')+' 资源调整已保存','ok');
+  closeBatchAdjustDrawer();
+}
+
+// ------ Drawer Resource Edit (v2.48) ------
+function drReplaceRes(taskId,batchLabel,taskIndex,resourceType,event){
+  event.stopPropagation();
+  const typeConfig={model:{list:projModels,attr:r=>r.name+' · '+r.grade+'级 · '+r.portrait},venue:{list:projVenues,attr:r=>r.name+' · '+r.area+'㎡ · '+r.style},sample:{list:projSamples,attr:r=>r.name+' · '+r.model+' · '+r.serial}};
+  const cfg=typeConfig[resourceType];
+  const cur=getTaskResource(batchLabel,taskIndex,resourceType);
+  const btn=event.target;
+
+  document.querySelectorAll('.dr-res-dd').forEach(d=>d.remove());
+  const dd=document.createElement('div');
+  dd.className='dr-res-dd';
+  dd.style.cssText='position:absolute;top:100%;right:0;z-index:999;background:#fff;border:1px solid var(--border);border-radius:6px;box-shadow:0 4px 12px rgba(0,0,0,.15);min-width:200px;max-height:200px;overflow-y:auto';
+  dd.innerHTML='<div style="padding:4px 0">'+
+    cfg.list.map(r=>'<div style="padding:6px 12px;cursor:pointer;font-size:12px;'+(r.name===cur?'background:var(--accent-light);font-weight:600':'')+'" onmouseover="if(!this.style.background.includes(\'accent-light\'))this.style.background=\'var(--bg-input)\'" onmouseout="if(!this.style.background.includes(\'accent-light\'))this.style.background=\'transparent\'" onclick="drSelectRes(\''+taskId+'\',\''+batchLabel+'\','+taskIndex+',\''+resourceType+'\',\''+r.name.replace(/'/g,"\\'")+'\')">'+cfg.attr(r)+'</div>').join('')+
+    '<div style="border-top:1px solid var(--border-light);padding:6px 12px;cursor:pointer;font-size:12px;color:var(--red)" onmouseover="this.style.background=\'var(--bg-input)\'" onmouseout="this.style.background=\'transparent\'" onclick="drClearRes(\''+taskId+'\',\''+batchLabel+'\','+taskIndex+',\''+resourceType+'\')">— 不分配</div>'+
+  '</div>';
+  btn.parentElement.style.position='relative';
+  btn.parentElement.appendChild(dd);
+  setTimeout(()=>document.addEventListener('click',function h(e){if(!dd.contains(e.target)){dd.remove();document.removeEventListener('click',h)}}),10);
+}
+
+function drSelectRes(taskId,batchLabel,taskIndex,resourceType,name){
+  const existing=batchResourceData.findIndex(r=>r.batchLabel===batchLabel&&r.taskIndex===taskIndex&&r.resourceType===resourceType);
+  if(existing>=0) batchResourceData[existing].resourceName=name;
+  else batchResourceData.push({batchLabel,taskIndex,resourceType,resourceName:name});
+  document.querySelectorAll('.dr-res-dd').forEach(d=>d.remove());
+  const t=pipeData.find(p=>p.id===taskId);
+  if(t) showPipeDrawer(taskId);
+  showToast('已更新资源','ok');
+}
+
+function drRemoveRes(taskId,batchLabel,taskIndex,resourceType){
+  const existing=batchResourceData.findIndex(r=>r.batchLabel===batchLabel&&r.taskIndex===taskIndex&&r.resourceType===resourceType);
+  if(existing>=0) batchResourceData.splice(existing,1);
+  const t=pipeData.find(p=>p.id===taskId);
+  if(t) showPipeDrawer(taskId);
+  showToast('已移除资源','ok');
+}
+
+function drClearRes(taskId,batchLabel,taskIndex,resourceType){
+  drRemoveRes(taskId,batchLabel,taskIndex,resourceType);
 }
 
 function renderProjAccountBind() {
@@ -5919,10 +6534,10 @@ function saveProjResource() {
 
 // Model list data & render
 const globalModels=[
-  {id:'M001',name:'张三',gender:'男',grade:'A',portrait:'厨房场景',base:'¥2,000',photos:['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=80&fit=crop&crop=face'],active:true},
-  {id:'M002',name:'李四',gender:'女',grade:'B',portrait:'客厅场景',base:'¥1,800',photos:['https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=80&fit=crop&crop=face'],active:true},
-  {id:'M003',name:'王五',gender:'男',grade:'C',portrait:'老人角色',base:'¥1,500',photos:['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=80&fit=crop&crop=face'],active:true},
-  {id:'M004',name:'赵丽',gender:'女',grade:'S',portrait:'年轻女性/美妆',base:'¥3,500',photos:['https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=80&fit=crop&crop=face'],active:true}
+  {id:'M001',name:'小林 (S级)',gender:'女',grade:'S',portrait:'时尚/家居类',base:'¥1,200',photos:['https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=120&h=80&fit=crop&crop=face'],active:true},
+  {id:'M002',name:'阿杰 (A级)',gender:'男',grade:'A',portrait:'生活/科技类',base:'¥800',photos:['https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=120&h=80&fit=crop&crop=face'],active:true},
+  {id:'M003',name:'小王 (B级)',gender:'男',grade:'B',portrait:'厨房场景',base:'¥500',photos:['https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&h=80&fit=crop&crop=face'],active:true},
+  {id:'M004',name:'赵丽 (A级)',gender:'女',grade:'A',portrait:'厨房/美食类',base:'¥900',photos:['https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=120&h=80&fit=crop&crop=face'],active:true}
 ];
 
 function renderModelList(){
@@ -5949,17 +6564,16 @@ function renderModelList(){
       <td>${m.portrait}</td>
       <td class="code">${m.base}</td>
       <td>${m.active?'<span class="badge badge-teal"><span class="badge-dot"></span>启用</span>':'<span class="badge badge-gray"><span class="badge-dot"></span>停用</span>'}</td>
-      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('model','${m.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
+      <td><button class="btn btn-xs" onclick="showModelDetail('${m.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();openResourceTaskDrawer('model','${m.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
     </tr>`;
   }).join('');
 }
 
 // Venue list data & render
 const globalVenues=[
-  {id:'V001',name:'影棚A区',type:'external',location:'朝阳区XX路18号',area:'120',style:'现代风',scene:'客厅',facilities:'绿幕、三基色灯、化妆间',billing:'按小时',pricing:'¥200/h',rent:'-',utility:'-',property:'-',active:true,venue_images:['https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?w=300&h=200&fit=crop']},
-  {id:'V002',name:'外景拍摄基地',type:'external',location:'顺义区XX镇东侧',area:'500',style:'原木风',scene:'阳台',facilities:'自然光、可变布景',billing:'按天',pricing:'¥3,000/天',rent:'-',utility:'-',property:'-',active:true,venue_images:['https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop']},
-  {id:'V003',name:'厨房实景棚',type:'external',location:'海淀区XX产业园',area:'80',style:'意式风格',scene:'厨房',facilities:'厨房实景、灶具、油烟机',billing:'固定时段',pricing:'13-16时 ¥1,500',rent:'-',utility:'-',property:'-',active:true,venue_images:['https://images.unsplash.com/photo-1484698886227-80088e99322a?w=300&h=200&fit=crop']},
-  {id:'V004',name:'公司影棚A',type:'internal',location:'总部B1层',area:'150',style:'现代风',scene:'客厅',facilities:'三基色灯、化妆间、空调',billing:'-',pricing:'-',rent:'¥18,000/月',utility:'¥2,500/月',property:'¥900/月',active:true,venue_images:['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300&h=200&fit=crop']}
+  {id:'V001',name:'广州天河创意园A区',type:'external',location:'天河区XX路18号',area:'120',style:'现代简约',scene:'客厅',facilities:'绿幕、三基色灯、化妆间',billing:'按天',pricing:'¥1,500/天',rent:'-',allocMode:'weighted_output',active:true,venue_images:['https://images.unsplash.com/photo-1590486803833-1c5dc8ddd4c8?w=300&h=200&fit=crop']},
+  {id:'V002',name:'公司自建拍摄间-客厅场景',type:'internal',location:'总部B1层',area:'60',style:'奶油风',scene:'客厅',facilities:'三基色灯、化妆间、空调',billing:'-',pricing:'-',rent:'¥7,800/月',allocMode:'weighted_output',active:true,venue_images:['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300&h=200&fit=crop']},
+  {id:'V003',name:'深圳南山摄影棚B02',type:'external',location:'南山区科技园',area:'80',style:'工业风',scene:'多功能',facilities:'可变布景、自然光',billing:'按天',pricing:'¥800/天',rent:'-',allocMode:'weighted_output',active:true,venue_images:['https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=300&h=200&fit=crop']}
 ];
 
 // Venue Modal Functions
@@ -5994,8 +6608,7 @@ function openVenueModal(id = null) {
         const area = parseFloat(venue.area) || 0;
         document.getElementById('venue-rent-pm').value = area > 0 ? Math.round(monthlyRent / area * 100) / 100 : '';
         document.getElementById('venue-monthly-rent').value = monthlyRent;
-        document.getElementById('venue-utility').value = venue.utility.replace('¥', '').replace('/月', '').replace(/,/g, '');
-        document.getElementById('venue-property').value = venue.property.replace('¥', '').replace('/月', '').replace(/,/g, '');
+        document.getElementById('venue-alloc-mode').value = venue.allocMode || 'weighted_output';
       }
       if (venue.venue_images && venue.venue_images.length > 0) {
         venueTempImages = [...venue.venue_images];
@@ -6015,8 +6628,7 @@ function openVenueModal(id = null) {
     document.getElementById('venue-pricing').value = '';
     document.getElementById('venue-rent-pm').value = '';
     document.getElementById('venue-monthly-rent').value = '';
-    document.getElementById('venue-utility').value = '';
-    document.getElementById('venue-property').value = '';
+    document.getElementById('venue-alloc-mode').value = 'weighted_output';
   }
   toggleVenueType();
   openModal('modal-venue');
@@ -6085,8 +6697,7 @@ function saveVenue() {
     billing: type === 'external' ? document.getElementById('venue-billing').value : '-',
     pricing: type === 'external' ? document.getElementById('venue-pricing').value : '-',
     rent: type === 'internal' ? '¥' + (document.getElementById('venue-monthly-rent').value || 0) + '/月' : '-',
-    utility: type === 'internal' ? '¥' + (document.getElementById('venue-utility').value || 0) + '/月' : '-',
-    property: type === 'internal' ? '¥' + (document.getElementById('venue-property').value || 0) + '/月' : '-',
+    allocMode: type === 'internal' ? document.getElementById('venue-alloc-mode').value : 'weighted_output',
     active: true,
     venue_images: venueTempImages.length > 0 ? venueTempImages : []
   };
@@ -6128,7 +6739,7 @@ function renderVenueList() {
   });
   document.getElementById('venue-list-tbody').innerHTML=filtered.map(v=>{
     const typeBadge=v.type==='external'?'<span class="badge badge-blue"><span class="badge-dot"></span>外部</span>':'<span class="badge badge-purple"><span class="badge-dot"></span>自建</span>';
-    const costCell=v.type==='external'?`<span class="code">${v.pricing}</span>`:`<div style="font-size:11px">房租 ${v.rent}<br>水电 ${v.utility}<br>物业 ${v.property}</div>`;
+    const costCell=v.type==='external'?`<span class="code">${v.pricing}</span>`:`<div style="font-size:11px">房租 ${v.rent}<br><span style="color:var(--text-tertiary)">分摊：${v.allocMode==='fixed_overhead'?'归管理费用':'按产出分摊'}</span></div>`;
     const billingCell=v.type==='external'?v.billing:'-';
     const previewImg=v.venue_images && v.venue_images[0]?`<img src="${v.venue_images[0]}" style="width:60px;height:40px;object-fit:cover;border-radius:4px;">`:`<div style="width:60px;height:40px;background:var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--text-tertiary)">暂无图</div>`;
     return `<tr>
@@ -6144,7 +6755,7 @@ function renderVenueList() {
       <td>${billingCell}</td>
       <td>${costCell}</td>
       <td>${v.active?'<span class="badge badge-teal"><span class="badge-dot"></span>启用</span>':'<span class="badge badge-gray"><span class="badge-dot"></span>停用</span>'}</td>
-      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('venue','${v.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
+      <td><button class="btn btn-xs" onclick="showVenueDetail('${v.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();openResourceTaskDrawer('venue','${v.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已停用','ok')">停用</button></td>
     </tr>`;
   }).join('');
 }
@@ -6153,13 +6764,13 @@ function renderVenueList() {
 const globalSamples = [
   {
     id: 'S001',
-    name: '白泽1000G净水器',
+    name: 'AK5 PRO (烟灶)',
     client: '美的集团',
-    model: 'MRO1891B-1000G',
-    serial: 'MX20260101001',
-    color: '冰川蓝',
+    model: 'CXW-260-AK5',
+    serial: 'AK5-2026-001',
+    color: '星云灰',
     qty: 2,
-    location: '仓库A区-01号架',
+    location: '仓库A区-03号架',
     attachments: '遥控器×1,说明书×1,电源线×1',
     status: '库存中',
     sample_images: ['https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=300&h=200&fit=crop'],
@@ -6167,13 +6778,13 @@ const globalSamples = [
   },
   {
     id: 'S002',
-    name: '白月光空调',
-    client: '美的集团',
-    model: 'KFR-35GW',
-    serial: 'MX20260101002',
-    color: '珍珠白',
+    name: 'JM1 (电热)',
+    client: '松下',
+    model: 'F6030-JM1',
+    serial: 'JM1-2026-003',
+    color: '象牙白',
     qty: 1,
-    location: '客户自留',
+    location: '仓库A-2-1',
     attachments: '遥控器×1,安装配件×1',
     status: '已借出',
     sample_images: ['https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=300&h=200&fit=crop'],
@@ -6181,14 +6792,14 @@ const globalSamples = [
   },
   {
     id: 'S003',
-    name: '松下电饭煲',
-    client: '松下',
-    model: 'SR-L10H8',
-    serial: 'PX20260201001',
-    color: '星空灰',
+    name: 'LN7PRO (燃热)',
+    client: '美的集团',
+    model: 'JSQ30-LN7PRO',
+    serial: 'LN7-2026-002',
+    color: '钛空银',
     qty: 1,
-    location: '仓库B区',
-    attachments: '内胆×1,饭勺×1,量杯×1',
+    location: '仓库A-1-3',
+    attachments: '说明书×1',
     status: '库存中',
     sample_images: ['https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=300&h=200&fit=crop'],
     remark: ''
@@ -6470,7 +7081,7 @@ function renderSampleList() {
       <td>${s.location}</td>
       <td style="font-size:11px">${s.attachments}</td>
       <td><span class="badge badge-${statusColor}"><span class="badge-dot"></span>${s.status}</span></td>
-      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();navigateToRestask('sample','${s.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已更新状态','ok')">${s.status==='已借出'?'归还':'借出'}</button></td>
+      <td><button class="btn btn-xs" onclick="showSampleDetail('${s.id}')">查看</button><button class="btn btn-xs" style="color:var(--blue);margin-left:4px" onclick="event.stopPropagation();openResourceTaskDrawer('sample','${s.name}')">关联任务</button><button class="btn btn-xs" style="color:var(--red);margin-left:4px" onclick="showToast('已更新状态','ok')">${s.status==='已借出'?'归还':'借出'}</button></td>
     </tr>`;
   }).join('');
 }
@@ -6490,6 +7101,27 @@ const resourceUsageData=[
   {id:'UR-010',type:'venue',name:'广州天河创意园A区',projectId:'1',projectName:'美的',taskId:'sh15',taskTitle:'拍摄-烟机AK5pro商品04',start:'2026-06-15',end:'2026-06-15',days:1,price:1500,amount:1500,status:'in_use',detail:'类型：外部场地 · 面积：120㎡ · 风格：现代简约 · ¥1,500/天 × 1天 · 登记人：张摄 · 2026-06-12 14:00'},
   {id:'UR-011',type:'model',name:'小林 (S级)',projectId:'3',projectName:'TCL',taskId:'sh16',taskTitle:'拍摄-消毒柜110HQ2商品03',start:'2026-06-20',end:'2026-06-20',days:1,price:1200,amount:1200,status:'reserved',detail:'肖像类型：时尚/家居类 · ¥1,200/天 × 1天 · 登记人：张摄 · 2026-06-18 10:00'},
   {id:'UR-012',type:'sample',name:'AK5 PRO (烟灶)',projectId:'1',projectName:'美的',taskId:'sh15',taskTitle:'拍摄-烟机AK5pro商品04',start:'2026-06-15',end:'2026-06-17',days:3,price:0,amount:0,status:'in_use',detail:'机身编号：AK5-2026-001 · 颜色：星云灰 · 存放位置：A-3-2 · 登记人：张摄 · 2026-06-14 09:00'},
+  {id:'UR-013',type:'model',name:'小林 (S级)',projectId:'1',projectName:'美的',taskId:'sh17',taskTitle:'拍摄-洗碗机DW550商品01',start:'2026-06-05',end:'2026-06-06',days:2,price:1200,amount:2400,status:'settled',detail:'肖像类型：时尚/家居类 · ¥1,200/天 × 2天 · 登记人：李四 · 2026-06-03 14:00'},
+  {id:'UR-014',type:'model',name:'小林 (S级)',projectId:'2',projectName:'松下',taskId:'sh18',taskTitle:'拍摄-电热JM1商品02',start:'2026-06-25',end:'2026-06-25',days:1,price:1200,amount:1200,status:'reserved',detail:'肖像类型：时尚/家居类 · ¥1,200/天 × 1天 · 登记人：张摄 · 2026-06-20 11:00'},
+  {id:'UR-015',type:'model',name:'阿杰 (A级)',projectId:'1',projectName:'美的',taskId:'sh19',taskTitle:'拍摄-净水白泽1000G商品03',start:'2026-06-01',end:'2026-06-02',days:2,price:800,amount:1600,status:'settled',detail:'肖像类型：生活/科技类 · ¥800/天 × 2天 · 登记人：李四 · 2026-05-28 15:30'},
+  {id:'UR-016',type:'model',name:'阿杰 (A级)',projectId:'3',projectName:'TCL',taskId:'sh20',taskTitle:'拍摄-消毒柜110HQ2商品04',start:'2026-06-22',end:'2026-06-23',days:2,price:800,amount:1600,status:'reserved',detail:'肖像类型：生活/科技类 · ¥800/天 × 2天 · 登记人：陈影 · 2026-06-16 09:00'},
+  {id:'UR-017',type:'model',name:'小王 (B级)',projectId:'1',projectName:'美的',taskId:'sh21',taskTitle:'拍摄-燃热LN7PRO商品02',start:'2026-06-10',end:'2026-06-10',days:1,price:500,amount:500,status:'settled',detail:'肖像类型：厨房场景 · ¥500/天 × 1天 · 登记人：李四 · 2026-06-08 16:00'},
+  {id:'UR-018',type:'model',name:'小王 (B级)',projectId:'4',projectName:'创维',taskId:'sh22',taskTitle:'拍摄-燃热HWF商品02',start:'2026-06-28',end:'2026-06-28',days:1,price:500,amount:500,status:'reserved',detail:'肖像类型：厨房场景 · ¥500/天 × 1天 · 登记人：陈影 · 2026-06-22 10:00'},
+  {id:'UR-019',type:'venue',name:'广州天河创意园A区',projectId:'1',projectName:'美的',taskId:'sh17',taskTitle:'拍摄-洗碗机DW550商品01',start:'2026-06-05',end:'2026-06-06',days:2,price:1500,amount:3000,status:'settled',detail:'类型：外部场地 · 面积：120㎡ · 风格：现代简约 · ¥1,500/天 × 2天 · 登记人：李四 · 2026-06-03 14:30'},
+  {id:'UR-020',type:'venue',name:'广州天河创意园A区',projectId:'2',projectName:'松下',taskId:'sh23',taskTitle:'拍摄-电热UDpro展示02',start:'2026-06-18',end:'2026-06-19',days:2,price:1500,amount:3000,status:'in_use',detail:'类型：外部场地 · 面积：120㎡ · 风格：现代简约 · ¥1,500/天 × 2天 · 登记人：张摄 · 2026-06-15 11:00'},
+  {id:'UR-021',type:'venue',name:'公司自建拍摄间-客厅场景',projectId:'1',projectName:'美的',taskId:'sh21',taskTitle:'拍摄-燃热LN7PRO商品02',start:'2026-06-10',end:'2026-06-10',days:1,price:260,amount:260,status:'settled',detail:'类型：企业自建 · 面积：60㎡ · 风格：奶油风 · ¥260/天(月租分摊) × 1天 · 登记人：李四 · 2026-06-08 16:15'},
+  {id:'UR-022',type:'venue',name:'公司自建拍摄间-客厅场景',projectId:'4',projectName:'创维',taskId:'sh13',taskTitle:'拍摄-燃热HWF商品01',start:'2026-06-18',end:'2026-06-18',days:1,price:260,amount:260,status:'reserved',detail:'类型：企业自建 · 面积：60㎡ · 风格：奶油风 · ¥260/天(月租分摊) × 1天 · 登记人：陈影 · 2026-06-13 10:45'},
+  {id:'UR-023',type:'venue',name:'深圳南山摄影棚B02',projectId:'3',projectName:'TCL',taskId:'sh16',taskTitle:'拍摄-消毒柜110HQ2商品03',start:'2026-06-20',end:'2026-06-20',days:1,price:800,amount:800,status:'reserved',detail:'类型：外部场地 · 面积：80㎡ · 风格：工业风 · ¥800/天 × 1天 · 登记人：张摄 · 2026-06-18 10:15'},
+  {id:'UR-024',type:'venue',name:'深圳南山摄影棚B02',projectId:'2',projectName:'松下',taskId:'sh24',taskTitle:'拍摄-电热JM1商品03',start:'2026-06-08',end:'2026-06-09',days:2,price:800,amount:1600,status:'settled',detail:'类型：外部场地 · 面积：80㎡ · 风格：工业风 · ¥800/天 × 2天 · 登记人：张摄 · 2026-06-05 09:30'},
+  {id:'UR-025',type:'sample',name:'AK5 PRO (烟灶)',projectId:'1',projectName:'美的',taskId:'sh17',taskTitle:'拍摄-洗碗机DW550商品01',start:'2026-06-05',end:'2026-06-06',days:2,price:0,amount:0,status:'settled',detail:'机身编号：AK5-2026-001 · 颜色：星云灰 · 存放位置：A-3-2 · 登记人：李四 · 2026-06-03 14:45'},
+  {id:'UR-026',type:'sample',name:'JM1 (电热)',projectId:'2',projectName:'松下',taskId:'sh18',taskTitle:'拍摄-电热JM1商品02',start:'2026-06-25',end:'2026-06-26',days:2,price:0,amount:0,status:'reserved',detail:'机身编号：JM1-2026-003 · 颜色：象牙白 · 存放位置：A-2-1 · 登记人：张摄 · 2026-06-20 11:15'},
+  {id:'UR-027',type:'sample',name:'JM1 (电热)',projectId:'2',projectName:'松下',taskId:'sh24',taskTitle:'拍摄-电热JM1商品03',start:'2026-06-08',end:'2026-06-09',days:2,price:0,amount:0,status:'settled',detail:'机身编号：JM1-2026-003 · 颜色：象牙白 · 存放位置：A-2-1 · 登记人：张摄 · 2026-06-05 09:45'},
+  {id:'UR-028',type:'sample',name:'LN7PRO (燃热)',projectId:'1',projectName:'美的',taskId:'sh06',taskTitle:'拍摄-燃热LN7PRO商品01',start:'2026-06-05',end:'2026-06-09',days:5,price:0,amount:0,status:'settled',detail:'机身编号：LN7-2026-002 · 颜色：钛空银 · 存放位置：A-1-3 · 登记人：李四 · 2026-06-02 09:15'},
+  {id:'UR-029',type:'sample',name:'LN7PRO (燃热)',projectId:'1',projectName:'美的',taskId:'sh21',taskTitle:'拍摄-燃热LN7PRO商品02',start:'2026-06-10',end:'2026-06-10',days:1,price:0,amount:0,status:'settled',detail:'机身编号：LN7-2026-002 · 颜色：钛空银 · 存放位置：A-1-3 · 登记人：李四 · 2026-06-08 16:30'},
+  {id:'UR-030',type:'model',name:'赵丽 (A级)',projectId:'1',projectName:'美的',taskId:'sh25',taskTitle:'拍摄-灶具M9Pro商品01',start:'2026-06-12',end:'2026-06-13',days:2,price:900,amount:1800,status:'in_use',detail:'肖像类型：厨房/美食类 · ¥900/天 × 2天 · 登记人：张摄 · 2026-06-10 14:00'},
+  {id:'UR-031',type:'model',name:'赵丽 (A级)',projectId:'4',projectName:'创维',taskId:'sh26',taskTitle:'拍摄-饮水机YW200商品01',start:'2026-06-03',end:'2026-06-03',days:1,price:900,amount:900,status:'settled',detail:'肖像类型：厨房/美食类 · ¥900/天 × 1天 · 登记人：陈影 · 2026-05-30 15:00'},
+  {id:'UR-032',type:'venue',name:'广州天河创意园A区',projectId:'3',projectName:'TCL',taskId:'sh20',taskTitle:'拍摄-消毒柜110HQ2商品04',start:'2026-06-22',end:'2026-06-23',days:2,price:1500,amount:3000,status:'reserved',detail:'类型：外部场地 · 面积：120㎡ · 风格：现代简约 · ¥1,500/天 × 2天 · 登记人：陈影 · 2026-06-16 09:30'},
+  {id:'UR-033',type:'sample',name:'AK5 PRO (烟灶)',projectId:'1',projectName:'美的',taskId:'sh25',taskTitle:'拍摄-灶具M9Pro商品01',start:'2026-06-12',end:'2026-06-13',days:2,price:0,amount:0,status:'in_use',detail:'机身编号：AK5-2026-001 · 颜色：星云灰 · 存放位置：A-3-2 · 登记人：张摄 · 2026-06-10 14:15'},
 ];
 let ruType='all';let ruProject='all';let ruStatus='all';
 function renderResourceUsage(){
@@ -6544,6 +7176,69 @@ function navigateToRestask(resourceType,resourceName){
   document.getElementById('rt-search').value='';
   rtSearch='';
   navTo('restask');
+}
+
+// ------ Resource Task Drawer (v2.42) ------
+function openResourceTaskDrawer(resourceType,resourceName){
+  const records=resourceUsageData.filter(r=>r.type===resourceType&&r.name===resourceName);
+  const now=new Date();
+  const thisMonth=now.getMonth();
+  const thisYear=now.getFullYear();
+  const monthlyCompleted=records.filter(r=>{
+    if(r.status!=='returned'&&r.status!=='settled') return false;
+    const endDate=new Date(r.end);
+    return endDate.getMonth()===thisMonth&&endDate.getFullYear()===thisYear;
+  }).length;
+
+  const projDone=records.filter(r=>{
+    if(r.status!=='returned'&&r.status!=='settled') return false;
+    return r.projectId===currentPid;
+  }).length;
+
+  const typeLabels={model:'模特',venue:'场地',sample:'样机'};
+  const typeBadgeColors={model:'badge-purple',venue:'badge-teal',sample:'badge-blue'};
+  const statusMap={reserved:'已预约',in_use:'拍摄中',returned:'已完成',settled:'已结算'};
+  const statusBadge={reserved:'badge-blue',in_use:'badge-amber',returned:'badge-teal',settled:'badge-gray'};
+
+  document.getElementById('rtd-title').textContent=resourceName;
+  const badge=document.getElementById('rtd-badge');
+  badge.textContent=typeLabels[resourceType]||resourceType;
+  badge.className='drawer-badge badge '+(typeBadgeColors[resourceType]||'badge-gray');
+  badge.style.cssText='font-size:10px;padding:1px 6px;border-radius:8px;margin-left:6px';
+
+  document.getElementById('rtd-monthly').textContent=monthlyCompleted;
+  document.getElementById('rtd-proj-done').textContent=projDone;
+  document.getElementById('rtd-total').textContent=records.length;
+
+  const sorted=records.slice().sort((a,b)=>b.start.localeCompare(a.start));
+  const tbody=document.getElementById('rtd-tbody');
+  const empty=document.getElementById('rtd-empty');
+  const tableWrap=document.querySelector('#rtd-body .table-wrap');
+
+  if(sorted.length===0){
+    tbody.innerHTML='';
+    empty.style.display='block';
+    tableWrap.style.display='none';
+  }else{
+    empty.style.display='none';
+    tableWrap.style.display='block';
+    tbody.innerHTML=sorted.map(r=>`<tr>
+      <td class="code" style="cursor:pointer;color:var(--blue);font-weight:500" onclick="closeResourceTaskDrawer();showPipeDrawer('${r.taskId||''}')">${r.taskId||'—'}</td>
+      <td>${r.taskTitle}</td>
+      <td>${r.projectName}</td>
+      <td class="code">${r.start}~${r.end}</td>
+      <td class="code">${r.days}天</td>
+      <td><span class="badge ${statusBadge[r.status]||'badge-gray'}"><span class="badge-dot"></span>${statusMap[r.status]||r.status}</span></td>
+    </tr>`).join('');
+  }
+
+  document.getElementById('pg-restask-drawer').classList.add('show');
+  document.getElementById('rtd-panel').classList.add('show');
+}
+
+function closeResourceTaskDrawer(){
+  document.getElementById('pg-restask-drawer').classList.remove('show');
+  document.getElementById('rtd-panel').classList.remove('show');
 }
 
 function checkTimeConflict(records){
